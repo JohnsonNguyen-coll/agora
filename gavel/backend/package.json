@@ -1,0 +1,28 @@
+{
+  "name": "@gavel/backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/backend/src/server.js",
+    "smoke:latch": "tsx scripts/latch-smoke.ts",
+    "test": "tsx --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "@fastify/cookie": "11.0.2",
+    "@fastify/rate-limit": "10.2.1",
+    "@fastify/static": "10.1.4",
+    "better-sqlite3": "11.8.1",
+    "dotenv": "16.4.7",
+    "drizzle-orm": "0.45.2",
+    "fastify": "5.12.5",
+    "pg": "8.13.3",
+    "zod": "3.24.2"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "7.6.12",
+    "@types/pg": "8.11.11",
+    "tsx": "4.19.3"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "gavel",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n server,web \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run typecheck && npm run build -w frontend && npm run build -w backend",
+    "typecheck": "tsc --noEmit -p backend && tsc --noEmit -p frontend",
+    "start": "npm run start -w backend",
+    "setup": "node scripts/setup.mjs",
+    "smoke:latch": "npm run smoke:latch -w backend",
+    "test": "npm run test -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "9.1.2",
+    "typescript": "5.7.3",
+    "@types/node": "22.10.5"
+  }
+}
