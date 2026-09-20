@@ -1,14 +1,15 @@
 import Database from 'better-sqlite3';
+import { SQLiteSyncDialect } from 'drizzle-orm/sqlite-core';
 import { drizzle as sqliteDrizzle } from 'drizzle-orm/better-sqlite3';
 import { drizzle as pgDrizzle } from 'drizzle-orm/node-postgres';
 import { sql, type SQL } from 'drizzle-orm';
-import { Pool } from 'pg';
+import pg from 'pg';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { env, projectRoot } from '../config/env.js';
 export type Query = <T extends object>(statement: SQL) => Promise<T[]>;
 const isPostgres = env.DATABASE_URL.startsWith('postgres');
-const pool = isPostgres ? new Pool({ connectionString: env.DATABASE_URL }) : null;
+const pool = isPostgres ? new pg.Pool({ connectionString: env.DATABASE_URL }) : null;
 const sqlitePath = resolve(projectRoot, env.DATABASE_URL.replace(/^file:/, ''));
 if (!isPostgres) mkdirSync(dirname(sqlitePath), { recursive: true });
 const sqlite = isPostgres ? null : new Database(sqlitePath);
@@ -17,7 +18,7 @@ sqlite?.pragma('foreign_keys = ON');
 const local = sqlite ? sqliteDrizzle(sqlite) : null;
 const remote = pool ? pgDrizzle(pool) : null;
 export const query: Query = async <T extends object>(statement: SQL): Promise<T[]> => {
-  if (local) return local.all(statement) as T[];
+  if (local) { const compiled = new SQLiteSyncDialect().sqlToQuery(statement); if (sqlite!.prepare(compiled.sql).reader) return local.all(statement) as T[]; local.run(statement); return []; }
   if (remote) return (await remote.execute(statement)).rows as T[];
   throw new Error('Database is unavailable.');
 };

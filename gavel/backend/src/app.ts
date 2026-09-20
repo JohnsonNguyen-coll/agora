@@ -23,9 +23,9 @@ export async function buildApp() {
     if (error instanceof AppError) return reply.code(error.statusCode).send({
       code: error.code, error: error.message, details: error.details
     });
-    if (error.statusCode && error.statusCode < 500)
+    if (error instanceof Error && 'statusCode' in error && typeof error.statusCode === 'number' && error.statusCode < 500)
       return reply.code(error.statusCode).send({ code: 'request_rejected', error: error.message });
-    request.log.error({ errorType: error.name }, 'Request failed');
+    request.log.error({ errorType: error instanceof Error ? error.name : 'UnknownError' }, 'Request failed');
     return reply.code(500).send({ code: 'server_error', error: 'The request could not be completed.' });
   });
   roomRoutes(app);

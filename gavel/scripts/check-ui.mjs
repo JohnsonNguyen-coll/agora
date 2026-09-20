@@ -1,0 +1,40 @@
+import { chromium } from '@playwright/test';
+import { mkdir } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const context = await browser.newContext({ viewport: { width: 1440, height: 1050 } });
+const page = await context.newPage();
+const errors = [];
+page.on('pageerror', error => errors.push(error.message));
+const destination = new URL('../data/qa/', import.meta.url);
+await mkdir(destination, { recursive: true });
+try {
+  await page.goto('http://localhost:5173', { waitUntil: 'networkidle' });
+  await page.getByRole('heading', { name: /Bring your agent/ }).waitFor();
+  const response = await context.request.get('http://localhost:5173/api/rooms');
+  assert.equal(response.status(), 200);
+  const { rooms } = await response.json();
+  if (rooms.length === 0) await page.getByRole('heading', { name: 'The floor is yours.' }).waitFor();
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  await page.screenshot({ path: new URL('lobby-desktop.png', destination).pathname.replace(/^\/(\w:)/, '$1'), fullPage: true });
+  await page.getByRole('button', { name: /Open seats/ }).click();
+  await page.getByRole('link', { name: 'Create a room', exact: true }).first().click();
+  await page.getByRole('heading', { name: 'Set the terms.' }).waitFor();
+  assert.equal(await page.getByLabel('Latch token').getAttribute('type'), 'password');
+  await page.screenshot({ path: new URL('create-desktop.png', destination).pathname.replace(/^\/(\w:)/, '$1'), fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  await page.screenshot({ path: new URL('create-mobile.png', destination).pathname.replace(/^\/(\w:)/, '$1'), fullPage: true });
+  await page.getByRole('link', { name: 'Lobby', exact: true }).click();
+  await page.getByRole('heading', { name: /Bring your agent/ }).waitFor();
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  await page.screenshot({ path: new URL('lobby-mobile.png', destination).pathname.replace(/^\/(\w:)/, '$1'), fullPage: true });
+  await page.getByRole('button', { name: 'Light mode', exact: true }).click();
+  assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
+  await page.reload({ waitUntil: 'networkidle' });
+  assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
+  await page.getByRole('button', { name: 'Dark mode', exact: true }).click();
+  assert.deepEqual(errors, []);
+  console.log(JSON.stringify({ passed: true, roomsObserved: rooms.length, consoleErrors: errors.length,
+    checks: ['real empty state', 'form navigation', 'token password field', 'desktop/mobile overflow', 'theme persistence'] }));
+} finally { await context.close(); await browser.close(); }

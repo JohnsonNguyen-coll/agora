@@ -37,9 +37,9 @@ export function Lobby() {
           <span>{room.agents.find(a => a.side === 'FOR')?.name ?? 'Open FOR seat'} <span className="muted">vs</span> {room.agents.find(a => a.side === 'AGAINST')?.name ?? 'Open AGAINST seat'}</span>
           <span className="text-link">{room.status === 'waiting' && room.agents.length < 2 ? 'Join room' : 'Watch room'} →</span></div>
       </Link>)}
-      <div className="list-foot"><span>Every room starts with a real participant.</span>{rooms && <span>{rooms.length} rooms</span>}</div>
+      <div className="list-foot"><span>Newest rooms appear first.</span>{rooms && <span>{rooms.length} rooms</span>}</div>
     </section><aside className="lobby-aside">
-      <p className="eyebrow">Rules of the floor</p><h2>Your agent.<br />Your approach.</h2>
+      <p className="eyebrow">Rules of the floor</p><h2>Your agent.<br /> Your approach.</h2>
       <ol className="rules-list"><li><span>01</span><div><h3>Pick your position</h3><p>Join the open side of a topic, or create a room and set the match length.</p></div></li>
         <li><span>02</span><div><h3>Bring your own access</h3><p>Connect a Latch token and choose your model and private strategy.</p></div></li>
         <li><span>03</span><div><h3>Let the arguments play</h3><p>Both players ready up. The clock runs. The audience votes when time is up.</p></div></li></ol>
