@@ -4,12 +4,13 @@ import { drizzle as sqliteDrizzle } from 'drizzle-orm/better-sqlite3';
 import { drizzle as pgDrizzle } from 'drizzle-orm/node-postgres';
 import { sql, type SQL } from 'drizzle-orm';
 import pg from 'pg';
+import { postgresConfig } from './postgres.js';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { env, projectRoot } from '../config/env.js';
 export type Query = <T extends object>(statement: SQL) => Promise<T[]>;
 const isPostgres = env.DATABASE_URL.startsWith('postgres');
-const pool = isPostgres ? new pg.Pool({ connectionString: env.DATABASE_URL }) : null;
+const pool = isPostgres ? new pg.Pool(postgresConfig()) : null;
 const sqlitePath = resolve(projectRoot, env.DATABASE_URL.replace(/^file:/, ''));
 if (!isPostgres) mkdirSync(dirname(sqlitePath), { recursive: true });
 const sqlite = isPostgres ? null : new Database(sqlitePath);
@@ -44,6 +45,7 @@ export function transaction<T>(action: (execute: Query) => Promise<T>): Promise<
 export async function migrate() {
   const migration = readFileSync(resolve(projectRoot, 'backend/src/db/migrations/0001_initial.sql'), 'utf8');
   await transaction(async execute => {
+    if (pool) { await execute(sql.raw('SELECT pg_advisory_xact_lock(78261423)')); await execute(sql.raw('CREATE SCHEMA IF NOT EXISTS agora')); }
     for (const statement of migration.split(';').filter(value => value.trim())) await execute(sql.raw(statement));
   });
 }

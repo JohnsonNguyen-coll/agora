@@ -7,6 +7,7 @@ export async function streamRoom(id: string, request: FastifyRequest, reply: Fas
   let cursor = typeof header === 'string' && /^\d+$/.test(header) ? Number(header) : 0;
   let closed = false, busy = false;
   reply.hijack();
+  for (const [name, value] of Object.entries(reply.getHeaders())) { if (value !== undefined) reply.raw.setHeader(name, value); }
   reply.raw.writeHead(200, {
     'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache, no-transform',
     Connection: 'keep-alive', 'X-Accel-Buffering': 'no'
@@ -32,7 +33,8 @@ export async function streamRoom(id: string, request: FastifyRequest, reply: Fas
   }
   const timer = setInterval(() => { void poll(); }, 1000);
   const heartbeat = setInterval(() => { if (!closed) reply.raw.write(': heartbeat\n\n'); }, 15000);
-  const cleanup = () => { closed = true; clearInterval(timer); clearInterval(heartbeat); };
+  const reconnect = setTimeout(() => { reply.raw.end(); }, 55000);
+  const cleanup = () => { closed = true; clearInterval(timer); clearInterval(heartbeat); clearTimeout(reconnect); };
   reply.raw.on('close', cleanup);
   await poll();
 }

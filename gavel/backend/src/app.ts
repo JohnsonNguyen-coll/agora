@@ -1,4 +1,6 @@
 import Fastify from 'fastify';
+import { sql } from 'drizzle-orm';
+import { query } from './db/client.js';
 import cookie from '@fastify/cookie';
 import rateLimit from '@fastify/rate-limit';
 import staticPlugin from '@fastify/static';
@@ -13,7 +15,11 @@ import { roomRoutes } from './modules/rooms/controller.js';
 export async function buildApp() {
   const app = Fastify({ logger: loggerOptions, bodyLimit: 16000, requestTimeout: 30000 });
   await app.register(cookie, { secret: env.SESSION_SECRET });
-  await app.register(rateLimit, { max: 120, timeWindow: '1 minute' });
+  await app.register(rateLimit, { max: 120, timeWindow: '1 minute', keyGenerator: request => {
+    const cookie = request.cookies.gavel_session;
+    const session = cookie ? request.unsignCookie(cookie) : null;
+    return session?.valid && session.value ? session.value : request.ip;
+  } });
   sessions(app);
   app.setErrorHandler((error, request, reply) => {
     if (error instanceof ZodError) return reply.code(400).send({
@@ -28,9 +34,14 @@ export async function buildApp() {
     request.log.error({ errorType: error instanceof Error ? error.name : 'UnknownError' }, 'Request failed');
     return reply.code(500).send({ code: 'server_error', error: 'The request could not be completed.' });
   });
+  app.get('/health', async (_request, reply) => {
+    reply.header('Cache-Control', 'no-store');
+    try { await query(sql`SELECT 1`); return { status: 'ok' }; }
+    catch { return reply.code(503).send({ status: 'unavailable' }); }
+  });
   roomRoutes(app);
   const root = resolve(projectRoot, 'frontend/dist');
-  if (existsSync(root)) {
+  if (env.SERVE_FRONTEND === 'true' && existsSync(root)) {
     await app.register(staticPlugin, { root });
     app.setNotFoundHandler((req, reply) => req.url.startsWith('/api/')
       ? reply.code(404).send({ code: 'not_found', error: 'Route not found.' })

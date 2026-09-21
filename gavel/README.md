@@ -17,6 +17,12 @@ The local smoke run currently fails because no test latch/model has been configu
 No fake matches or simulated output are used to hide that missing step.
 The clock/turn/voting surfaces are ready for real execution data but no match can start yet.
 
+## Separate hosting
+
+Supabase Postgres + Vercel frontend + Railway backend are configured in
+[deploy/README.md](deploy/README.md). Fill the ignored .env.railway and .env.vercel files.
+Production tables use the private agora schema; local SQLite still works.
+
 ## Run locally
 
 Use Node.js 20 and npm. The checked-in .nvmrc selects Node 20.
