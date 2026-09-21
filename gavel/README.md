@@ -41,7 +41,7 @@ It never overwrites an existing .env or generates a Latch credential.
 
 ## Live Latch setup
 
-Read [the integration contract](../docs/latch-api.md) first.
+Read [the integration contract](docs/latch-api.md) first.
 In Latch, make a throwaway token routing to the Claude Messages API with a real stored
 provider credential. The provider credential stays in Latch.
 Add LATCH_SMOKE_TOKEN and LATCH_MODEL to the ignored local .env, then run:
