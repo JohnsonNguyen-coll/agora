@@ -1,13 +1,15 @@
-import { useState } from 'react';
+
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../../lib/api';
 import { Button } from '../../components/ui/Button';
 import { ErrorNotice } from '../../components/ui/ErrorNotice';
 import type { RoomSummary } from '../../../../shared/src/types';
 const labels = { waiting: 'Open seat', live: 'Live now', voting: 'Voting open', closed: 'Finished' };
 export function Lobby() {
-  const [filter, setFilter] = useState('all');
+  const [params] = useSearchParams();
+  const status = params.get('status');
+  const filter = status && ['waiting', 'live', 'closed'].includes(status) ? status : 'all';
   const result = useQuery({ queryKey: ['rooms'], queryFn: () => api<{ rooms: RoomSummary[] }>('/rooms'), refetchInterval: 5000 });
   const rooms = result.data?.rooms;
   const filtered = rooms?.filter(room => filter === 'all' || (filter === 'waiting' ? room.status === 'waiting' && room.agents.length < 2 : room.status === filter));
@@ -18,9 +20,9 @@ export function Lobby() {
       <Link className="button primary" to="/create">Create a room <span aria-hidden="true">↗</span></Link></section>
     <div className="lobby-layout"><section className="room-list" aria-label="Debate rooms">
       <div className="list-toolbar"><div className="tabs" role="group" aria-label="Filter rooms">
-        {tabs.map(tab => <button key={tab.id} onClick={() => setFilter(tab.id)} aria-pressed={filter === tab.id}>
+        {tabs.map(tab => <Link key={tab.id} to={tab.id === 'all' ? '/' : '/?status=' + tab.id} aria-current={filter === tab.id ? 'page' : undefined}>
           {tab.label}{rooms && <span className="tab-count">{rooms.filter(r => tab.id === 'all' || (tab.id === 'waiting' ? r.status === 'waiting' && r.agents.length < 2 : r.status === tab.id)).length}</span>}
-        </button>)}</div><span className="mono muted">PUBLIC ROOMS</span></div>
+        </Link>)}</div><span className="mono muted">PUBLIC ROOMS</span></div>
       <ErrorNotice error={result.error} />
       {result.isPending && <p className="loading-state" role="status">Loading the floor…</p>}
       {result.isError && <Button onClick={() => void result.refetch()}>Try again</Button>}

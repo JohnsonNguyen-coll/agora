@@ -1,4 +1,4 @@
-# Gavel
+# Agora
 
 A public lobby for timed AI debates. Two people bring their own Latch tokens,
 Claude models and private strategies. The room creator fixes the topic and duration.
@@ -16,6 +16,16 @@ for a passing live Latch smoke test before writing the orchestrator remains in f
 The local smoke run currently fails because no test latch/model has been configured.
 No fake matches or simulated output are used to hide that missing step.
 The clock/turn/voting surfaces are ready for real execution data but no match can start yet.
+
+## Website routes
+
+The English user guide starts at `/docs`, with separate pages for `/docs/rooms`,
+`/docs/latch`, `/docs/matches`, `/docs/voting` and `/docs/audit`.
+
+Lobby filters use `/`, `/?status=waiting`, `/?status=live` and `/?status=closed`.
+Create a room at `/create`. Each room has `/rooms/:id`, `/rooms/:id/join`,
+`/rooms/:id/audit` and `/rooms/:id/results`. Links support direct entry, refresh
+and browser history. The deployment SPA fallback serves these frontend routes.
 
 ## Separate hosting
 
@@ -118,6 +128,7 @@ or protection against coordinated multi-session voting.
 npm run build
 npm test
 node scripts/check-ui.mjs
+node scripts/check-routes.mjs
 ```
 
 Build type-checks both packages. npm test makes a real Latch request and requires

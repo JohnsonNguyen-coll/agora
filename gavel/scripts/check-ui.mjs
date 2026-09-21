@@ -17,7 +17,7 @@ try {
   if (rooms.length === 0) await page.getByRole('heading', { name: 'The floor is yours.' }).waitFor();
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   await page.screenshot({ path: new URL('lobby-desktop.png', destination).pathname.replace(/^\/(\w:)/, '$1'), fullPage: true });
-  await page.getByRole('button', { name: /Open seats/ }).click();
+  await page.getByRole('link', { name: /Open seats/ }).click();
   await page.getByRole('link', { name: 'Create a room', exact: true }).first().click();
   await page.getByRole('heading', { name: 'Set the terms.' }).waitFor();
   assert.equal(await page.getByLabel('Latch token').getAttribute('type'), 'password');

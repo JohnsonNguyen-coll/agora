@@ -42,9 +42,9 @@ em { font-weight: 400; }
 .lobby-layout { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 48px; }
 .list-toolbar { min-height: 56px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); gap: 16px; }
 .tabs { display: flex; gap: 24px; flex-wrap: wrap; }
-.tabs button { position: relative; padding: 16px 0; color: var(--muted); font-size: 13px; background: none; border: 0; white-space: nowrap; }
-.tabs button[aria-pressed='true'] { color: var(--text); }
-.tabs button[aria-pressed='true']::after { content: ''; position: absolute; height: 1px; background: var(--text); bottom: -1px; left: 0; right: 0; }
+.tabs a { position: relative; padding: 16px 0; color: var(--muted); font-size: 13px; background: none; border: 0; white-space: nowrap; }
+.tabs a[aria-current='page'] { color: var(--text); }
+.tabs a[aria-current='page']::after { content: ''; position: absolute; height: 1px; background: var(--text); bottom: -1px; left: 0; right: 0; }
 .tab-count { margin-left: 8px; color: var(--muted); font: 12px var(--mono); }
 .empty-state { text-align: center; }
 .lobby-empty { min-height: 348px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; }

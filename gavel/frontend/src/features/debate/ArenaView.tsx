@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Room } from '../../../../shared/src/types';
 import { useRoom } from '../room/useRoom';
 import { api } from '../../lib/api';
 import { Button } from '../../components/ui/Button';
 import { ErrorNotice } from '../../components/ui/ErrorNotice';
-import { JoinRoom } from '../room/JoinRoom';
+import { RoomNavigation } from '../room/RoomNavigation';
 import { Transcript } from './Transcript';
 import { Seats } from './Seats';
 import { RoomClock } from './RoomClock';
@@ -15,7 +15,8 @@ import { VoteBar } from '../vote/VoteBar';
 import { exportTranscript } from './export';
 export function ArenaView() {
   const { id, data: room, error, runtime, connected } = useRoom();
-  const [joining, setJoining] = useState(false), [auditOpen, setAuditOpen] = useState(false), [copyText, setCopyText] = useState('Copy room link');
+  const [copyText, setCopyText] = useState('Copy room link');
+  const navigate = useNavigate();
   const client = useQueryClient();
   const ready = useMutation({ mutationFn: () => api<Room>('/rooms/' + id + '/ready', {}),
     onSuccess: value => client.setQueryData(['room', id], value) });
@@ -33,17 +34,16 @@ export function ArenaView() {
       <RoomClock end={room.endsAt} minutes={room.durationMinutes} live={room.status === 'live'} /></header>
     <div className="arena-actions"><Button className="quiet" onClick={() => void copy()}>{copyText}</Button>
       <Button className="quiet" onClick={() => exportTranscript(room)} disabled={!room.transcript.length}>Export transcript</Button>
-      <Button className="quiet" onClick={() => setAuditOpen(!auditOpen)}>{auditOpen ? 'Hide audit trail' : 'View audit trail'}</Button></div>
+      <Link className="button quiet" to={'/rooms/' + id + '/audit'}>View audit trail</Link></div><RoomNavigation id={id} />
     {runtime && !runtime.debateAvailable && room.status === 'waiting' && <div className="availability-notice" role="status">{runtime.reason} You can create or join a room in the meantime.</div>}
-    <div className={'arena-layout ' + (auditOpen ? 'audit-visible' : '')}><div className="arena-main">
-      <Seats room={room} onJoin={() => setJoining(true)} />
+    <div className="arena-layout"><div className="arena-main">
+      <Seats room={room} onJoin={() => navigate('/rooms/' + id + '/join')} />
       {room.status === 'waiting' && me && <div className="ready-strip"><p>{me.ready ? 'You’re ready. Waiting for your opponent.' : 'Ready to stand behind your argument?'}</p>
         <Button className="primary" disabled={me.ready || ready.isPending || !runtime?.debateAvailable} onClick={() => ready.mutate()}>{me.ready ? 'Ready' : ready.isPending ? 'Confirming…' : 'I’m ready'}</Button></div>}
       <ErrorNotice error={ready.error} /><Transcript turns={room.transcript} agents={room.agents} live={room.status === 'live'} />
       {room.endReason && <p className="end-reason">{room.endReason}</p>}
       <VoteBar room={room} />
       {['voting','closed'].includes(room.status) && <Link className="text-link results-link" to={'/rooms/' + id + '/results'}>View results →</Link>}
-    </div><AuditRail id={id} open={auditOpen} onClose={() => setAuditOpen(false)} /></div>
-    {joining && <JoinRoom id={id} side={room.agents.some(a => a.side === 'FOR') ? 'AGAINST' : 'FOR'} open onClose={() => setJoining(false)} />}
+    </div><AuditRail id={id} /></div>
   </div>;
 }
