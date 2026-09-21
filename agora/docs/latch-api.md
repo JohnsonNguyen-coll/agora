@@ -84,7 +84,7 @@ No fake Latch receipts, hashes, usage counts, rooms, transcripts or votes.
 
 ## Live gate
 Before implementing the debate orchestrator, run backend/scripts/latch-smoke.ts against a real throwaway latch.
-Configure LATCH_SMOKE_TOKEN and LATCH_MODEL in the ignored gavel/.env, never in chat.
+Configure LATCH_SMOKE_TOKEN and LATCH_MODEL in the ignored agora/.env, never in chat.
 The script must fail on missing configuration, stream a real short answer, and record actual correlation/usage.
 Do not claim this proves mint/revoke or Activity retrieval: those operations were removed from scope.
 A separate rejected-call run may verify a user-revoked token after revocation in the Latch dashboard.

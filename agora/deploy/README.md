@@ -1,6 +1,6 @@
 # Agora: Supabase + Vercel + Railway
 
-Repository directory is still gavel; these instructions do not rename existing source.
+The project directory is agora; use it as the deployment root.
 No deployment has been performed. Match execution remains behind the original live-smoke gate.
 
 ## Topology
@@ -26,7 +26,7 @@ Source: [database connections](https://supabase.com/docs/guides/database/connect
 
 ## 2. Railway backend
 
-Connect this repository and set Root Directory to /gavel. Railway detects the Dockerfile.
+Connect this repository and set Root Directory to /agora. Railway detects the Dockerfile.
 In Service Settings set Start Command to npm run start -w backend, Healthcheck Path to /health,
 Healthcheck Timeout to 120 seconds, Restart Policy to On Failure, and replicas to 1.
 Use dashboard settings for this new service; Railway marks legacy railway.json config as deprecated.
@@ -43,7 +43,7 @@ Source: [Railway Fastify](https://docs.railway.com/guides/fastify).
 
 ## 3. Vercel frontend
 
-Connect the same repository. Set Root Directory to gavel.
+Connect the same repository. Set Root Directory to agora.
 Set RAILWAY_BACKEND_URL using vercel.env.example or the ignored .env.vercel copy.
 vercel.ts supplies install/build/output settings and reads that variable at deployment time.
 Only frontend/dist is published. Database and token secrets belong only on Railway.
@@ -67,10 +67,10 @@ Source: [Vercel limits](https://vercel.com/docs/limits).
 - Railway: APP_ORIGIN, DATABASE_URL, and DATABASE_SSL_CA when your Supabase certificate needs it.
 - The ignored .env.railway has generated SESSION_SECRET and TOKEN_ENCRYPTION_KEY; copy them to Railway.
 - Vercel: RAILWAY_BACKEND_URL.
-- Local live test: LATCH_SMOKE_TOKEN and LATCH_MODEL in gavel/.env.
+- Local live test: LATCH_SMOKE_TOKEN and LATCH_MODEL in agora/.env.
 
 The .env.railway/.env.vercel files are reference inputs for the dashboards, not automatically loaded locally.
-The local server continues to read gavel/.env and platform environment variables take precedence.
+The local server continues to read agora/.env and platform environment variables take precedence.
 Never commit the filled files or send credentials in chat.
 
 ## Deployment verification still required

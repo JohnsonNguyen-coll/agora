@@ -1,4 +1,4 @@
-// Vercel project Root Directory: gavel. No database or Latch secrets on Vercel.
+// Vercel project Root Directory: agora. No database or Latch secrets on Vercel.
 const value = process.env.RAILWAY_BACKEND_URL;
 if (!value) throw new Error('Set RAILWAY_BACKEND_URL in the Vercel project environment.');
 const backend = new URL(value);

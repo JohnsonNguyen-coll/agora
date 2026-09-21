@@ -38,7 +38,7 @@ Production tables use the private agora schema; local SQLite still works.
 Use Node.js 20 and npm. The checked-in .nvmrc selects Node 20.
 
 ```sh
-cd gavel
+cd agora
 npm ci
 npm run setup
 npm run dev

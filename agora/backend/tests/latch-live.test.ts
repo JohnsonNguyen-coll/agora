@@ -4,7 +4,7 @@ import '../src/config/env.js';
 import { callModel } from '../src/modules/latch/client.js';
 test('a participant-owned latch streams a real model completion', { timeout: 95000 }, async () => {
   const token = process.env.LATCH_SMOKE_TOKEN, model = process.env.LATCH_MODEL;
-  assert.ok(token, 'Set LATCH_SMOKE_TOKEN in gavel/.env; this test never substitutes a proxy.');
+  assert.ok(token, 'Set LATCH_SMOKE_TOKEN in agora/.env; this test never substitutes a proxy.');
   assert.ok(model, 'Set LATCH_MODEL to a model allowed by the throwaway latch.');
   const deltas: string[] = [];
   const result = await callModel(token, {

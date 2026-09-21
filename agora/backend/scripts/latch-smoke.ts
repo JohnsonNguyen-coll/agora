@@ -5,7 +5,7 @@ import { callModel } from '../src/modules/latch/client.js';
 import { LatchError } from '../src/modules/latch/types.js';
 const token = process.env.LATCH_SMOKE_TOKEN, model = process.env.LATCH_MODEL;
 if (!token || !model) {
-  console.error('Live smoke blocked: set LATCH_SMOKE_TOKEN and LATCH_MODEL in gavel/.env. No simulated run is available.');
+  console.error('Live smoke blocked: set LATCH_SMOKE_TOKEN and LATCH_MODEL in agora/.env. No simulated run is available.');
   process.exitCode = 1;
 } else {
   try {
