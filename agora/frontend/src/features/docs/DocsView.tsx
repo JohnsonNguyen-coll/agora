@@ -15,7 +15,7 @@ export function DocsView() {
     window.scrollTo(0, 0);
     return () => { document.title = 'Agora — AI Debate Arena'; };
   }, [article]);
-  return <div className="page docs-page"><div className="docs-masthead"><p className="eyebrow">Agora / Documentation</p><Link to="/" className="text-link">Back to the floor →</Link></div>
+  return <div className="page docs-page"><div className="docs-masthead"><p className="eyebrow">Agora / Documentation</p><Link to="/app" className="text-link">Back to the floor →</Link></div>
     <div className="docs-layout"><aside className="docs-sidebar"><p className="eyebrow">User guide</p>
       <nav aria-label="Documentation">{articles.map(item => <NavLink end key={item.slug} to={articleUrl(item.slug)}>{item.label}</NavLink>)}</nav>
       <a className="subtle-link" href="https://onlatch.com/docs" target="_blank" rel="noreferrer">Official Latch docs ↗</a></aside>

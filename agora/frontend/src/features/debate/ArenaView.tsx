@@ -24,26 +24,26 @@ export function ArenaView() {
     try { await navigator.clipboard.writeText(window.location.href); setCopyText('Link copied'); }
     catch { setCopyText('Copy the URL from your browser'); }
   }
-  if (error) return <div className="page"><ErrorNotice error={error} /><Link to="/">Back to lobby</Link></div>;
+  if (error) return <div className="page"><ErrorNotice error={error} /><Link to="/app">Back to lobby</Link></div>;
   if (!room) return <div className="page loading-state">Loading the room…</div>;
   const me = room.agents.find(a => a.side === room.mySide);
-  return <div className="page arena-page"><div className="arena-breadcrumb"><Link to="/">← The floor</Link>
+  return <div className="page arena-page"><div className="arena-breadcrumb"><Link to="/app">← The floor</Link>
     <span className="mono muted">{connected ? 'CONNECTED' : 'RECONNECTING'}</span></div>
     <header className="arena-header"><div><p className="eyebrow">{room.status === 'waiting' ? 'Waiting for the opening bell' : room.status}</p><h1>{room.topic}</h1>
       <p className="mono muted">{room.turns} {room.turns === 1 ? 'TURN' : 'TURNS'} RECORDED</p></div>
       <RoomClock end={room.endsAt} minutes={room.durationMinutes} live={room.status === 'live'} /></header>
     <div className="arena-actions"><Button className="quiet" onClick={() => void copy()}>{copyText}</Button>
       <Button className="quiet" onClick={() => exportTranscript(room)} disabled={!room.transcript.length}>Export transcript</Button>
-      <Link className="button quiet" to={'/rooms/' + id + '/audit'}>View audit trail</Link></div><RoomNavigation id={id} />
+      <Link className="button quiet" to={'/app/rooms/' + id + '/audit'}>View audit trail</Link></div><RoomNavigation id={id} />
     {runtime && !runtime.debateAvailable && room.status === 'waiting' && <div className="availability-notice" role="status">{runtime.reason} You can create or join a room in the meantime.</div>}
     <div className="arena-layout"><div className="arena-main">
-      <Seats room={room} onJoin={() => navigate('/rooms/' + id + '/join')} />
+      <Seats room={room} onJoin={() => navigate('/app/rooms/' + id + '/join')} />
       {room.status === 'waiting' && me && <div className="ready-strip"><p>{me.ready ? 'You’re ready. Waiting for your opponent.' : 'Ready to stand behind your argument?'}</p>
         <Button className="primary" disabled={me.ready || ready.isPending || !runtime?.debateAvailable} onClick={() => ready.mutate()}>{me.ready ? 'Ready' : ready.isPending ? 'Confirming…' : 'I’m ready'}</Button></div>}
       <ErrorNotice error={ready.error} /><Transcript turns={room.transcript} agents={room.agents} live={room.status === 'live'} />
       {room.endReason && <p className="end-reason">{room.endReason}</p>}
       <VoteBar room={room} />
-      {['voting','closed'].includes(room.status) && <Link className="text-link results-link" to={'/rooms/' + id + '/results'}>View results →</Link>}
+      {['voting','closed'].includes(room.status) && <Link className="text-link results-link" to={'/app/rooms/' + id + '/results'}>View results →</Link>}
     </div><AuditRail id={id} /></div>
   </div>;
 }

@@ -6,6 +6,7 @@ import './styles/tokens.css';
 import './styles/globals.css';
 import './styles/arena.css';
 import './styles/docs.css';
+import './styles/landing.css';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode><Providers><AppRouter /></Providers></React.StrictMode>
 );

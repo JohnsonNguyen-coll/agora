@@ -8,8 +8,8 @@ import { ErrorNotice } from '../../components/ui/ErrorNotice';
 export function AuditView() {
   const { id, data: room, error } = useRoom();
   const audit = useQuery({ queryKey: ['audit', id], queryFn: () => api<AuditResult>('/rooms/' + id + '/audit'), enabled: Boolean(room), refetchInterval: 5000 });
-  if (error) return <div className="page"><ErrorNotice error={error} /><Link to="/">Back to lobby</Link></div>;
-  return <div className="page audit-page"><Link className="back-link" to="/">← The floor</Link>
+  if (error) return <div className="page"><ErrorNotice error={error} /><Link to="/app">Back to lobby</Link></div>;
+  return <div className="page audit-page"><Link className="back-link" to="/app">← The floor</Link>
     <p className="eyebrow">Room record</p><h1>Audit trail.</h1><p className="lede">{room?.topic ?? 'Loading the room…'}</p>
     <RoomNavigation id={id} /><ErrorNotice error={audit.error} />
     {audit.data ? <><div className="audit-intro"><h2>{audit.data.valid ? 'The stored chain is intact.' : 'The chain needs attention.'}</h2>

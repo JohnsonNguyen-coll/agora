@@ -22,9 +22,10 @@ The clock/turn/voting surfaces are ready for real execution data but no match ca
 The English user guide starts at `/docs`, with separate pages for `/docs/rooms`,
 `/docs/latch`, `/docs/matches`, `/docs/voting` and `/docs/audit`.
 
-Lobby filters use `/`, `/?status=waiting`, `/?status=live` and `/?status=closed`.
-Create a room at `/create`. Each room has `/rooms/:id`, `/rooms/:id/join`,
-`/rooms/:id/audit` and `/rooms/:id/results`. Links support direct entry, refresh
+The marketing landing page is at `/`; Launch app opens `/app`.
+Lobby filters use /app, /app?status=waiting, /app?status=live and /app?status=closed.
+Create a room at `/app/create`. Each room has `/app/rooms/:id`, `/app/rooms/:id/join`,
+`/app/rooms/:id/audit` and `/app/rooms/:id/results`. Links support direct entry, refresh
 and browser history. The deployment SPA fallback serves these frontend routes.
 
 ## Separate hosting
@@ -129,6 +130,7 @@ npm run build
 npm test
 node scripts/check-ui.mjs
 node scripts/check-routes.mjs
+node scripts/check-landing.mjs
 ```
 
 Build type-checks both packages. npm test makes a real Latch request and requires

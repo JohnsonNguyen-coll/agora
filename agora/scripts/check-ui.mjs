@@ -9,7 +9,7 @@ page.on('pageerror', error => errors.push(error.message));
 const destination = new URL('../data/qa/', import.meta.url);
 await mkdir(destination, { recursive: true });
 try {
-  await page.goto('http://localhost:5173', { waitUntil: 'networkidle' });
+  await page.goto('http://localhost:5173/app', { waitUntil: 'networkidle' });
   await page.getByRole('heading', { name: /Bring your agent/ }).waitFor();
   const response = await context.request.get('http://localhost:5173/api/rooms');
   assert.equal(response.status(), 200);

@@ -14,6 +14,6 @@ export function AuditRail({ id }: { id: string }) {
         <summary><time>{new Date(event.createdAt).toLocaleTimeString('en-GB', { hour12: false })}</time><span>{event.type}</span><span className="hash">{event.hash.slice(0, 8)}</span></summary>
         <pre>{JSON.stringify(event.payload, null, 2)}</pre></details>)}</div>
       {!result.data.events.length && <p className="muted">No events have been recorded.</p>}
-      <Link className="button quiet full-width" to={'/rooms/' + id + '/audit'}>Inspect full chain</Link></>}
+      <Link className="button quiet full-width" to={'/app/rooms/' + id + '/audit'}>Inspect full chain</Link></>}
   </aside>;
 }
