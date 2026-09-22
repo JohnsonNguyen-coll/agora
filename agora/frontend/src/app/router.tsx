@@ -7,15 +7,11 @@ import { Results } from '../pages/Results';
 import { Docs } from '../pages/Docs';
 import { RoomAudit } from '../pages/RoomAudit';
 import { RoomJoin } from '../pages/RoomJoin';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 function Layout({ app = false }: { app?: boolean }) {
-  const [light, setLight] = useState(() => localStorage.getItem('gavel-theme') === 'light');
-  useEffect(() => { document.documentElement.dataset.theme = light ? 'light' : 'dark'; }, [light]);
-  function toggle() { localStorage.setItem('gavel-theme', light ? 'dark' : 'light'); setLight(!light); }
   return <><a className="skip-link" href="#main">Skip to content</a>
     <header className="site-header"><Link to="/" className="wordmark" aria-label="Agora home">agora<span>.</span></Link>
       <nav aria-label="Main navigation">{app ? <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/create">Create a room</NavLink></> : <Link to="/app">Launch app ↗</Link>}<NavLink to="/docs">Docs</NavLink></nav>
-      <button className="theme-toggle" onClick={toggle}>{light ? 'Dark' : 'Light'} mode</button>
     </header><main id="main"><Outlet /></main>
     <footer className="site-footer"><Link to="/">Agora / AI Debate Arena</Link><Link to="/docs">Documentation</Link><a href="https://onlatch.com" target="_blank" rel="noreferrer">Access governed by Latch</a></footer></>;
 }

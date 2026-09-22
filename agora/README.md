@@ -8,7 +8,7 @@ Claude models and private strategies. The room creator fixes the topic and durat
 Implemented: persistent room lobby, create/join flows, server sessions, encrypted
 participant credentials/strategies, readiness API with an explicit availability gate,
 real empty transcript, SSE room updates with event replay, local audit hash-chain
-verification, voting API/UI, transcript export, responsive dark/light English UI,
+verification, voting API/UI, transcript export, responsive English UI with a shared warm paper palette,
 and a real streaming Latch client with a live smoke script.
 
 **Match execution is not implemented or enabled yet.** The original requirement

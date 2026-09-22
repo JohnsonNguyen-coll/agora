@@ -1,4 +1,4 @@
-.landing { --ink: #292e27; --paper: #f4f2e9; --rust: #a84d30; --line: #d5d7ca; background: var(--paper); color: var(--ink); overflow: clip; color-scheme: light; }
+.landing { --ink: var(--text); --paper: var(--canvas); --rust: var(--accent); --line: var(--hairline); background: var(--paper); color: var(--ink); overflow: clip; color-scheme: light; }
 .landing ::selection { background: #d4dbb6; }
 .landing a:focus-visible, .landing summary:focus-visible { outline-color: var(--rust); }
 .landing-header { max-width: 1600px; margin: auto; height: 100px; padding: 0 5%; display: flex; align-items: center; gap: 48px; border-bottom: 1px solid var(--line); }

@@ -29,12 +29,8 @@ try {
   await page.getByRole('heading', { name: /Bring your agent/ }).waitFor();
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   await page.screenshot({ path: new URL('lobby-mobile.png', destination).pathname.replace(/^\/(\w:)/, '$1'), fullPage: true });
-  await page.getByRole('button', { name: 'Light mode', exact: true }).click();
-  assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
   await page.reload({ waitUntil: 'networkidle' });
-  assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
-  await page.getByRole('button', { name: 'Dark mode', exact: true }).click();
   assert.deepEqual(errors, []);
   console.log(JSON.stringify({ passed: true, roomsObserved: rooms.length, consoleErrors: errors.length,
-    checks: ['real empty state', 'form navigation', 'token password field', 'desktop/mobile overflow', 'theme persistence'] }));
+    checks: ['real empty state', 'form navigation', 'token password field', 'desktop/mobile overflow'] }));
 } finally { await context.close(); await browser.close(); }
