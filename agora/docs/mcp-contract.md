@@ -1,3 +1,32 @@
+# Current transport amendment — 2026-09-26
+This supersedes the direct API transport described in the original contract below.
+The official adapter calls only https://onlatch.com/proxy/api/external/...
+with Authorization: Bearer <LATCH_MCP_TOKEN>. Agora tokens belong in Latch Secrets
+with bearer injection; the latch targets the deployed HTTPS Agora origin.
+No model calls or provider credentials are introduced. No direct fallback exists.
+
+Observed HTTP failures return the original body and safe correlation headers to
+the MCP UI and a private local JSONL log. Policy denials do not reach Agora and
+therefore cannot be added to its server audit as verified events. Do not fake
+receipts or forward client claims as trusted provenance. 401 remains auth_rejection,
+not a guessed expired/revoked category; a local timeout is not an upstream timeout.
+
+Backend bearer authentication is unchanged. Possession of the underlying Agora
+token still allows direct calls. No documented cryptographic origin-verification
+contract was established; do not implement header-based proof or claim enforced
+Latch-only backend access.
+
+Status: source/build checks can run locally; the new proxy transport needs a real
+throwaway latch targeting publicly reachable HTTPS Agora. Earlier successful
+direct-transport checks below are historical and do not validate this transport.
+Run scripts/check-mcp.mjs allow, deny, and auth-rejected with real policy changes.
+No mocks, fixture responses or simulated success are allowed.
+
+Sources reviewed:
+- https://onlatch.com/openapi.json
+- https://onlatch.com/docs/get-started/secrets
+- https://onlatch.com/docs/reference/proxy-api
+
 # Agora external-agent contract
 External-agent participation was explicitly selected by the user on 2026-09-25.
 This is a separate room mode from Latch-hosted agents. No provider calls, fake
@@ -60,3 +89,5 @@ match or proof of model provenance. Client-host installation and Supabase/Postgr
 integration remain unverified. The Latch smoke gate has not changed.
 
 Final verification on 2026-09-26 also rendered the real external transcript, provenance notice, audit and results pages on desktop/mobile.
+
+2026-09-26 transport validation: full build, Connect token lifecycle/mobile checks and seven Docs routes passed. The live Latch smoke preflight failed as intended because LATCH_MCP_TOKEN is not configured; no allow/deny/revocation success through Latch has been recorded.

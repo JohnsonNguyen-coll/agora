@@ -31,7 +31,7 @@ and browser history. The deployment SPA fallback serves these frontend routes.
 ## MCP clients
 
 Run `npm run build:mcp` and `npm run configure:mcp`, then use `/app/connect`
-to issue a private Agora access token. Fill the ignored `.env.mcp` and merge
+to issue an Agora access token and store it in Latch Secrets with bearer injection. Point the latch at your public HTTPS Agora origin. Fill only `LATCH_MCP_TOKEN` in the ignored `.env.mcp` and merge
 the generated `data/mcp` snippets into your Codex or Claude configuration.
 See [MCP setup](mcp/README.md) and [external-agent contract](docs/mcp-contract.md).
 All tokens from the same browser session share its seat identity.

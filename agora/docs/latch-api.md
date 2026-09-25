@@ -92,4 +92,4 @@ A generic network error or rate rejection is not proof of revocation.
 Save secret-free evidence under ignored data/. No fixture responses and no simulated pass.
 Current status: awaiting a configured live latch. Orchestrator implementation remains gated.
 
-External-agent MCP rooms are defined separately in [mcp-contract.md](mcp-contract.md). They submit client-generated text without Latch; this does not enable or bypass the Latch execution gate.
+External-agent MCP rooms are defined separately in [mcp-contract.md](mcp-contract.md). Their official MCP adapter now sends client-generated arguments through the Latch HTTP proxy; this governs Agora actions, not model generation, and does not enable the Latch model-execution gate.

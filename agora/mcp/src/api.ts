@@ -1,29 +1,67 @@
-import { config } from 'dotenv';
-import { resolve } from 'node:path';
-const envFile = process.argv[2];
-if (envFile) {
-  const result = config({ path: resolve(envFile) });
-  if (result.error) throw new Error('Cannot read the configured Agora credential file.');
+import { mkdir, appendFile } from 'node:fs/promises';
+import { dirname } from 'node:path';
+import { latchToken, proxyBase, auditPath } from './config.js';
+interface Observation {
+  timestamp: string; path: string; method: string; source: 'mcp-client-observation';
+  category: string; httpStatus: number | null; body: string; headers: Record<string, string>;
 }
-const rawBase = process.env.AGORA_API_URL, token = process.env.AGORA_ACCESS_TOKEN;
-if (!rawBase || !token || !/^agora_[a-f0-9]{64}$/.test(token))
-  throw new Error('Set AGORA_API_URL and AGORA_ACCESS_TOKEN in the private MCP env file.');
-const base = new URL(rawBase);
-if (base.origin !== rawBase || base.username || base.password ||
-    (base.protocol !== 'https:' && !(base.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(base.hostname))))
-  throw new Error('AGORA_API_URL must be an HTTPS origin, or loopback HTTP for local development.');
+function category(status: number, body: string) {
+  if (status === 401) return 'auth_rejection'; // Expired and revoked are not distinguishable from status alone.
+  if (status === 429) return 'rate_rejection';
+  if (status === 403) {
+    try {
+      const parsed: unknown = JSON.parse(body);
+      if (typeof parsed === 'object' && parsed !== null && 'deniedBy' in parsed && typeof parsed.deniedBy === 'string')
+        return 'policy_denial';
+    } catch { /* Preserve the original body even when it is not JSON. */ }
+  }
+  if (status === 502) return 'gateway_failure';
+  return status >= 400 ? 'http_rejection' : 'success';
+}
+async function result(observation: Observation, isError: boolean) {
+  if (JSON.stringify(observation).includes(latchToken!)) {
+    observation.body = 'Credential reflection blocked; the response was not recorded.';
+    observation.headers = {}; observation.category = 'credential_reflection'; isError = true;
+  }
+  let auditSaved: boolean | null = null;
+  if (isError) {
+    try {
+      await mkdir(dirname(auditPath), { recursive: true });
+      await appendFile(auditPath, JSON.stringify(observation) + '\n', { mode: 0o600 });
+      auditSaved = true;
+    } catch { auditSaved = false; }
+  }
+  // body is the verbatim observed response, encoded as a JSON string without rewriting it.
+  return { isError, content: [{ type: 'text' as const, text: JSON.stringify({ ...observation, auditSaved }) }] };
+}
 export async function call(path: string, body?: unknown) {
-  let response: Response;
+  if (!/^\/(status|rooms(?:\/[a-f0-9-]{36}(?:\/(audit|join|ready|arguments))?)?)$/.test(path))
+    throw new Error('Unsupported Agora MCP route.');
+  const method = body === undefined ? 'GET' : 'POST';
+  const observation: Observation = { timestamp: new Date().toISOString(), path: '/api/external' + path,
+    method, source: 'mcp-client-observation', category: 'network_failure', httpStatus: null, body: '', headers: {} };
+  let response: Response | undefined;
   try {
-    response = await fetch(base.origin + '/api/external' + path, {
-      method: body === undefined ? 'GET' : 'POST', redirect: 'error',
-      headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    response = await fetch(proxyBase + observation.path, {
+      method, redirect: 'error', headers: { Authorization: 'Bearer ' + latchToken,
+        ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }), signal: AbortSignal.timeout(15000)
     });
-  } catch {
-    return { isError: true, content: [{ type: 'text' as const, text: 'Agora could not be reached. Retry by reading the room first; a previous submission may have been saved.' }] };
+    observation.httpStatus = response.status;
+    for (const key of ['x-latch-request-id', 'x-latch-link-id', 'x-latch-mount', 'retry-after']) {
+      const value = response.headers.get(key); if (value !== null) observation.headers[key] = value;
+    }
+    observation.body = await response.text();
+    if (JSON.stringify(observation).includes(latchToken!)) {
+      observation.body = 'Credential reflection blocked; the response was not recorded.';
+      observation.headers = {}; observation.category = 'credential_reflection';
+      return result(observation, true);
+    }
+    observation.category = category(response.status, observation.body);
+    return result(observation, !response.ok);
+  } catch (error) {
+    observation.category = error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError') ? 'local_timeout' : 'network_failure';
+    observation.body = 'The Latch request did not complete. Read the room before retrying: an earlier submission may have been saved.';
+    return result(observation, true);
   }
-  const text = await response.text();
-  if (text.includes(token!)) return { isError: true, content: [{ type: 'text' as const, text: 'Credential reflection blocked.' }] };
-  return { isError: !response.ok, content: [{ type: 'text' as const, text: JSON.stringify({ httpStatus: response.status, body: text }) }] };
 }
