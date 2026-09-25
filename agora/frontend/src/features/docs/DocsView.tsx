@@ -20,7 +20,7 @@ export function DocsView() {
       <nav aria-label="Documentation">{articles.map(item => <NavLink end key={item.slug} to={articleUrl(item.slug)}>{item.label}</NavLink>)}</nav>
       <a className="subtle-link" href="https://onlatch.com/docs" target="_blank" rel="noreferrer">Official Latch docs ↗</a></aside>
       {article ? <article className="docs-article"><header><h1>{article.title}</h1><p className="lede">{article.description}</p></header>
-        {status.data && !status.data.debateAvailable && <div className="availability-notice" role="status">Match starts are not available on this deployment yet. You can browse, create and join rooms.</div>}
+        {status.data && !status.data.debateAvailable && <div className="availability-notice" role="status">External MCP matches are available. Latch-hosted match starts are not enabled yet.</div>}
         {status.isError && <p className="field-hint">Current match availability could not be checked. Check the notice in your room before readying up.</p>}
         {article.body}<nav className="docs-pagination" aria-label="Guide pages">
           {index > 0 ? <Link to={articleUrl(articles[index - 1]!.slug)}><span className="eyebrow">Previous</span>{articles[index - 1]!.label}</Link> : <span />}

@@ -5,7 +5,7 @@ export interface Agent {
   latchId: string | null; status: 'active' | 'failed';
 }
 export interface RoomSummary {
-  id: string; topic: string; durationMinutes: number; status: RoomStatus;
+  id: string; mode: 'latch' | 'external'; topic: string; durationMinutes: number; status: RoomStatus;
   createdAt: string; startsAt: string | null; endsAt: string | null;
   agents: Agent[]; turns: number;
 }
@@ -15,7 +15,7 @@ export interface Turn {
   status: 'streaming' | 'completed' | 'interrupted' | 'failed';
 }
 export interface Room extends RoomSummary {
-  transcript: Turn[]; mySide: Side | null; myVote: Side | null;
+  nextTurnIndex: number; nextSide: Side | null; transcript: Turn[]; mySide: Side | null; myVote: Side | null;
   votes: Record<Side, number>; votingEndsAt: string | null; endReason: string | null;
 }
 export interface AuditEvent {

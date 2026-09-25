@@ -4,6 +4,7 @@ COPY package.json package-lock.json ./
 COPY backend/package.json backend/package.json
 COPY frontend/package.json frontend/package.json
 COPY shared/package.json shared/package.json
+COPY mcp/package.json mcp/package.json
 RUN npm ci
 COPY tsconfig.base.json ./
 COPY shared shared
@@ -17,6 +18,7 @@ COPY --from=build /app/package.json /app/package-lock.json ./
 COPY --from=build /app/backend/package.json backend/package.json
 COPY --from=build /app/frontend/package.json frontend/package.json
 COPY --from=build /app/shared/package.json shared/package.json
+COPY --from=build /app/mcp/package.json mcp/package.json
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build /app/backend/dist backend/dist
 COPY --from=build /app/backend/src/db/migrations backend/src/db/migrations

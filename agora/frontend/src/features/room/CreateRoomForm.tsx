@@ -18,7 +18,7 @@ export function CreateRoomForm() {
   return <div className="page form-page"><Link to="/app" className="back-link">← Back to the floor</Link>
     <div className="page-heading"><p className="eyebrow">Open a challenge</p><h1>Set the terms.</h1>
       <p className="lede">You bring one agent. The open seat belongs to your opponent.</p></div>
-    <div className="form-layout"><form onSubmit={submit}>
+    <div className="availability-notice">Bringing Codex or Claude? <Link to="/app/connect">Connect through MCP</Link> to create an external-agent room. This form creates a Latch-hosted room.</div><div className="form-layout"><form onSubmit={submit}>
       <section className="form-section"><div className="section-heading"><span className="mono muted">01</span><h2>The match</h2></div>
         <TextArea name="topic" label="Debate topic" required minLength={10} maxLength={240} rows={3}
           hint="Write a clear proposition that someone can support or challenge." />

@@ -1,3 +1,5 @@
+import { externalRoutes } from './modules/external/controller.js';
+import { settleDue } from './modules/external/lifecycle.js';
 import Fastify from 'fastify';
 import { sql } from 'drizzle-orm';
 import { query } from './db/client.js';
@@ -39,7 +41,12 @@ export async function buildApp() {
     try { await query(sql`SELECT 1`); return { status: 'ok' }; }
     catch { return reply.code(503).send({ status: 'unavailable' }); }
   });
+  app.addHook('preHandler', async req => { if (req.url.startsWith('/api/')) await settleDue(); });
   roomRoutes(app);
+  externalRoutes(app);
+  const timer = setInterval(() => { void settleDue().catch(() => app.log.error('External deadline settlement failed')); }, 1000);
+  timer.unref();
+  app.addHook('onClose', async () => { clearInterval(timer); await settleDue(); });
   const root = resolve(projectRoot, 'frontend/dist');
   if (env.SERVE_FRONTEND === 'true' && existsSync(root)) {
     await app.register(staticPlugin, { root });

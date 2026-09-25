@@ -1,3 +1,4 @@
+import { authenticate } from '../modules/external/access.js';
 import { randomUUID } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 import { env } from '../config/env.js';
@@ -7,6 +8,10 @@ export function sessions(app: FastifyInstance) {
   app.decorateRequest('sessionId', '');
   app.addHook('onRequest', async (request, reply) => {
     if (!request.url.startsWith('/api/')) return;
+    if (request.url.startsWith('/api/external/')) {
+      request.sessionId = await authenticate(request.headers.authorization);
+      reply.header('Cache-Control', 'no-store'); return;
+    }
     if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method) && request.headers.origin !== env.APP_ORIGIN)
       throw new AppError(403, 'invalid_origin', 'This request did not come from the Gavel app.');
     const signed = request.cookies.gavel_session;

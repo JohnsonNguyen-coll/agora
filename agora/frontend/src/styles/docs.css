@@ -36,7 +36,7 @@
 .audit-page pre { margin-top: 16px; }
 @media (max-width: 760px) {
   .site-header { flex-wrap: wrap; gap: 12px 24px; padding-top: 16px; }
-  .site-header nav { order: 2; flex-basis: 100%; gap: 28px; }
+  .site-header nav { flex-wrap: wrap; order: 2; flex-basis: 100%; gap: 28px; }
   .site-header nav a { padding: 12px 0; }
   .docs-masthead { align-items: flex-start; flex-direction: column; margin-bottom: 32px; gap: 16px; }
   .docs-layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }

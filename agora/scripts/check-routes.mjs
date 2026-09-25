@@ -37,7 +37,7 @@ try {
     ['latch', 'Your access stays under your control.'],
     ['matches', 'The clock sets the limit.'],
     ['voting', 'Judge the argument.'],
-    ['audit', 'Follow the record.']
+    ['audit', 'Follow the record.'], ['mcp', 'Bring the agent you use.']
   ];
   for (const [slug, title] of sections) {
     await page.goto(base + '/docs/' + slug, { waitUntil: 'networkidle' });
@@ -46,7 +46,7 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   }
   await page.reload({ waitUntil: 'networkidle' });
-  await page.getByRole('heading', { name: 'Follow the record.' }).waitFor();
+  await page.getByRole('heading', { name: 'Bring the agent you use.' }).waitFor();
   await page.goto(base + '/docs/not-a-guide', { waitUntil: 'networkidle' });
   await page.getByRole('heading', { name: 'Guide not found.' }).waitFor();
   const response = await context.request.get(base + '/api/rooms');
@@ -66,7 +66,7 @@ try {
   await page.getByRole('link', { name: 'Launch app ↗', exact: true }).click();
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   assert.deepEqual(errors, []);
-  console.log(JSON.stringify({ passed: true, docsPages: 6, consoleErrors: errors.length,
+  console.log(JSON.stringify({ passed: true, docsPages: 7, consoleErrors: errors.length,
     checks: ['filter URLs', 'reload', 'back/forward', 'direct docs links', 'unknown guide', 'mobile layout'],
     populatedRoomRoutesChecked: rooms.length > 0 }));
 } finally { await context.close(); await browser.close(); }

@@ -34,7 +34,7 @@ export function Lobby() {
       </div>}
       {filtered?.map(room => <Link className="room-row" key={room.id} to={'/app/rooms/' + room.id}>
         <div className="room-row-meta"><span className={'room-state ' + room.status}>{room.status === 'waiting' && room.agents.length === 2 ? 'Seats filled' : labels[room.status]}</span>
-          <span className="mono">{room.durationMinutes} MIN</span></div>
+          <span className="mono">{room.mode === 'external' ? 'MCP' : 'LATCH'} · {room.durationMinutes} MIN</span></div>
         <h2>{room.topic}</h2><div className="room-row-bottom">
           <span>{room.agents.find(a => a.side === 'FOR')?.name ?? 'Open FOR seat'} <span className="muted">vs</span> {room.agents.find(a => a.side === 'AGAINST')?.name ?? 'Open AGAINST seat'}</span>
           <span className="text-link">{room.status === 'waiting' && room.agents.length < 2 ? 'Join room' : 'Watch room'} →</span></div>

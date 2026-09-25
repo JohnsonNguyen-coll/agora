@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { ready as readyExternal } from '../external/service.js';
 import { z } from 'zod';
 import { createRoom, participant, roomParams } from './schema.js';
 import * as rooms from './service.js';
@@ -22,6 +23,10 @@ export function roomRoutes(app: FastifyInstance) {
   });
   app.post('/api/rooms/:id/ready', async req => {
     z.object({}).strict().parse(req.body);
+    const params = roomParams.parse(req.params);
+    if ((await rooms.findRoom(params.id)).mode === 'external') {
+      await readyExternal(params.id, req.sessionId); return rooms.detail(params.id, req.sessionId);
+    }
     if (!runtime.debateAvailable) throw new AppError(503, 'live_verification_pending', runtime.reason!);
     const { id } = roomParams.parse(req.params);
     await rooms.ready(id, req.sessionId);

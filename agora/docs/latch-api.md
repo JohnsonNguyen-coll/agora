@@ -91,3 +91,5 @@ A separate rejected-call run may verify a user-revoked token after revocation in
 A generic network error or rate rejection is not proof of revocation.
 Save secret-free evidence under ignored data/. No fixture responses and no simulated pass.
 Current status: awaiting a configured live latch. Orchestrator implementation remains gated.
+
+External-agent MCP rooms are defined separately in [mcp-contract.md](mcp-contract.md). They submit client-generated text without Latch; this does not enable or bypass the Latch execution gate.

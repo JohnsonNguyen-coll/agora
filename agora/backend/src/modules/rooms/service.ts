@@ -9,19 +9,19 @@ import type { Agent, CreateRoomInput, ParticipantInput, Room, RoomSummary, Side 
 const safeAgent = (a: AgentRecord): Agent => ({ id: a.id, name: a.name, model: a.model, side: a.side,
   ready: Boolean(a.ready), status: a.status, latchId: a.latch_id });
 export async function findRoom(id: string, execute: Query = query) {
-  const room = (await execute<RoomRecord>(sql`SELECT * FROM rooms WHERE id=${id}`))[0];
+  const room = (await execute<RoomRecord>(sql`SELECT r.*, CASE WHEN e.room_id IS NULL THEN 'latch' ELSE 'external' END AS mode FROM rooms r LEFT JOIN external_rooms e ON e.room_id=r.id WHERE r.id=${id}`))[0];
   if (!room) throw new AppError(404, 'room_not_found', 'This room could not be found.');
   return room;
 }
 export async function roomAgents(id: string, execute: Query = query) {
-  return execute<AgentRecord>(sql`SELECT * FROM agents WHERE room_id=${id} ORDER BY side DESC`);
+  return execute<AgentRecord>(sql`SELECT * FROM agents WHERE room_id=${id} UNION ALL SELECT id,room_id,session_id,side,name,model,NULL AS strategy,NULL AS latch_token,NULL AS latch_id,ready,status FROM external_agents WHERE room_id=${id} ORDER BY side DESC`);
 }
 function summary(row: RoomRecord, agents: AgentRecord[], turns: number): RoomSummary {
-  return { id: row.id, topic: row.topic, status: row.status, durationMinutes: row.duration_minutes,
+  return { id: row.id, mode: row.mode, topic: row.topic, status: row.status, durationMinutes: row.duration_minutes,
     createdAt: row.created_at, startsAt: row.starts_at, endsAt: row.ends_at, agents: agents.map(safeAgent), turns };
 }
 export async function listRooms() {
-  const rows = await query<RoomRecord>(sql`SELECT * FROM rooms ORDER BY created_at DESC LIMIT 100`);
+  const rows = await query<RoomRecord>(sql`SELECT r.*, CASE WHEN e.room_id IS NULL THEN 'latch' ELSE 'external' END AS mode FROM rooms r LEFT JOIN external_rooms e ON e.room_id=r.id ORDER BY r.created_at DESC LIMIT 100`);
   return Promise.all(rows.map(async row => {
     const count = (await query<{ count: number | string }>(sql`SELECT COUNT(*) AS count FROM turns WHERE room_id=${row.id}`))[0];
     return summary(row, await roomAgents(row.id), Number(count?.count ?? 0));
@@ -32,7 +32,7 @@ export async function detail(id: string, session: string): Promise<Room> {
   const transcript = await query<TurnRecord>(sql`SELECT * FROM turns WHERE room_id=${id} ORDER BY turn_index`);
   const votes = await query<{ side: Side; count: number | string }>(sql`SELECT side,COUNT(*) AS count FROM votes WHERE room_id=${id} GROUP BY side`);
   const mine = (await query<{ side: Side }>(sql`SELECT side FROM votes WHERE room_id=${id} AND session_id=${session}`))[0];
-  return { ...summary(row, agents, transcript.length), mySide: agents.find(a => a.session_id === session)?.side ?? null,
+  return { ...summary(row, agents, transcript.length), nextTurnIndex: transcript.length, nextSide: row.mode === 'external' && row.status === 'live' ? (transcript.length % 2 === 0 ? 'FOR' : 'AGAINST') : null, mySide: agents.find(a => a.session_id === session)?.side ?? null,
     myVote: mine?.side ?? null, votingEndsAt: row.voting_ends_at, endReason: row.end_reason,
     votes: { FOR: Number(votes.find(v => v.side === 'FOR')?.count ?? 0), AGAINST: Number(votes.find(v => v.side === 'AGAINST')?.count ?? 0) },
     transcript: transcript.map(t => ({ id: t.id, roomId: t.room_id, side: t.side, turnIndex: t.turn_index,
@@ -59,6 +59,7 @@ export async function create(input: CreateRoomInput, session: string) {
 export async function join(id: string, session: string, input: ParticipantInput) {
   await transaction(async execute => {
     const room = await findRoom(id, execute), agents = await roomAgents(id, execute);
+    if (room.mode !== 'latch') throw new AppError(409, 'wrong_mode', 'Join this external room through MCP.');
     if (room.status !== 'waiting') throw new AppError(409, 'room_locked', 'This match is no longer accepting players.');
     if (agents.some(a => a.session_id === session)) throw new AppError(409, 'already_joined', 'You already occupy a side in this room.');
     if (agents.length >= 2) throw new AppError(409, 'room_full', 'Both sides have been taken.');

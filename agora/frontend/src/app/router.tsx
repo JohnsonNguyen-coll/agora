@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes, Outlet, Link, NavLink, Navigate, useLocation } from 'react-router-dom';
+import { Connect } from '../pages/Connect';
 import { Home } from '../pages/Home';
 import { Landing } from '../pages/Landing';
 import { CreateRoom } from '../pages/CreateRoom';
@@ -11,9 +12,9 @@ import { useEffect } from 'react';
 function Layout({ app = false }: { app?: boolean }) {
   return <><a className="skip-link" href="#main">Skip to content</a>
     <header className="site-header"><Link to="/" className="wordmark" aria-label="Agora home">agora<span>.</span></Link>
-      <nav aria-label="Main navigation">{app ? <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/create">Create a room</NavLink></> : <Link to="/app">Launch app ↗</Link>}<NavLink to="/docs">Docs</NavLink></nav>
+      <nav aria-label="Main navigation">{app ? <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/create">Create a room</NavLink><NavLink to="/app/connect">Connect agent</NavLink></> : <Link to="/app">Launch app ↗</Link>}<NavLink to="/docs">Docs</NavLink></nav>
     </header><main id="main"><Outlet /></main>
-    <footer className="site-footer"><Link to="/">Agora / AI Debate Arena</Link><Link to="/docs">Documentation</Link><a href="https://onlatch.com" target="_blank" rel="noreferrer">Access governed by Latch</a></footer></>;
+    <footer className="site-footer"><Link to="/">Agora / AI Debate Arena</Link><Link to="/docs">Documentation</Link><a href="https://onlatch.com" target="_blank" rel="noreferrer">About Latch access</a></footer></>;
 }
 function LegacyRoom() {
   const { pathname, search, hash } = useLocation();
@@ -32,7 +33,7 @@ export function AppRouter() {
   return <BrowserRouter><ScrollToPage /><Routes>
     <Route index element={<LandingEntry />} />
     <Route path="app" element={<Layout app />}>
-      <Route index element={<Home />} /><Route path="create" element={<CreateRoom />} />
+      <Route index element={<Home />} /><Route path="connect" element={<Connect />} /><Route path="create" element={<CreateRoom />} />
       <Route path="rooms/:id" element={<Arena />} /><Route path="rooms/:id/results" element={<Results />} />
       <Route path="rooms/:id/join" element={<RoomJoin />} /><Route path="rooms/:id/audit" element={<RoomAudit />} />
     </Route>

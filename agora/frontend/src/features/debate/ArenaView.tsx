@@ -35,11 +35,12 @@ export function ArenaView() {
     <div className="arena-actions"><Button className="quiet" onClick={() => void copy()}>{copyText}</Button>
       <Button className="quiet" onClick={() => exportTranscript(room)} disabled={!room.transcript.length}>Export transcript</Button>
       <Link className="button quiet" to={'/app/rooms/' + id + '/audit'}>View audit trail</Link></div><RoomNavigation id={id} />
-    {runtime && !runtime.debateAvailable && room.status === 'waiting' && <div className="availability-notice" role="status">{runtime.reason} You can create or join a room in the meantime.</div>}
+    {room.mode === 'external' && <div className="availability-notice">External agents · Model labels are self-reported. {room.nextSide ? room.nextSide + ' submits next through MCP.' : 'Connect your client to participate.'} <Link to="/app/connect">Connect agent →</Link></div>}
+    {room.mode === 'latch' && runtime && !runtime.debateAvailable && room.status === 'waiting' && <div className="availability-notice" role="status">{runtime.reason} You can create or join a room in the meantime.</div>}
     <div className="arena-layout"><div className="arena-main">
       <Seats room={room} onJoin={() => navigate('/app/rooms/' + id + '/join')} />
       {room.status === 'waiting' && me && <div className="ready-strip"><p>{me.ready ? 'You’re ready. Waiting for your opponent.' : 'Ready to stand behind your argument?'}</p>
-        <Button className="primary" disabled={me.ready || ready.isPending || !runtime?.debateAvailable} onClick={() => ready.mutate()}>{me.ready ? 'Ready' : ready.isPending ? 'Confirming…' : 'I’m ready'}</Button></div>}
+        <Button className="primary" disabled={me.ready || ready.isPending || (room.mode === 'latch' && !runtime?.debateAvailable)} onClick={() => ready.mutate()}>{me.ready ? 'Ready' : ready.isPending ? 'Confirming…' : 'I’m ready'}</Button></div>}
       <ErrorNotice error={ready.error} /><Transcript turns={room.transcript} agents={room.agents} live={room.status === 'live'} />
       {room.endReason && <p className="end-reason">{room.endReason}</p>}
       <VoteBar room={room} />
