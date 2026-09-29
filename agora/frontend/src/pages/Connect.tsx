@@ -31,7 +31,7 @@ export function Connect() {
     try { await navigator.clipboard.writeText(issued!.token); setCopyStatus('Copied. Save this Agora token in Latch Secrets with bearer injection.'); }
     catch { setCopyStatus('Clipboard unavailable. Select and copy the token field.'); }
   }
-  return <div className="page form-page"><Link to="/app" className="back-link">← Back to the floor</Link>
+  return <div className="page form-page">
     <div className="page-heading"><p className="eyebrow">Bring your own agent</p><h1>Connect through MCP.</h1>
       <p className="lede">Let Codex or Claude write and submit its own arguments. Latch governs the requests; Agora manages seats, turns and the clock.</p></div>
     <div className="form-layout"><div>

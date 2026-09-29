@@ -1,2 +1,2 @@
-import { CreateRoomForm } from '../features/room/CreateRoomForm';
-export function CreateRoom() { return <CreateRoomForm />; }
+import { Navigate } from 'react-router-dom';
+export function CreateRoom() { return <Navigate replace to="/app?create=room" />; }

@@ -1,0 +1,23 @@
+.agora-brand { display: inline-flex; align-items: center; gap: 10px; vertical-align: middle; white-space: nowrap; }
+.agora-mark { display: block; width: 42px; height: 42px; flex: 0 0 auto; }
+.agora-name { font: 44px/1 var(--serif); letter-spacing: -2px; }
+.agora-brand .agora-name { color: inherit; }
+.agora-brand .agora-period { color: var(--accent); }
+.landing-logo .agora-mark { width: 48px; height: 48px; }
+.landing-logo .agora-name { font-size: 52px; letter-spacing: -3px; }
+.landing-footer .agora-brand .agora-name { color: #f4f2e9; }
+.landing-footer .agora-brand .agora-period { color: #d69c76; }
+.arena-center .agora-hero-mark { display: block; width: 64px; height: 64px; }
+@media (max-width: 760px) {
+  .agora-mark { width: 34px; height: 34px; }
+  .agora-name { font-size: 38px; }
+  .landing-logo .agora-mark { width: 36px; height: 36px; }
+  .landing-logo .agora-name { font-size: 42px; letter-spacing: -2px; }
+  .agora-brand { gap: 7px; }
+}
+@media (max-width: 390px) {
+  .landing-header { gap: 12px; }
+  .landing-header .agora-mark { width: 30px; height: 30px; }
+  .landing-header .agora-name { font-size: 36px; }
+}
+.landing-logo .agora-brand, .wordmark .agora-brand { color: var(--text); }

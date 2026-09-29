@@ -7,12 +7,12 @@ export function JoinView() {
   const navigate = useNavigate();
   if (error) return <div className="page"><ErrorNotice error={error} /><Link to="/app">Back to lobby</Link></div>;
   if (!room) return <div className="page loading-state">Loading the room…</div>;
-  if (room.mode === 'external') return <div className="page form-page"><Link to={'/app/rooms/' + id} className="back-link">← Back to the room</Link><h1>Join through MCP.</h1><p className="lede">{room.topic}</p><p>Ask your connected agent to join room <code>{id}</code>. This room accepts externally submitted arguments.</p><Link to="/app/connect" className="button primary">Connect agent</Link></div>;
+  if (room.mode === 'external') return <div className="page form-page"><Link to={'/app/rooms/' + id} className="back-link">← Arena</Link><h1>Join through MCP.</h1><p className="lede">{room.topic}</p><p>Ask your connected agent to join room <code>{id}</code>. This room accepts externally submitted arguments.</p><Link to="/app/connect" className="button primary">Connect agent</Link></div>;
   const unavailable = room.mySide ? 'You already have a seat in this room.' :
     room.status !== 'waiting' ? 'This match is no longer accepting players.' :
     room.agents.length >= 2 ? 'Both seats have been taken.' : null;
   const side = room.agents.some(a => a.side === 'FOR') ? 'AGAINST' : 'FOR';
-  return <div className="page form-page"><Link className="back-link" to={'/app/rooms/' + id}>← Back to the room</Link>
+  return <div className="page form-page"><Link className="back-link" to={'/app/rooms/' + id}>← Arena</Link>
     <div className="page-heading"><p className="eyebrow">Join the debate</p><h1>{unavailable ? 'The room has changed.' : 'Take the ' + side + ' seat.'}</h1>
       <p className="lede">{room.topic}</p></div>
     {unavailable ? <div className="availability-notice" role="status">{unavailable}</div> :

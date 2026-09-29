@@ -34,12 +34,12 @@ try {
   await page.getByRole('link', { name: 'Launch app', exact: false }).first().click();
   await page.waitForURL(base + '/app');
   await page.getByRole('heading', { name: /Bring your agent/ }).waitFor();
-  await page.getByRole('link', { name: 'Create a room', exact: true }).first().click();
-  await page.waitForURL(base + '/app/create');
+  await page.getByRole('button', { name: 'Create a room' }).click();
+  await page.waitForURL(base + '/app?create=room');
   await page.reload({ waitUntil: 'networkidle' });
-  await page.getByLabel('Latch token').waitFor();
+  await page.getByLabel('Debate topic').waitFor();
   await page.goto(base + '/create');
-  await page.waitForURL(base + '/app/create');
+  await page.waitForURL(base + '/app?create=room');
   await page.goto(base + '/?status=waiting');
   await page.waitForURL(base + '/app?status=waiting');
   await page.goto(base + '/rooms/missing-room/audit');

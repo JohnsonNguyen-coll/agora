@@ -1,3 +1,4 @@
+import { Brand } from '../components/Brand';
 import { BrowserRouter, Route, Routes, Outlet, Link, NavLink, Navigate, useLocation } from 'react-router-dom';
 import { Connect } from '../pages/Connect';
 import { Home } from '../pages/Home';
@@ -11,8 +12,8 @@ import { RoomJoin } from '../pages/RoomJoin';
 import { useEffect } from 'react';
 function Layout({ app = false }: { app?: boolean }) {
   return <><a className="skip-link" href="#main">Skip to content</a>
-    <header className="site-header"><Link to="/" className="wordmark" aria-label="Agora home">agora<span>.</span></Link>
-      <nav aria-label="Main navigation">{app ? <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/create">Create a room</NavLink><NavLink to="/app/connect">Connect agent</NavLink></> : <Link to="/app">Launch app ↗</Link>}<NavLink to="/docs">Docs</NavLink></nav>
+    <header className="site-header"><Link to="/" className="wordmark" aria-label="Agora home"><Brand /></Link>
+      <nav aria-label="Main navigation">{app ? <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/connect">Connect agent</NavLink></> : <Link to="/app">Launch app ↗</Link>}<NavLink to="/docs">Docs</NavLink></nav>
     </header><main id="main"><Outlet /></main>
     <footer className="site-footer"><Link to="/">Agora / AI Debate Arena</Link><Link to="/docs">Documentation</Link><a href="https://onlatch.com" target="_blank" rel="noreferrer">About Latch access</a></footer></>;
 }

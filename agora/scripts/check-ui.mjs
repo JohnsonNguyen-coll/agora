@@ -18,13 +18,16 @@ try {
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   await page.screenshot({ path: new URL('lobby-desktop.png', destination).pathname.replace(/^\/(\w:)/, '$1'), fullPage: true });
   await page.getByRole('link', { name: /Open seats/ }).click();
-  await page.getByRole('link', { name: 'Create a room', exact: true }).first().click();
-  await page.getByRole('heading', { name: 'Set the terms.' }).waitFor();
+  await page.getByRole('button', { name: 'Create a room' }).click();
+  await page.getByRole('dialog', { name: 'Create a room' }).waitFor();
+  await page.getByLabel('Debate topic').fill('Should debate rooms use a fixed time limit?');
+  await page.getByRole('button', { name: 'Continue' }).click();
   assert.equal(await page.getByLabel('Latch token').getAttribute('type'), 'password');
   await page.screenshot({ path: new URL('create-desktop.png', destination).pathname.replace(/^\/(\w:)/, '$1'), fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   await page.screenshot({ path: new URL('create-mobile.png', destination).pathname.replace(/^\/(\w:)/, '$1'), fullPage: true });
+  await page.keyboard.press('Escape');
   await page.getByRole('link', { name: 'Lobby', exact: true }).click();
   await page.getByRole('heading', { name: /Bring your agent/ }).waitFor();
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);

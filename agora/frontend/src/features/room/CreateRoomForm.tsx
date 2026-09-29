@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import type { FormEvent } from 'react';
+import { useState, useRef, type FormEvent } from 'react';
 import type { Room, Side } from '../../../../shared/src/types';
 import { api } from '../../lib/api';
 import { Button } from '../../components/ui/Button';
@@ -8,29 +8,41 @@ import { Field, TextArea } from '../../components/ui/Field';
 import { Select } from '../../components/ui/Select';
 import { ErrorNotice } from '../../components/ui/ErrorNotice';
 import { ParticipantFields, participantValues } from './ParticipantFields';
-export function CreateRoomForm() {
+export function CreateRoomForm({ onClose, onBusyChange }: { onClose: () => void; onBusyChange: (busy: boolean) => void }) {
   const navigate = useNavigate();
+  const [step, setStep] = useState(0);
+  const form = useRef<HTMLFormElement>(null);
   const mutation = useMutation({ mutationFn: (data: FormData) => api<Room>('/rooms', {
     ...participantValues(data), topic: String(data.get('topic')), durationMinutes: Number(data.get('durationMinutes')),
     side: data.get('side') as Side
-  }), onSuccess: room => navigate('/app/rooms/' + room.id) });
-  function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); mutation.mutate(new FormData(event.currentTarget)); }
-  return <div className="page form-page"><Link to="/app" className="back-link">← Back to the floor</Link>
-    <div className="page-heading"><p className="eyebrow">Open a challenge</p><h1>Set the terms.</h1>
-      <p className="lede">You bring one agent. The open seat belongs to your opponent.</p></div>
-    <div className="availability-notice">Bringing Codex or Claude? <Link to="/app/connect">Connect through MCP</Link> to create an external-agent room. This form creates a Latch-hosted room.</div><div className="form-layout"><form onSubmit={submit}>
-      <section className="form-section"><div className="section-heading"><span className="mono muted">01</span><h2>The match</h2></div>
+  }), onSuccess: room => navigate('/app/rooms/' + room.id), onSettled: () => onBusyChange(false) });
+  function changeStep(next: number) {
+    setStep(next);
+    requestAnimationFrame(() => form.current?.querySelector<HTMLElement>(next ? '[name="name"]' : '[name="topic"]')?.focus());
+  }
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!step) { changeStep(1); return; }
+    onBusyChange(true); mutation.mutate(new FormData(event.currentTarget));
+  }
+  return <form ref={form} onSubmit={submit} className="create-room-form">
+    <div className="create-dialog-body">
+      <ol className="create-steps" aria-label="Room setup"><li aria-current={step === 0 ? 'step' : undefined}>Match details</li>
+        <li aria-current={step === 1 ? 'step' : undefined}>Your agent</li></ol>
+      <p className="create-mode-note">Latch-hosted room. Using Codex or Claude? <Link to="/app/connect">Connect through MCP ↗</Link></p>
+      <fieldset hidden={step !== 0} className="create-fields"><legend className="sr-only">Match details</legend>
         <TextArea name="topic" label="Debate topic" required minLength={10} maxLength={240} rows={3}
-          hint="Write a clear proposition that someone can support or challenge." />
-        <div className="form-row"><Field name="durationMinutes" label="Match length (minutes)" type="number" required min={1} max={60} defaultValue={5} />
-          <Select label="Your side" name="side"><option value="FOR">FOR — support the topic</option><option value="AGAINST">AGAINST — challenge the topic</option></Select></div>
-      </section>
-      <section className="form-section"><div className="section-heading"><span className="mono muted">02</span><h2>Your agent</h2></div><ParticipantFields /></section>
-      <ErrorNotice error={mutation.error} /><div className="form-actions"><Link to="/app">Cancel</Link>
-        <Button className="primary" disabled={mutation.isPending}>{mutation.isPending ? 'Opening room…' : 'Create room'}</Button></div>
-    </form><aside className="form-aside"><p className="eyebrow">Before you open</p><h2>A fair starting point.</h2>
-      <p>The topic and duration are fixed when you create the room.</p><p>The clock only starts once an opponent joins and both players are ready.</p>
-      <p>Make sure your latch stays valid for the full match. Gavel cannot extend its expiry or change its policy.</p>
-      <div className="aside-note">Your token grants model access. Use a dedicated, scoped latch for this match.</div>
-    </aside></div></div>;
+          hint="A clear proposition that someone can support or challenge." autoFocus />
+        <div className="form-row"><Field name="durationMinutes" label="Duration (minutes)" type="number" required min={1} max={60} defaultValue={5} />
+          <Select label="Your side" name="side"><option value="FOR">FOR — support</option><option value="AGAINST">AGAINST — challenge</option></Select></div>
+        <p className="create-context">The clock starts when both players are ready. Your topic and duration are fixed once the room opens.</p>
+      </fieldset>
+      <fieldset hidden={step !== 1} disabled={step !== 1 || mutation.isPending} className="create-fields"><legend className="sr-only">Your agent</legend>
+        <ParticipantFields /><p className="create-context">Automated Latch-hosted debates are not enabled yet. You can prepare a room; external agents participate through MCP.</p>
+      </fieldset>
+      <ErrorNotice error={mutation.error} />
+    </div>
+    <footer className="create-dialog-actions"><Button type="button" className="quiet" disabled={mutation.isPending} onClick={() => step ? changeStep(0) : onClose()}>{step ? 'Back to match details' : 'Cancel'}</Button>
+      <Button type="submit" className="primary" disabled={mutation.isPending}>{!step ? 'Continue →' : mutation.isPending ? 'Opening room…' : 'Create room'}</Button></footer>
+  </form>;
 }

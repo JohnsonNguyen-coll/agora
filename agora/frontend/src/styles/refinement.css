@@ -1,0 +1,70 @@
+/* A shorter landing and focused room setup. */
+.landing-refined .landing-hero { padding-top: 40px; padding-bottom: 45px; min-height: 650px; }
+.landing-refined .hero-motion-toggle { position: absolute; right: 5%; bottom: 15px; padding: 6px 0; border: 0; border-bottom: 1px solid var(--hairline); background: none; color: var(--muted); font: 10px var(--mono); }
+.landing-refined .how-section { padding-top: 64px; padding-bottom: 48px; background: transparent; }
+.landing-refined .section-heading-row h2 { font-size: clamp(36px, 3.5vw, 52px); }
+.landing-refined .landing-steps { margin-top: 32px; }
+.landing-refined .landing-steps article { background: #eceee3; padding: 24px; }
+.landing-refined .step-drawing { height: 76px; }
+.landing-refined .landing-steps .landing-kicker { margin-top: 18px; }
+.landing-refined .landing-build-note { margin-top: 28px; padding-top: 18px; font-size: 11px; }
+.landing-refined .landing-faq { padding-top: 60px; padding-bottom: 60px; }
+.duel-section { display: grid; grid-template-columns: .8fr 1.3fr; gap: 30px; align-items: center; padding-top: 65px; padding-bottom: 65px; }
+.duel-copy > p:not(.landing-kicker) { max-width: 350px; color: var(--muted); font-size: 14px; line-height: 1.85; margin: 24px 0; }
+.duel-figure { margin: 0; min-width: 0; }
+.duel-figure svg { width: 100%; display: block; overflow: visible; }
+.duel-figure text { font-family: var(--mono); }
+.duel-figure figcaption { max-width: 480px; margin: 4px auto 0; font-size: 11px; line-height: 1.8; color: var(--muted); text-align: center; }
+.duel-figure figcaption a { display: inline-block; text-decoration: underline; text-underline-offset: 3px; }
+.duel-boundary { animation: boundary-orbit 22s linear infinite; }
+.duel-person { transform-box: fill-box; transform-origin: center bottom; animation: debate-gesture 6s ease-in-out infinite; }
+.duel-person-against { animation-delay: -3s; }
+.duel-argument { animation: argument-exchange 6s ease-in-out infinite; }
+.argument-against { animation-delay: -3s; }
+@keyframes boundary-orbit { to { stroke-dashoffset: -280; } }
+@keyframes debate-gesture { 25% { transform: rotate(2deg) translateY(-2px); } 50%, 100% { transform: none; } }
+@keyframes argument-exchange { 0%, 10%, 90%, 100% { opacity: .18; transform: translateY(3px); } 35%, 60% { opacity: 1; transform: translateY(-3px); } }
+dialog.create-room-dialog { width: min(640px, calc(100% - 32px)); max-width: 640px; max-height: calc(100dvh - 48px); padding: 0; border: 1px solid var(--hairline); border-radius: 16px; box-shadow: 0 28px 100px #18201540; overflow: auto; }
+.create-room-dialog::backdrop { background: #20271e80; backdrop-filter: blur(4px); }
+.create-dialog-header { padding: 24px 28px 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; position: sticky; top: 0; z-index: 2; background: var(--canvas); border-bottom: 1px solid var(--hairline); }
+.create-dialog-header .eyebrow { margin-bottom: 6px; font-size: 10px; }
+.create-dialog-header h1 { font-size: 32px; }
+.modal-close { border: 1px solid var(--hairline); border-radius: 50%; width: 36px; height: 36px; flex-shrink: 0; display: grid; place-items: center; background: transparent; font: 24px/1 var(--sans); color: var(--muted); }
+.modal-close:hover { background: var(--surface); }
+.create-dialog-body { padding: 22px 28px 8px; }
+.create-steps { padding: 0; margin: 0 0 18px; list-style: none; display: flex; gap: 22px; font-size: 12px; color: var(--muted); }
+.create-steps li { padding-bottom: 8px; border-bottom: 2px solid transparent; }
+.create-steps li[aria-current] { color: var(--text); border-color: var(--accent); }
+.create-mode-note { font-size: 12px; color: var(--muted); margin: 0 0 24px; }
+.create-mode-note a { text-decoration: underline; text-underline-offset: 3px; }
+.create-fields { border: 0; padding: 0; margin: 0; min-width: 0; }
+.create-fields[hidden] { display: none; }
+.create-fields .field { margin-bottom: 18px; }
+.create-fields .field-hint { font-size: 11px; }
+.create-fields textarea { min-height: 76px; }
+.create-fields .form-note { font-size: 11px; }
+.create-context { font-size: 12px; line-height: 1.7; padding: 14px 16px; background: var(--surface); border-radius: 8px; color: var(--muted); margin-bottom: 18px; }
+.create-dialog-actions { position: sticky; bottom: 0; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 28px; border-top: 1px solid var(--hairline); background: var(--canvas); z-index: 2; }
+.create-dialog-actions .button { border-radius: 6px; }
+.back-link { margin-bottom: 24px; font-size: 12px; }
+.site-header nav { gap: 28px; }
+.lobby-heading > .button { border-radius: 6px; }
+@media (max-width: 760px) {
+  .landing-refined .landing-hero { padding: 40px 22px 44px; }
+  .landing-refined .how-section { padding: 44px 22px; }
+  .landing-refined .landing-steps article { padding: 20px 16px; }
+  .landing-refined .step-drawing { height: 100%; }
+  .duel-section { grid-template-columns: 1fr; padding: 48px 22px; gap: 12px; }
+  .duel-copy > p:not(.landing-kicker) { max-width: none; }
+  .duel-figure { margin-inline: -10px; }
+  .duel-figure figcaption { padding-inline: 12px; }
+  .landing-refined .landing-faq { padding: 44px 22px; }
+  dialog.create-room-dialog { width: calc(100% - 20px); max-height: calc(100dvh - 20px); border-radius: 12px; }
+  .create-dialog-header { padding: 18px 20px; }
+  .create-dialog-body { padding: 20px 20px 4px; }
+  .create-dialog-actions { padding: 16px 20px; gap: 10px; }
+  .create-dialog-actions .button { font-size: 12px; padding-inline: 14px; }
+  .create-dialog-actions .button.quiet { padding-inline: 0; text-align: left; }
+  .create-room-form .form-row { gap: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .duel-figure * { animation: none !important; } }
