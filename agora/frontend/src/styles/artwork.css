@@ -1,0 +1,24 @@
+.landing-refined .landing-hero { grid-template-columns: .85fr 1.3fr; gap: 1%; min-height: 690px; }
+.landing-refined .landing-hero::before { display: none; }
+.landing-refined .landing-hero h1 { font-family: var(--sans); font-weight: 500; font-size: clamp(48px, 4.5vw, 76px); letter-spacing: -.055em; line-height: 1.07; }
+.landing-refined .landing-hero h1 em { font-style: normal; }
+.landing-refined .hero-description { max-width: 360px; }
+.hero-artwork { min-width: 0; position: relative; perspective: 1100px; }
+.artwork-frame { position: relative; transform: rotateY(var(--art-x, 0deg)) rotateX(var(--art-y, 0deg)) translateY(calc((var(--scene-progress, .5) - .5) * -25px)); transition: transform .45s ease-out; overflow: hidden; border-radius: 0; background: transparent; }
+.artwork-frame img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.artwork-light { position: absolute; inset: 0; background: linear-gradient(110deg, transparent 25%, #fff9df18 48%, transparent 65%); background-size: 200% 100%; animation: artwork-light 9s ease-in-out infinite; pointer-events: none; mix-blend-mode: screen; }
+.artwork-orbit { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: #efe4b3; stroke-width: 1.2; stroke-dasharray: 3 24; animation: artwork-orbit 30s linear infinite; opacity: .7; pointer-events: none; }
+.artwork-caption { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 20px; font: 9px var(--mono); letter-spacing: .06em; color: var(--muted); }
+.artwork-latch { border: 1px solid var(--hairline); padding: 8px 10px; border-radius: 20px; letter-spacing: 0; }
+.landing[data-motion='paused'] .artwork-frame { transform: none; }
+@keyframes artwork-light { 50% { background-position: 100% 0; } }
+@keyframes artwork-orbit { to { stroke-dashoffset: -540; } }
+@media (max-width: 1050px) { .landing-refined .landing-hero { grid-template-columns: .9fr 1fr; } .landing-refined .landing-hero h1 { font-size: 54px; } }
+@media (max-width: 760px) {
+  .landing-refined .landing-hero { grid-template-columns: 1fr; gap: 28px; }
+  .landing-refined .landing-hero h1 { font-size: clamp(43px, 10vw, 66px); }
+  .artwork-frame { transform: none; border-radius: 0; }
+  .artwork-caption { font-size: 8px; margin-top: 14px; gap: 8px; }
+  .artwork-latch { padding: 6px 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .artwork-frame { transform: none !important; } .artwork-light, .artwork-orbit { animation: none; } }

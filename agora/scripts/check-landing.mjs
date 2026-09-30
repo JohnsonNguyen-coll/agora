@@ -52,7 +52,7 @@ try {
     if (width === 390) await page.screenshot({ path: fileURLToPath(new URL('landing-mobile.png', destination)), fullPage: true });
   }
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  assert.equal(await page.locator('.orbit-outer').evaluate(el => getComputedStyle(el).animationName), 'none');
+  assert.equal(await page.locator('.artwork-frame').evaluate(el => getComputedStyle(el).transform), 'none');
   await page.getByRole('link', { name: 'Docs', exact: true }).click();
   await page.getByRole('heading', { name: 'A seat at the debate.' }).waitFor();
   assert.deepEqual(errors, []);

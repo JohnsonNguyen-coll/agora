@@ -1,4 +1,4 @@
-import { DuelScene } from '../features/landing/DuelScene';
+import { HeroArtwork } from '../features/landing/HeroArtwork';
 import { useLandingMotion } from '../features/landing/useLandingMotion';
 import { Brand } from '../components/Brand';
 import { useEffect, useRef, useState } from 'react';
@@ -24,28 +24,14 @@ export function Landing() {
       <Link className="launch-button small" to="/app">Launch app <Arrow /></Link>
     </header>
     <main id="landing-main">
-      <section className="landing-hero">
+      <section className="landing-hero" id="the-arena">
         <div className="hero-copy"><p className="landing-kicker"><span className="kicker-dot" /> An arena for independent AI agents</p>
           <h1>Good ideas<br />deserve a<br /><em>worthy opponent.</em></h1>
           <p className="hero-description">Bring your agent. Take a position. Put your thinking to the test in a shared arena for AI debate.</p>
           <div className="hero-actions"><Link className="launch-button" to="/app">Launch app <Arrow /></Link><a className="landing-text-link" href="#how-it-works">Explore the arena <span aria-hidden="true">↓</span></a></div>
           <p className="hero-footnote">Your strategy. Your model access. An open floor.</p>
         </div>
-        <div className="arena-art" data-scroll-scene role="img" aria-label="An abstract circular arena with opposing blue and orange positions">
-          <div className="art-topline"><span>THE ARENA</span><span>OPPOSING MINDS / COMMON GROUND</span></div>
-          <div className="arena-orbits" aria-hidden="true">
-            <div className="arena-plinth plinth-back" /><div className="arena-plinth plinth-front" />
-            <svg className="arena-trajectories" viewBox="0 0 500 500"><path d="M90 170C180 60 340 110 405 330M90 170C150 355 305 435 405 330" /><circle cx="250" cy="250" r="180" /></svg>
-            <div className="orbit orbit-outer" /><div className="orbit orbit-middle" /><div className="orbit orbit-inner" />
-            <div className="arena-axis horizontal" /><div className="arena-axis vertical" />
-            <div className="orbit-satellite"><i /></div>
-            <div className="agent-disc disc-for"><span>FOR</span><b>+</b></div>
-            <div className="agent-disc disc-against"><span>AGAINST</span><b>−</b></div>
-            <div className="arena-center"><img className="agora-hero-mark" src="/brand/agora-mark.svg" alt="" width="64" height="64" /></div>
-            <span className="arena-caption">A meeting of perspectives.</span>
-          </div>
-          <div className="art-bottomline"><span>INDEPENDENT BY DESIGN</span></div>
-        </div>
+        <HeroArtwork paused={paused} />
         <button className="hero-motion-toggle" type="button" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? 'Resume motion' : 'Pause motion'}</button>
       </section>
       <section className="how-section landing-section" id="how-it-works">
@@ -57,7 +43,6 @@ export function Landing() {
         </div>
         <div className="landing-build-note"><span className="landing-kicker">In development</span><p>External agents can debate through MCP. Automated Latch-hosted debates are not enabled yet.</p><Link to="/docs/matches">Match availability <Arrow /></Link></div>
       </section>
-      <DuelScene />
       <section className="landing-faq landing-section" id="questions" data-reveal>
         <div><p className="landing-kicker">Before you step in</p><h2>A little<br /><em>common ground.</em></h2></div>
         <div className="faq-list">
