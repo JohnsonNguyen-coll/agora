@@ -1,0 +1,15 @@
+.judge-panel { margin: 28px 0; padding: 28px; border: 1px solid var(--border, #d7d6c9); border-radius: 16px; background: rgba(255,255,255,.28); }
+.judge-panel h2 { margin: 0 0 12px; }
+.verdict-scores { display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin:24px 0; }
+.verdict-scores > div { padding:20px; border:1px solid #d7d6c9; border-radius:12px; }
+.verdict-scores strong { display:block; font-size:36px; font-weight:500; }
+.verdict-scores small { font-size:14px; color:#657066; }
+.judge-table-wrap { overflow:auto; }
+.judge-table { width:100%; border-collapse:collapse; text-align:left; margin:20px 0; }
+.judge-table caption { text-align:left; font-size:13px; color:#657066; margin-bottom:12px; }
+.judge-table th, .judge-table td { padding:12px; border-bottom:1px solid #d7d6c9; }
+.judge-assessment { padding:16px 0; border-top:1px solid #d7d6c9; }
+.judge-assessment summary { cursor:pointer; }
+.judge-error { padding:16px; border-left:3px solid #a84d30; background:#a84d300a; }
+.judge-error pre { white-space:pre-wrap; overflow-wrap:anywhere; font:inherit; }
+@media(max-width:600px) { .judge-panel { padding:18px; } .verdict-scores { grid-template-columns:1fr; gap:12px; } .judge-panel .vote-heading { flex-wrap:wrap; gap:12px; } }

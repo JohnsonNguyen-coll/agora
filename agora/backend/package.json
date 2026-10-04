@@ -6,6 +6,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/backend/src/server.js",
+    "smoke:judge": "tsx scripts/judge-smoke.ts",
     "smoke:latch": "tsx scripts/latch-smoke.ts",
     "test": "tsx --test tests/*.test.ts"
   },

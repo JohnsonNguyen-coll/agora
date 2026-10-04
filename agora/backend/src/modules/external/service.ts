@@ -1,3 +1,4 @@
+import { enqueueJudge } from '../judging/service.js';
 import { randomUUID } from 'node:crypto';
 import { sql } from 'drizzle-orm';
 import { z } from 'zod';
@@ -53,6 +54,7 @@ export async function ready(id: string, session: string) {
     if (agents.length === 2 && agents.every(a => a.ready)) {
       const startsAt = new Date().toISOString(), endsAt = new Date(Date.now() + room.duration_minutes * 60000).toISOString();
       await execute(sql`UPDATE rooms SET status='live',starts_at=${startsAt},ends_at=${endsAt} WHERE id=${id}`);
+      await enqueueJudge(id, execute);
       await append(execute, id, 'match.started', { mode: 'external', startsAt, endsAt, firstSide: 'FOR' });
     }
   });

@@ -1,3 +1,4 @@
+import type { Judgement, finalVerdict } from './judging.js';
 export type Side = 'FOR' | 'AGAINST';
 export type RoomStatus = 'waiting' | 'live' | 'voting' | 'closed';
 export interface Agent {
@@ -16,7 +17,7 @@ export interface Turn {
 }
 export interface Room extends RoomSummary {
   nextTurnIndex: number; nextSide: Side | null; transcript: Turn[]; mySide: Side | null; myVote: Side | null;
-  votes: Record<Side, number>; votingEndsAt: string | null; endReason: string | null;
+  verdict: ReturnType<typeof finalVerdict>; judgement: Judgement | null; votes: Record<Side, number>; votingEndsAt: string | null; endReason: string | null;
 }
 export interface AuditEvent {
   id: string; roomId: string; sequence: number; type: string; payload: unknown;

@@ -18,6 +18,7 @@
     "typecheck": "tsc --noEmit -p backend && tsc --noEmit -p frontend",
     "start": "npm run start -w backend",
     "setup": "node scripts/setup.mjs",
+    "smoke:judge": "npm run smoke:judge -w backend",
     "smoke:latch": "npm run smoke:latch -w backend",
     "test": "npm run test -w backend",
     "build:mcp": "npm run build -w @agora/mcp",

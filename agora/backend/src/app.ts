@@ -1,3 +1,4 @@
+import { startJudgeWorker } from './modules/judging/service.js';
 import { externalRoutes } from './modules/external/controller.js';
 import { settleDue } from './modules/external/lifecycle.js';
 import Fastify from 'fastify';
@@ -46,6 +47,8 @@ export async function buildApp() {
   externalRoutes(app);
   const timer = setInterval(() => { void settleDue().catch(() => app.log.error('External deadline settlement failed')); }, 1000);
   timer.unref();
+  const stopJudge = startJudgeWorker(() => app.log.error('Judge worker failed'));
+  app.addHook('onClose', stopJudge);
   app.addHook('onClose', async () => { clearInterval(timer); await settleDue(); });
   const root = resolve(projectRoot, 'frontend/dist');
   if (env.SERVE_FRONTEND === 'true' && existsSync(root)) {

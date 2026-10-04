@@ -14,7 +14,9 @@ const schema = z.object({
   DATABASE_POOL_MAX: z.coerce.number().int().min(1).max(20).default(5),
   SERVE_FRONTEND: z.enum(['true', 'false']).default('true'),
   SESSION_SECRET: z.string().min(32), TOKEN_ENCRYPTION_KEY: z.string().regex(/^[a-fA-F0-9]{64}$/),
-  LATCH_PROXY_BASE: z.string().url().default('https://onlatch.com/proxy')
+  LATCH_PROXY_BASE: z.string().url().default('https://onlatch.com/proxy'),
+  JUDGE_LATCH_TOKEN: z.string().regex(/^lat_[A-Za-z0-9_-]+$/).optional().or(z.literal('')),
+  JUDGE_MODEL: z.string().max(120).optional()
 });
 export const env = schema.parse(process.env);
 if (new URL(env.APP_ORIGIN).origin !== env.APP_ORIGIN) throw new Error('APP_ORIGIN must be an origin without a path or trailing slash.');

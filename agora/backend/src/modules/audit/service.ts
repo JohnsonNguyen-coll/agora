@@ -8,6 +8,8 @@ interface Row {
   prev_hash: string | null; hash: string; created_at: string;
 }
 export async function append(execute: Query, roomId: string, type: string, payload: unknown) {
+  // Serialize appending the room chain across Postgres instances.
+  await execute(sql`UPDATE rooms SET status=status WHERE id=${roomId}`);
   const previous = (await execute<Row>(sql`SELECT * FROM audit_events WHERE room_id=${roomId} ORDER BY sequence DESC LIMIT 1`))[0];
   const event = { id: randomUUID(), roomId, sequence: (previous?.sequence ?? 0) + 1, type,
     payloadJson: JSON.stringify(payload), prevHash: previous?.hash ?? null, createdAt: new Date().toISOString() };

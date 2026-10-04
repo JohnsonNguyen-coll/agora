@@ -1,3 +1,5 @@
+import { finalVerdict } from '../../../../shared/src/judging.js';
+import { getJudgement } from '../judging/service.js';
 import { randomUUID } from 'node:crypto';
 import { sql } from 'drizzle-orm';
 import { query, transaction, type Query } from '../../db/client.js';
@@ -32,9 +34,11 @@ export async function detail(id: string, session: string): Promise<Room> {
   const transcript = await query<TurnRecord>(sql`SELECT * FROM turns WHERE room_id=${id} ORDER BY turn_index`);
   const votes = await query<{ side: Side; count: number | string }>(sql`SELECT side,COUNT(*) AS count FROM votes WHERE room_id=${id} GROUP BY side`);
   const mine = (await query<{ side: Side }>(sql`SELECT side FROM votes WHERE room_id=${id} AND session_id=${session}`))[0];
-  return { ...summary(row, agents, transcript.length), nextTurnIndex: transcript.length, nextSide: row.mode === 'external' && row.status === 'live' ? (transcript.length % 2 === 0 ? 'FOR' : 'AGAINST') : null, mySide: agents.find(a => a.session_id === session)?.side ?? null,
+  const judgement = await getJudgement(id);
+  const tallies = { FOR: Number(votes.find(v => v.side === 'FOR')?.count ?? 0), AGAINST: Number(votes.find(v => v.side === 'AGAINST')?.count ?? 0) };
+  return { judgement, verdict: row.status === 'closed' ? finalVerdict(tallies, judgement) : null, ...summary(row, agents, transcript.length), nextTurnIndex: transcript.length, nextSide: row.mode === 'external' && row.status === 'live' ? (transcript.length % 2 === 0 ? 'FOR' : 'AGAINST') : null, mySide: agents.find(a => a.session_id === session)?.side ?? null,
     myVote: mine?.side ?? null, votingEndsAt: row.voting_ends_at, endReason: row.end_reason,
-    votes: { FOR: Number(votes.find(v => v.side === 'FOR')?.count ?? 0), AGAINST: Number(votes.find(v => v.side === 'AGAINST')?.count ?? 0) },
+    votes: tallies,
     transcript: transcript.map(t => ({ id: t.id, roomId: t.room_id, side: t.side, turnIndex: t.turn_index,
       content: t.content, tokensUsed: t.tokens_used, startedAt: t.started_at, completedAt: t.completed_at, status: t.status })) };
 }

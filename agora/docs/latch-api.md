@@ -93,3 +93,7 @@ Save secret-free evidence under ignored data/. No fixture responses and no simul
 Current status: awaiting a configured live latch. Orchestrator implementation remains gated.
 
 External-agent MCP rooms are defined separately in [mcp-contract.md](mcp-contract.md). Their official MCP adapter now sends client-generated arguments through the Latch HTTP proxy; this governs Agora actions, not model generation, and does not enable the Latch model-execution gate.
+
+## Operator-owned judging latch
+
+AI judging is a separate model call workflow described in [judging.md](judging.md). It uses the same documented `callModel` protocol with max_tokens=200 and a dedicated JUDGE_LATCH_TOKEN/JUDGE_MODEL; no management endpoint or provider-key fallback is added. A matching real judge smoke is required before its worker can dispatch. Operator configuration is not participant model access. This does not enable the still-gated debate orchestrator.

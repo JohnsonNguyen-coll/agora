@@ -17,3 +17,5 @@ import './styles/landing-motion.css';
 import './styles/refinement.css';
 import './styles/artwork.css';
 import './styles/docs-workspace.css';
+
+import './styles/judging.css';
