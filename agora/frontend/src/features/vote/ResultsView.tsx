@@ -13,23 +13,24 @@ export function ResultsView() {
   const total = room.votes.FOR + room.votes.AGAINST, closed = room.status === 'closed';
   const verdict = closed ? room.verdict : null;
   const judge = room.judgement, shares = judge ? judgeShares(judge.passes) : null;
-  const title = !closed ? 'The verdict is still open.' : verdict ? verdict.winner ? `The case ${verdict.winner} wins.` : 'A tied verdict.' : !room.judgement || ['failed','needs_review','insufficient','unavailable'].includes(room.judgement.status) ? 'No final verdict is available.' : 'The final verdict is pending.';
+  const title = room.tournamentControl?.outcome?.startsWith('forfeit:') ? 'The case '+room.tournamentControl.outcome.slice(8)+' advances by forfeit.' : room.tournamentControl?.outcome==='void' ? 'Match ended without a winner.' : !closed ? 'The verdict is still open.' : verdict ? verdict.winner ? `The case ${verdict.winner} wins.` : 'A tied verdict.' : !room.judgement || ['failed','needs_review','insufficient','unavailable'].includes(room.judgement.status) ? 'No final verdict is available.' : 'The final verdict is pending.';
   const audience = !total ? 'No audience votes were cast.' : room.votes.FOR === room.votes.AGAINST ? 'The audience vote is tied.' : `Audience choice: ${room.votes.FOR > room.votes.AGAINST ? 'FOR' : 'AGAINST'}.`;
   return <div className="page results-page"><Link to={'/app/rooms/' + room.id} className="back-link">← Arena</Link>
     <p className="eyebrow">{verdict ? 'Final verdict' : room.status === 'voting' ? 'Voting is open' : 'Match results'}</p>
-    <h1>{title}</h1><p className="result-topic">{room.topic}</p><RoomNavigation id={room.id} />
+    <h1>{title}</h1><p className="result-topic">{room.topic}</p>{room.tournament && <Link to={'/app/tournaments/' + room.tournament.id}>Back to tournament ↗</Link>}<RoomNavigation id={room.id} />
+    {room.endReason && <p className="availability-notice">{room.endReason}</p>}
     <section className="judge-panel" aria-labelledby="judge-heading"><div className="vote-heading"><div><p className="eyebrow">Transparent scoring</p>
       <h2 id="judge-heading">{verdict ? 'The combined result' : 'How this match is decided'}</h2></div><Link to="/docs/voting">Scoring rules ↗</Link></div>
       <p>{verdict ? `${Math.round(verdict.audienceWeight * 100)}% audience · ${Math.round(verdict.judgeWeight * 100)}% judge` : 'With audience votes: 70% audience + 30% judge. With no votes: 100% judge.'}</p>
       {verdict && <div className="verdict-scores">{(['FOR','AGAINST'] as const).map(side => <div key={side}><span className="eyebrow">{side}</span><strong>{verdict.score[side].toFixed(2)}<small> / 100</small></strong>
         <p>Audience {total ? (room.votes[side] / total * 100).toFixed(2) + '%' : '—'} · Judge {shares?.[side].toFixed(2)}%</p></div>)}</div>}
-      <p className="field-hint">{total} {total === 1 ? 'recorded vote' : 'recorded votes'}. Even one vote activates the 70% audience weight. Session votes do not verify unique people. The winner is computed before rounding.</p>
+      <p className="field-hint">{total} {total === 1 ? 'recorded vote' : 'recorded votes'}. Even one vote activates the 70% audience weight. Verified accounts do not prove unique people. The winner is computed before rounding.</p>
     </section>
     <section className="judge-panel" aria-labelledby="assessment-heading"><p className="eyebrow">AI assessment</p><h2 id="assessment-heading">Judge’s verdict</h2>
-      <p>{judge?.status === 'completed' && shares ? shares.FOR === shares.AGAINST ? 'The judge assessment is tied.' : `The judge favors ${shares.FOR > shares.AGAINST ? 'FOR' : 'AGAINST'}.` :
+      <p>{room.tournamentControl?.outcome ? 'Administrative result: no AI score was generated for this outcome.' : judge?.status === 'completed' && shares ? shares.FOR === shares.AGAINST ? 'The judge assessment is tied.' : `The judge favors ${shares.FOR > shares.AGAINST ? 'FOR' : 'AGAINST'}.` :
         judge?.status === 'needs_review' ? 'Assessment requires review.' : judge?.status === 'failed' ? 'Judging could not be completed.' : judge?.status === 'insufficient' ? 'Not enough completed arguments.' :
         judge?.status === 'running' ? 'The judge is assessing the transcript…' : judge?.status === 'unavailable' ? 'Live judging is not available yet.' : 'Judging begins after voting closes.'}</p>
-      {!judge && <p className="field-hint">This match has no recorded AI assessment. No combined winner can be declared.</p>}
+      {!judge && !room.tournamentControl?.outcome && <p className="field-hint">This match has no recorded AI assessment. No combined winner can be declared.</p>}
       {judge?.error && <div className="judge-error" role="status"><span className="mono">{judge.error.code}</span><pre>{judge.error.message}</pre></div>}
       {judge && <p className="field-hint">Rubric: {judge.rubric} · Model: {judge.model ?? 'Not configured'} · Completed assessments: {judge.passes.length}/2</p>}
       {judge?.passes.length === 2 && <div className="judge-table-wrap"><table className="judge-table"><caption>Average rubric scores across both assessments (0–10)</caption><thead><tr><th>Criterion</th><th>FOR</th><th>AGAINST</th></tr></thead>

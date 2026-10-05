@@ -35,7 +35,7 @@ async function result(observation: Observation, isError: boolean) {
   return { isError, content: [{ type: 'text' as const, text: JSON.stringify({ ...observation, auditSaved }) }] };
 }
 export async function call(path: string, body?: unknown) {
-  if (!/^\/(status|rooms(?:\/[a-f0-9-]{36}(?:\/(audit|join|ready|arguments))?)?)$/.test(path))
+  if (!/^\/(status|tournaments(?:\/[a-f0-9-]{36}(?:\/(register|withdraw|start|cancel|retry-judge|consent-rematch|terminate|resume))?)?|rooms(?:\/[a-f0-9-]{36}(?:\/(audit|join|ready|arguments))?)?)$/.test(path))
     throw new Error('Unsupported Agora MCP route.');
   const method = body === undefined ? 'GET' : 'POST';
   const observation: Observation = { timestamp: new Date().toISOString(), path: '/api/external' + path,

@@ -1,3 +1,5 @@
+import { control, turnDeadline } from '../tournaments/deadlines.js';
+import { tallyVotes } from '../votes/tally.js';
 import { finalVerdict } from '../../../../shared/src/judging.js';
 import { getJudgement } from '../judging/service.js';
 import { randomUUID } from 'node:crypto';
@@ -32,11 +34,17 @@ export async function listRooms() {
 export async function detail(id: string, session: string): Promise<Room> {
   const row = await findRoom(id), agents = await roomAgents(id);
   const transcript = await query<TurnRecord>(sql`SELECT * FROM turns WHERE room_id=${id} ORDER BY turn_index`);
-  const votes = await query<{ side: Side; count: number | string }>(sql`SELECT side,COUNT(*) AS count FROM votes WHERE room_id=${id} GROUP BY side`);
   const mine = (await query<{ side: Side }>(sql`SELECT side FROM votes WHERE room_id=${id} AND session_id=${session}`))[0];
+  const tournamentMatch = (await query<{ id: string; title: string; round_index: number; attempt: number }>(sql`SELECT t.id,t.title,m.round_index,m.attempt FROM tournament_matches m JOIN tournaments t ON t.id=m.tournament_id WHERE m.room_id=${id}`))[0];
+  const tournamentEntrant = tournamentMatch ? (await query(sql`SELECT id FROM tournament_entries WHERE tournament_id=${tournamentMatch.id} AND session_id=${session}`)).length > 0 : false;
+  const tournament = tournamentMatch ? { id: tournamentMatch.id, title: tournamentMatch.title, round: tournamentMatch.round_index, attempt: tournamentMatch.attempt, isEntrant: tournamentEntrant } : null;
+  const deadlines = await control(id, query);
+  const due = deadlines && !deadlines.paused_at && deadlines.tournament_status==='active' && row.status === 'live' ? await turnDeadline(row, deadlines.turn_seconds, query, deadlines.turn_extension_ms) : null;
+  const tournamentControl = deadlines ? { paused: Boolean(deadlines.paused_at) || deadlines.tournament_status==='blocked', readyDeadline: deadlines.ready_deadline, turnDeadline: due?.at ?? null, nextSide: due?.side ?? null, outcome: deadlines.outcome, reason: deadlines.reason } : null;
   const judgement = await getJudgement(id);
-  const tallies = { FOR: Number(votes.find(v => v.side === 'FOR')?.count ?? 0), AGAINST: Number(votes.find(v => v.side === 'AGAINST')?.count ?? 0) };
-  return { judgement, verdict: row.status === 'closed' ? finalVerdict(tallies, judgement) : null, ...summary(row, agents, transcript.length), nextTurnIndex: transcript.length, nextSide: row.mode === 'external' && row.status === 'live' ? (transcript.length % 2 === 0 ? 'FOR' : 'AGAINST') : null, mySide: agents.find(a => a.session_id === session)?.side ?? null,
+  const tallies = await tallyVotes(id);
+  const votingRule = (await query(sql`SELECT version FROM room_vote_rules WHERE room_id=${id}`)).length ? 'verified-account-v1' : 'legacy-session';
+  return { tournamentControl, votingRule, tournament, judgement, verdict: row.status === 'closed' ? finalVerdict(tallies, judgement) : null, ...summary(row, agents, transcript.length), nextTurnIndex: transcript.length, nextSide: row.mode === 'external' && row.status === 'live' ? (transcript.length % 2 === 0 ? 'FOR' : 'AGAINST') : null, mySide: agents.find(a => a.session_id === session)?.side ?? null,
     myVote: mine?.side ?? null, votingEndsAt: row.voting_ends_at, endReason: row.end_reason,
     votes: tallies,
     transcript: transcript.map(t => ({ id: t.id, roomId: t.room_id, side: t.side, turnIndex: t.turn_index,
@@ -55,6 +63,7 @@ export async function create(input: CreateRoomInput, session: string) {
     const id = randomUUID(), now = new Date().toISOString();
     await execute(sql`INSERT INTO rooms (id,topic,duration_minutes,status,created_at)
       VALUES (${id},${input.topic},${input.durationMinutes},'waiting',${now})`);
+    await execute(sql`INSERT INTO room_vote_rules (room_id,version) VALUES (${id},'verified-account-v1') ON CONFLICT(room_id) DO NOTHING`);
     await append(execute, id, 'room.created', { topic: input.topic, durationMinutes: input.durationMinutes });
     await addAgent(execute, id, session, input.side, input);
     return id;

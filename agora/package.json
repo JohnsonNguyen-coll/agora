@@ -22,12 +22,18 @@
     "smoke:latch": "npm run smoke:latch -w backend",
     "test": "npm run test -w backend",
     "build:mcp": "npm run build -w @agora/mcp",
-    "configure:mcp": "node scripts/configure-mcp.mjs"
+    "configure:mcp": "node scripts/configure-mcp.mjs",
+    "check:readiness": "node scripts/check-readiness.mjs",
+    "smoke:auth": "node scripts/auth-smoke.mjs",
+    "verify:tournament": "node scripts/verify-tournament.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
     "@types/node": "22.10.5",
     "concurrently": "9.1.2",
     "typescript": "5.7.3"
+  },
+  "overrides": {
+    "ws@>=8.0.0 <8.21.0": "8.21.0"
   }
 }

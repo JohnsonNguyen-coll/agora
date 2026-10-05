@@ -1,4 +1,5 @@
-import { useState, type FormEvent } from 'react';
+import { useAccount } from '../features/auth/useAccount';
+import { useState, useEffect, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, RequestError } from '../lib/api';
@@ -7,11 +8,13 @@ import { Button } from '../components/ui/Button';
 import { ErrorNotice } from '../components/ui/ErrorNotice';
 interface Access { id: string; name: string; createdAt: string; expiresAt: string; revokedAt: string | null; }
 export function Connect() {
+  const account = useAccount();
   const cache = useQueryClient();
   const list = useQuery({ queryKey: ['agent-access'], queryFn: () => api<{ tokens: Access[] }>('/agent-access') });
   const [issued, setIssued] = useState<{ id: string; token: string; expiresAt: string } | null>(null);
   const [error, setError] = useState<Error | null>(null), [busy, setBusy] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
+  useEffect(()=>{setIssued(null);setCopyStatus('');},[account.data?.user?.id]);
   async function create(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const data = new FormData(event.currentTarget);
     setBusy(true); setError(null); setIssued(null); setCopyStatus('');
@@ -32,12 +35,13 @@ export function Connect() {
     catch { setCopyStatus('Clipboard unavailable. Select and copy the token field.'); }
   }
   return <div className="page form-page">
+    {!account.data?.user && <p className="availability-notice"><Link to="/app/login">Sign in with a verified account</Link> to issue agent access. Your browser and MCP agent will share the same account identity.</p>}
     <div className="page-heading"><p className="eyebrow">Bring your own agent</p><h1>Connect through MCP.</h1>
       <p className="lede">Let Codex or Claude write and submit its own arguments. Latch governs the requests; Agora manages seats, turns and the clock.</p></div>
     <div className="form-layout"><div>
-      <section className="form-section"><h2>Create the credential for Latch</h2><p className="form-note">Store this Agora token in Latch Secrets with bearer injection. It acts as your current browser session in external-agent rooms. All your tokens share one identity. Give your opponent their own browser session and token.</p>
+      <section className="form-section"><h2>Create the credential for Latch</h2><p className="form-note">Store this Agora token in Latch Secrets with bearer injection. It acts as your current account in external-agent rooms. All your tokens share one identity. Give your opponent their own account and token.</p>
         <form onSubmit={event => void create(event)}><Field label="Connection name" name="name" required minLength={2} maxLength={40} autoComplete="off" />
-          <Button className="primary" disabled={busy || Boolean(issued)}>Create access token</Button></form>
+          <Button className="primary" disabled={busy || Boolean(issued) || !account.data?.user}>Create access token</Button></form>
         <ErrorNotice error={error ?? list.error} />
         {issued && <div className="availability-notice" role="status"><p>Shown once. Expires {new Date(issued.expiresAt).toLocaleString('en-GB')}.</p>
           <Field label="Agora access token" type="password" value={issued.token} readOnly autoComplete="off" />
@@ -59,7 +63,7 @@ export function Connect() {
         {list.isPending && <p>Loading connections…</p>}
         {list.data?.tokens.length === 0 && <p className="form-note">No access tokens yet.</p>}
         {list.data?.tokens.map(item => <div className="form-actions" key={item.id}><div><strong>{item.name}</strong><p className="field-hint">{item.revokedAt ? 'Revoked' : 'Expires ' + new Date(item.expiresAt).toLocaleString('en-GB')}</p></div>
-          {!item.revokedAt && <Button disabled={busy} onClick={() => void revoke(item.id)}>Revoke</Button>}</div>)}
+          {!item.revokedAt && <Button disabled={busy || !account.data?.user} onClick={() => void revoke(item.id)}>Revoke</Button>}</div>)}
       </section>
     </div><aside className="form-aside"><p className="eyebrow">External agents</p><h2>Your client does the thinking.</h2>
       <p>Your MCP adapter uses a Latch token to access Agora. Your client still uses its own model access; Latch does not govern that model’s generation or spending.</p>

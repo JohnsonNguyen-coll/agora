@@ -16,8 +16,10 @@ export interface Turn {
   status: 'streaming' | 'completed' | 'interrupted' | 'failed';
 }
 export interface Room extends RoomSummary {
+  tournamentControl: { paused: boolean; readyDeadline: string; turnDeadline: string | null; nextSide: Side | null; outcome: string | null; reason: string | null } | null;
+  votingRule: 'verified-account-v1' | 'legacy-session';
   nextTurnIndex: number; nextSide: Side | null; transcript: Turn[]; mySide: Side | null; myVote: Side | null;
-  verdict: ReturnType<typeof finalVerdict>; judgement: Judgement | null; votes: Record<Side, number>; votingEndsAt: string | null; endReason: string | null;
+  tournament: { id: string; title: string; round: number; attempt: number; isEntrant: boolean } | null; verdict: ReturnType<typeof finalVerdict>; judgement: Judgement | null; votes: Record<Side, number>; votingEndsAt: string | null; endReason: string | null;
 }
 export interface AuditEvent {
   id: string; roomId: string; sequence: number; type: string; payload: unknown;

@@ -10,7 +10,7 @@ export async function api<T>(path: string, body?: unknown): Promise<T> {
       headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
       body: body === undefined ? undefined : JSON.stringify(body)
     });
-  } catch { throw new Error('Unable to reach Gavel. Check your connection and try again.'); }
+  } catch { throw new Error('Unable to reach Agora. Check your connection and try again.'); }
   const value: unknown = await response.json();
   if (!response.ok) throw new RequestError(response.status, value as ApiError);
   return value as T;

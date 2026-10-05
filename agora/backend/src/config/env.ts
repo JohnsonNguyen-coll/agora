@@ -16,7 +16,9 @@ const schema = z.object({
   SESSION_SECRET: z.string().min(32), TOKEN_ENCRYPTION_KEY: z.string().regex(/^[a-fA-F0-9]{64}$/),
   LATCH_PROXY_BASE: z.string().url().default('https://onlatch.com/proxy'),
   JUDGE_LATCH_TOKEN: z.string().regex(/^lat_[A-Za-z0-9_-]+$/).optional().or(z.literal('')),
-  JUDGE_MODEL: z.string().max(120).optional()
+  JUDGE_MODEL: z.string().max(120).optional(),
+  PRIVY_APP_ID: z.string().min(1).optional().or(z.literal('')),
+  PRIVY_APP_SECRET: z.string().min(1).optional().or(z.literal(''))
 });
 export const env = schema.parse(process.env);
 if (new URL(env.APP_ORIGIN).origin !== env.APP_ORIGIN) throw new Error('APP_ORIGIN must be an origin without a path or trailing slash.');
@@ -26,3 +28,5 @@ if (env.NODE_ENV === 'production') {
   if (!env.APP_ORIGIN.startsWith('https://')) throw new Error('Production APP_ORIGIN requires HTTPS.');
 }
 if (new URL(env.LATCH_PROXY_BASE).protocol !== 'https:') throw new Error('Latch requires HTTPS.');
+
+if (Boolean(env.PRIVY_APP_ID) !== Boolean(env.PRIVY_APP_SECRET)) throw new Error('Set both Privy backend fields together.');

@@ -1,3 +1,6 @@
+import { authRoutes } from './modules/auth/controller.js';
+import { tournamentRoutes } from './modules/tournaments/controller.js';
+import { settleTournaments } from './modules/tournaments/service.js';
 import { startJudgeWorker } from './modules/judging/service.js';
 import { externalRoutes } from './modules/external/controller.js';
 import { settleDue } from './modules/external/lifecycle.js';
@@ -19,9 +22,7 @@ export async function buildApp() {
   const app = Fastify({ logger: loggerOptions, bodyLimit: 16000, requestTimeout: 30000 });
   await app.register(cookie, { secret: env.SESSION_SECRET });
   await app.register(rateLimit, { max: 120, timeWindow: '1 minute', keyGenerator: request => {
-    const cookie = request.cookies.gavel_session;
-    const session = cookie ? request.unsignCookie(cookie) : null;
-    return session?.valid && session.value ? session.value : request.ip;
+    return request.ip;
   } });
   sessions(app);
   app.setErrorHandler((error, request, reply) => {
@@ -43,13 +44,24 @@ export async function buildApp() {
     catch { return reply.code(503).send({ status: 'unavailable' }); }
   });
   app.addHook('preHandler', async req => { if (req.url.startsWith('/api/')) await settleDue(); });
+  authRoutes(app);
   roomRoutes(app);
   externalRoutes(app);
-  const timer = setInterval(() => { void settleDue().catch(() => app.log.error('External deadline settlement failed')); }, 1000);
+  tournamentRoutes(app);
+  let settling = false;
+  async function settle() {
+    if (settling) return;
+    settling = true;
+    try { await settleDue(); await settleTournaments(); }
+    catch { app.log.error('Match or tournament settlement failed'); }
+    finally { settling = false; }
+  }
+  let settlement: Promise<void> = Promise.resolve();
+  const timer = setInterval(() => { if (!settling) settlement = settle(); }, 1000);
   timer.unref();
   const stopJudge = startJudgeWorker(() => app.log.error('Judge worker failed'));
   app.addHook('onClose', stopJudge);
-  app.addHook('onClose', async () => { clearInterval(timer); await settleDue(); });
+  app.addHook('onClose', async () => { clearInterval(timer); await settlement; await settleDue(); await settleTournaments(); });
   const root = resolve(projectRoot, 'frontend/dist');
   if (env.SERVE_FRONTEND === 'true' && existsSync(root)) {
     await app.register(staticPlugin, { root });

@@ -1,3 +1,4 @@
+import { assertTournamentReady } from '../tournaments/service.js';
 import { enqueueJudge } from '../judging/service.js';
 import { randomUUID } from 'node:crypto';
 import { sql } from 'drizzle-orm';
@@ -24,6 +25,7 @@ export async function create(input: z.infer<typeof externalCreate>, session: str
     await execute(sql`INSERT INTO rooms (id,topic,duration_minutes,status,created_at)
       VALUES (${id},${input.topic},${input.durationMinutes},'waiting',${new Date().toISOString()})`);
     await execute(sql`INSERT INTO external_rooms (room_id) VALUES (${id})`);
+    await execute(sql`INSERT INTO room_vote_rules (room_id,version) VALUES (${id},'verified-account-v1') ON CONFLICT(room_id) DO NOTHING`);
     await append(execute, id, 'room.created', { topic: input.topic, durationMinutes: input.durationMinutes, mode: 'external' });
     await add(execute, id, session, input.side, input);
     return id;
@@ -43,6 +45,7 @@ export async function ready(id: string, session: string) {
   await transaction(async execute => {
     const room = await settleRoom(id, execute), agents = await roomAgents(id, execute);
     if (room.mode !== 'external') throw new AppError(409, 'wrong_mode', 'MCP cannot start Latch-hosted matches.');
+    await assertTournamentReady(id, execute);
     const me = agents.find(a => a.session_id === session);
     if (!me) throw new AppError(403, 'spectator', 'Only a participant can ready up.');
     if (room.status !== 'waiting') throw new AppError(409, 'room_locked', 'The match has already started.');
@@ -75,6 +78,7 @@ export async function submit(id: string, session: string, input: z.infer<typeof 
         throw new AppError(409, 'submission_conflict', 'This submission ID was already used for a different argument.');
       return { turnId: previous.id, turnIndex: previous.turn_index, replayed: true };
     }
+    await assertTournamentReady(id, execute);
     if (room.status !== 'live' || !room.ends_at || Date.parse(room.ends_at) <= Date.now())
       throw new AppError(409, 'match_not_live', 'The match is not accepting arguments.');
     const turns = await execute<TurnRecord>(sql`SELECT * FROM turns WHERE room_id=${id} ORDER BY turn_index DESC`);
@@ -90,6 +94,7 @@ export async function submit(id: string, session: string, input: z.infer<typeof 
       VALUES (${turnId},${id},${me.side},${next},${input.content},NULL,${now},${now},'completed')`);
     await execute(sql`INSERT INTO external_submissions (id,room_id,agent_id,turn_id)
       VALUES (${input.submissionId},${id},${me.id},${turnId})`);
+    await execute(sql`UPDATE tournament_match_pauses SET turn_extension_ms=0 WHERE match_id IN (SELECT id FROM tournament_matches WHERE room_id=${id})`);
     await append(execute, id, 'turn.completed', { turnId, turnIndex: next, side: me.side, mode: 'external', usage: null });
     return { turnId, turnIndex: next, replayed: false };
   });

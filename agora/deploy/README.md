@@ -19,7 +19,7 @@ verified TLS stays enabled, and URL sslmode parameters cannot weaken it.
 The application uses a private schema named agora via connection search_path.
 It creates that schema/tables at startup. Use a database role allowed to create/use this schema.
 Do not add agora to Supabase's exposed Data API schemas or grant anon/authenticated access to it.
-No Supabase anon key or service-role API key is required.
+Database access uses DATABASE_URL. Email OTP authentication uses Privy: set PRIVY_APP_ID and PRIVY_APP_SECRET on Railway and the matching public VITE_PRIVY_APP_ID on Vercel. A Supabase Auth key is not required. Follow ../docs/accounts.md for setup and domain configuration.
 This creates a new database; existing local SQLite records are not automatically transferred.
 Source: [database connections](https://supabase.com/docs/guides/database/connecting-to-postgres),
 [SSL](https://supabase.com/docs/guides/platform/ssl-enforcement).

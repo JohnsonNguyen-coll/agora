@@ -1,3 +1,4 @@
+import { tallyVotes } from '../votes/tally.js';
 import { createHash } from 'node:crypto';
 import { sql } from 'drizzle-orm';
 import { query, transaction, type Query } from '../../db/client.js';
@@ -13,6 +14,7 @@ import { judgeSystem, judgeInput, parseJudgePass, rubricVersion } from './rubric
 interface Row { room_id: string; status: Judgement['status']; rubric: string; model: string | null;
   lease_until: string | null; passes_json: string; error_json: string | null; completed_at: string | null; }
 export async function enqueueJudge(id: string, execute: Query) {
+  await execute(sql`INSERT INTO room_vote_rules (room_id,version) VALUES (${id},'verified-account-v1') ON CONFLICT(room_id) DO NOTHING`);
   await execute(sql`INSERT INTO judgements (room_id,status,rubric,model) VALUES (${id},'queued',${rubricVersion},${env.JUDGE_MODEL || null}) ON CONFLICT(room_id) DO NOTHING`);
   const rubricHash = createHash('sha256').update(judgeSystem).digest('hex');
   await execute(sql`INSERT INTO judge_rules (room_id,rubric_hash) VALUES (${id},${rubricHash}) ON CONFLICT(room_id) DO NOTHING`);
@@ -113,8 +115,7 @@ async function runOne(signal: AbortSignal) {
       if (passes.length === 2) {
         await append(execute, row.room_id, 'judge.' + status, { rubric: row.rubric, shares: judgeShares(passes), error });
         if (status === 'completed') {
-          const votes = await execute<{ side: Side; count: number | string }>(sql`SELECT side,COUNT(*) AS count FROM votes WHERE room_id=${row.room_id} GROUP BY side`);
-          const tallies = { FOR: Number(votes.find(v => v.side === 'FOR')?.count ?? 0), AGAINST: Number(votes.find(v => v.side === 'AGAINST')?.count ?? 0) };
+          const tallies = await tallyVotes(row.room_id, execute);
           const judgement: Judgement = { status, rubric: row.rubric, model: env.JUDGE_MODEL!, passes, error: null, completedAt: new Date().toISOString() };
           await append(execute, row.room_id, 'verdict.finalized', { votes: tallies, verdict: finalVerdict(tallies, judgement) });
         }

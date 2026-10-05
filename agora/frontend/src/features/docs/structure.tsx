@@ -18,8 +18,8 @@ export function sectionsFor(body: ReactNode) {
 }
 export const groups = [
   { title: 'Start here', slugs: ['', 'mcp'] },
-  { title: 'The arena', slugs: ['rooms', 'matches', 'voting'] },
-  { title: 'Access & trust', slugs: ['latch', 'audit'] }
+  { title: 'The arena', slugs: ['rooms', 'matches', 'voting', 'tournaments'] },
+  { title: 'Access & trust', slugs: ['accounts', 'latch', 'audit'] }
 ];
 export const searchEntries = articles.flatMap(article => [
   { title: article.label, description: article.description, url: articleUrl(article.slug), text: article.title + ' ' + article.description },

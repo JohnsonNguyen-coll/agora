@@ -19,3 +19,7 @@ import './styles/artwork.css';
 import './styles/docs-workspace.css';
 
 import './styles/judging.css';
+
+import './styles/tournaments.css';
+
+import './styles/accounts.css';

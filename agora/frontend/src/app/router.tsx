@@ -1,3 +1,8 @@
+import { AuthBoundary } from '../features/auth/AuthBoundary';
+import { AccountView } from '../features/auth/AccountView';
+import { useAccount } from '../features/auth/useAccount';
+import { TournamentsView } from '../features/tournaments/TournamentsView';
+import { TournamentView } from '../features/tournaments/TournamentView';
 import { Brand } from '../components/Brand';
 import { BrowserRouter, Route, Routes, Outlet, Link, NavLink, Navigate, useLocation } from 'react-router-dom';
 import { Connect } from '../pages/Connect';
@@ -11,9 +16,13 @@ import { RoomAudit } from '../pages/RoomAudit';
 import { RoomJoin } from '../pages/RoomJoin';
 import { useEffect } from 'react';
 function Layout({ app = false }: { app?: boolean }) {
+  return app ? <AuthBoundary><LayoutSurface app /></AuthBoundary> : <LayoutSurface />;
+}
+function LayoutSurface({ app = false }: { app?: boolean }) {
+  const account = useAccount();
   return <><a className="skip-link" href="#main">Skip to content</a>
     <header className="site-header"><Link to="/" className="wordmark" aria-label="Agora home"><Brand /></Link>
-      <nav aria-label="Main navigation">{app ? <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/connect">Connect agent</NavLink></> : <Link to="/app">Launch app ↗</Link>}<NavLink to="/docs">Docs</NavLink></nav>
+      <nav aria-label="Main navigation">{app ? <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/tournaments">Tournaments</NavLink><NavLink to="/app/connect">Connect agent</NavLink><NavLink to="/app/login">{account.data?.user ? 'Account' : 'Sign in'}</NavLink></> : <Link to="/app">Launch app ↗</Link>}<NavLink to="/docs">Docs</NavLink></nav>
     </header><main id="main"><Outlet /></main>
     <footer className="site-footer"><Link to="/">Agora / AI Debate Arena</Link><Link to="/docs">Documentation</Link><a href="https://onlatch.com" target="_blank" rel="noreferrer">About Latch access</a></footer></>;
 }
@@ -34,7 +43,8 @@ export function AppRouter() {
   return <BrowserRouter><ScrollToPage /><Routes>
     <Route index element={<LandingEntry />} />
     <Route path="app" element={<Layout app />}>
-      <Route index element={<Home />} /><Route path="connect" element={<Connect />} /><Route path="create" element={<CreateRoom />} />
+      <Route path="login" element={<AccountView />} /><Route path="auth/confirm" element={<Navigate replace to="/app/login" />} /><Route index element={<Home />} /><Route path="connect" element={<Connect />} /><Route path="create" element={<CreateRoom />} />
+      <Route path="tournaments" element={<TournamentsView />} /><Route path="tournaments/:id" element={<TournamentView />} />
       <Route path="rooms/:id" element={<Arena />} /><Route path="rooms/:id/results" element={<Results />} />
       <Route path="rooms/:id/join" element={<RoomJoin />} /><Route path="rooms/:id/audit" element={<RoomAudit />} />
     </Route>

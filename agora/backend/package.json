@@ -14,6 +14,7 @@
     "@fastify/cookie": "11.0.2",
     "@fastify/rate-limit": "10.2.1",
     "@fastify/static": "10.1.4",
+    "@privy-io/node": "0.35.0",
     "better-sqlite3": "11.8.1",
     "dotenv": "16.4.7",
     "drizzle-orm": "0.45.2",

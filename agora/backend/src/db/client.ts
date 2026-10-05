@@ -43,7 +43,7 @@ export function transaction<T>(action: (execute: Query) => Promise<T>): Promise<
   return task;
 }
 export async function migrate() {
-  const migration = ['0001_initial.sql', '0002_external.sql', '0003_judging.sql'].map(file => readFileSync(resolve(projectRoot, 'backend/src/db/migrations', file), 'utf8')).join('\n');
+  const migration = ['0001_initial.sql', '0002_external.sql', '0003_judging.sql', '0004_tournaments.sql', '0005_accounts_recovery.sql'].map(file => readFileSync(resolve(projectRoot, 'backend/src/db/migrations', file), 'utf8')).join('\n');
   await transaction(async execute => {
     if (pool) { await execute(sql.raw('SELECT pg_advisory_xact_lock(78261423)')); await execute(sql.raw('CREATE SCHEMA IF NOT EXISTS agora')); }
     for (const statement of migration.split(';').filter(value => value.trim())) await execute(sql.raw(statement));
