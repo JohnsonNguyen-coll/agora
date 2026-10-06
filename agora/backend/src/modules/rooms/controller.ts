@@ -6,10 +6,14 @@ import * as rooms from './service.js';
 import { audit } from '../audit/service.js';
 import { vote } from '../votes/service.js';
 import { streamRoom } from '../../lib/sse.js';
+import { judgeAvailability } from '../judging/availability.js';
 import { runtime } from '../../config/runtime.js';
 import { AppError } from '../../lib/errors.js';
 export function roomRoutes(app: FastifyInstance) {
-  app.get('/api/runtime', async () => runtime);
+  app.get('/api/runtime', async () => {
+    const judgeReason = judgeAvailability();
+    return { ...runtime, judgeAvailable: judgeReason === null, judgeReason };
+  });
   app.get('/api/rooms', async () => ({ rooms: await rooms.listRooms() }));
   app.post('/api/rooms', { config: { rateLimit: { max: 10, timeWindow: '1 minute' } } }, async (req, reply) => {
     const id = await rooms.create(createRoom.parse(req.body), req.sessionId);

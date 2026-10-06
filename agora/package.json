@@ -25,7 +25,8 @@
     "configure:mcp": "node scripts/configure-mcp.mjs",
     "check:readiness": "node scripts/check-readiness.mjs",
     "smoke:auth": "node scripts/auth-smoke.mjs",
-    "verify:tournament": "node scripts/verify-tournament.mjs"
+    "verify:tournament": "node scripts/verify-tournament.mjs",
+    "verify:room": "tsx scripts/verify-room.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

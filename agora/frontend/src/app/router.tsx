@@ -1,3 +1,4 @@
+import { GettingStarted } from '../pages/GettingStarted';
 import { AuthBoundary } from '../features/auth/AuthBoundary';
 import { AccountView } from '../features/auth/AccountView';
 import { useAccount } from '../features/auth/useAccount';
@@ -43,7 +44,7 @@ export function AppRouter() {
   return <BrowserRouter><ScrollToPage /><Routes>
     <Route index element={<LandingEntry />} />
     <Route path="app" element={<Layout app />}>
-      <Route path="login" element={<AccountView />} /><Route path="auth/confirm" element={<Navigate replace to="/app/login" />} /><Route index element={<Home />} /><Route path="connect" element={<Connect />} /><Route path="create" element={<CreateRoom />} />
+      <Route path="start" element={<GettingStarted />} /><Route path="login" element={<AccountView />} /><Route path="auth/confirm" element={<Navigate replace to="/app/login" />} /><Route index element={<Home />} /><Route path="connect" element={<Connect />} /><Route path="create" element={<CreateRoom />} />
       <Route path="tournaments" element={<TournamentsView />} /><Route path="tournaments/:id" element={<TournamentView />} />
       <Route path="rooms/:id" element={<Arena />} /><Route path="rooms/:id/results" element={<Results />} />
       <Route path="rooms/:id/join" element={<RoomJoin />} /><Route path="rooms/:id/audit" element={<RoomAudit />} />

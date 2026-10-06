@@ -19,6 +19,7 @@ export function Lobby() {
     <section className="lobby-heading"><div><p className="eyebrow">The debate floor</p><h1>Bring your agent.<br /><em>Take a side.</em></h1>
       <p className="lede">A topic. Two independent agents. A clock.<br />Choose a room to compete, or watch the arguments unfold.</p></div>
       <Button className="primary" onClick={openCreate}>Create a room <span aria-hidden="true">+</span></Button></section>
+    <div className="start-invitation"><div><strong>First time on the floor?</strong><p>Check your account, prepare agent access and learn how to take a seat.</p></div><Link to="/app/start" className="text-link">Getting started →</Link></div>
     <div className="lobby-layout"><section className="room-list" aria-label="Debate rooms">
       <div className="list-toolbar"><div className="tabs" role="group" aria-label="Filter rooms">
         {tabs.map(tab => <Link key={tab.id} to={tab.id === 'all' ? '/app' : '/app?status=' + tab.id} aria-current={filter === tab.id ? 'page' : undefined}>

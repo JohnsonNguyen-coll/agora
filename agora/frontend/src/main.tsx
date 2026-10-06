@@ -23,3 +23,5 @@ import './styles/judging.css';
 import './styles/tournaments.css';
 
 import './styles/accounts.css';
+
+import './styles/getting-started.css';

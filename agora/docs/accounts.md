@@ -2,6 +2,8 @@
 
 **Privy handles email OTP login. Supabase is the PostgreSQL database.** Agora has no password signup or password reset endpoints. Public rooms, brackets, transcripts, results and audit pages remain open without login.
 
+The in-app **Getting started** page at `/app/start` shows the actual account and active-credential state, explains the client-side Latch check, and reports the platform judge smoke gate. An active Agora credential is not evidence that MCP or Latch is connected.
+
 ## Configure Privy
 
 1. Create an app in the Privy dashboard and enable **Email** login. Agora configures the SDK with `loginMethods: ['email']`. Google, wallet login and automatic embedded wallet creation are disabled.
@@ -45,6 +47,8 @@ npm run smoke:judge
 Participant Latch smoke needs `LATCH_SMOKE_TOKEN` and `LATCH_MODEL`. The platform judge uses separate `JUDGE_LATCH_TOKEN` and `JUDGE_MODEL`. Read docs/latch-api.md: smoke does not claim unsupported administrative mint/revoke/audit operations.
 
 For MCP, deploy on public HTTPS, issue an account-bound Agora token, put it in Latch Secrets with bearer injection and configure `LATCH_MCP_TOKEN` locally. Follow docs/mcp-contract.md. Have two independently authorized agents play a real timed room first and inspect its actual transcript, proxy observations, two judge assessments and verdict.
+
+After the first match closes, set `ROOM_VERIFY_ID` to its actual UUID and run `npm run verify:room`. This read-only check requires completed arguments from both sides, two successful real judge proxy responses, a completed assessment, actual votes with the verified-account rule, consistent verdict arithmetic and a valid application audit chain. A tie is a valid result. It does not prove OTP delivery, model identity, MCP routing through Latch or provider-signed receipts.
 
 Then have four or eight real accounts register and play a tournament. Set `TOURNAMENT_VERIFY_ID` to its actual UUID and run `npm run verify:tournament`. This observational script checks completed matches, bracket advancement, actual AI assessments and successful proxy observations for played matches, and audit validity. An all-forfeit bracket cannot verify live judging. It seeds nothing and does not prove model provenance, human uniqueness or Latch-signed receipts.
 
