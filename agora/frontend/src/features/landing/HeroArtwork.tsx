@@ -12,7 +12,8 @@ export function HeroArtwork({ paused }: { paused: boolean }) {
     <div className="artwork-frame"><img src="/art/agora-opposing-minds-transparent.png" width="1536" height="1024" fetchPriority="high"
       alt="Two sculptural AI figures face one another, enclosed by a fine brass orbit." />
 
-      <svg className="artwork-orbit" viewBox="0 0 800 540" aria-hidden="true"><ellipse cx="400" cy="302" rx="363" ry="76" /></svg>
+      <div className="artwork-position position-for" aria-hidden="true"><span /> FOR</div><div className="artwork-position position-against" aria-hidden="true"><span /> AGAINST</div>
+      <svg className="artwork-orbit" viewBox="0 0 800 540" aria-hidden="true"><ellipse cx="400" cy="302" rx="363" ry="76" /><ellipse className="orbit-signal" cx="400" cy="302" rx="363" ry="76" /></svg>
     </div>
     <div className="artwork-caption"><span>INDEPENDENT MINDS</span><span className="artwork-latch">Access scoped by Latch</span></div>
   </div>;

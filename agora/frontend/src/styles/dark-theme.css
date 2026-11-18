@@ -1,0 +1,30 @@
+/* Agora night palette: midnight, teal and warm brass. */
+:root{color-scheme:dark}
+body{background:var(--canvas);color:var(--text)}
+::selection,.landing ::selection{background:#306574;color:#fff}
+.landing{position:relative;isolation:isolate;color-scheme:dark;background:var(--canvas)}
+.landing-atmosphere{position:absolute;top:0;left:0;right:0;height:950px;z-index:-1;pointer-events:none;overflow:hidden;background:radial-gradient(ellipse at 25% 0,#1d57654d,transparent 60%),radial-gradient(ellipse at 85% 10%,#7a4e383d,transparent 65%)}
+.landing-atmosphere:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#0b101680,transparent 65%),linear-gradient(0deg,var(--canvas),transparent 62%)}
+.landing-atmosphere .aurora-container{height:100%;opacity:.95}.aurora-container[data-renderer='fallback']{background:radial-gradient(ellipse at 20% 8%,#276d7d,transparent 65%),radial-gradient(ellipse at 80% 0,#8a6447,transparent 65%)}
+.landing-header{border-color:#ffffff15;background:#0b10161f}
+.landing-refined .hero-description,.landing .hero-footnote,.landing .section-heading-row>p,.landing .landing-steps article>p:not(.landing-kicker),.landing-refined .landing-steps .arena-feature-card article>p:not(.landing-kicker),.landing .faq-list details p{color:var(--muted)}
+.landing .landing-text-link{border-color:#8497a95c}.landing .hero-footnote{color:#a6b3bd}
+.landing .launch-button{background:#e9dfce;border-color:#e9dfce;color:#172028;border-radius:5px}.landing .launch-button:hover{background:#f6eddf;box-shadow:0 8px 28px #0004}
+.landing-refined .landing-hero h1 em{color:#ecb48f}.landing .kicker-dot{background:#82cebe;box-shadow:0 0 15px #82cebe99}
+.landing .hero-motion-toggle{color:#b1bdc6}.landing .artwork-position{background:#101923e8;color:#c0ccd5;border-color:#384855}.landing .artwork-caption{color:#a6b3bd}.landing .artwork-latch{border-color:#41504b;background:#18251e66;color:#c3cbb9}
+.landing .artwork-frame img{filter:drop-shadow(0 18px 28px #0005)}.landing .artwork-orbit{stroke:#ba9b6a}
+.landing .how-section,.landing .landing-faq{border-color:var(--hairline)}.landing .landing-steps .arena-feature-card{border:1px solid var(--hairline)}
+.landing .arena-feature-card article{border-color:var(--hairline)}.landing .step-drawing.topic-drawing span,.landing .record-drawing span{background:#88a7a2}.landing .sides-drawing span{border-color:#6f8d90;color:#b6cec8}.landing .sides-drawing span+span{background:#1c302eaa}
+.landing .landing-build-note{border-color:var(--hairline);color:var(--muted)}.landing .landing-build-note a{color:var(--text)}.landing .faq-list details{border-color:var(--hairline)}
+.landing-footer{background:#080d12;border-color:var(--hairline)}.landing-footer p,.landing-footer a,.landing-footer .footer-bottom{color:var(--muted)}.landing-footer nav h2{color:var(--text)}.landing-footer a:hover{color:var(--text)}.footer-top,.footer-bottom{border-color:var(--hairline)}
+.site-header{background:#0e151c}.site-footer{background:#090f15}.room-row:hover{background:#131d26}.tournament-card,.bracket-match{background:var(--surface)}
+.match-status,.seat{background:var(--surface)}.transcript-empty{background:linear-gradient(145deg,var(--surface),var(--canvas))}.verdict-scores small,.judge-table caption{color:var(--muted)}
+.docs-workspace,.docs-topbar{background:var(--canvas)}.docs-topbar,.docs-guide-sidebar,.docs-sidebar-bottom,.docs-search-dialog header,.docs-search-trigger,.docs-reader code,.docs-reader .docs-links>a,.docs-code>div,.docs-code pre{border-color:var(--hairline)}
+.docs-search-trigger,.docs-nav-group>a:hover,.docs-reader code,.docs-reader .docs-links>a,.docs-code>div,.docs-code pre,.docs-guide-sidebar{background:var(--surface)}
+.docs-nav-group>a[aria-current]{color:var(--accent);background:#e1a47712}.docs-reader section>p,.docs-reader li,.docs-callout p{color:var(--muted)}
+.docs-reader .docs-links>a:hover,.docs-search-results a:hover,.docs-search-results a:focus-visible{background:#1e2b35;border-color:#506171}.docs-callout{background:#132c2b;border-color:#2b5652}.docs-reader code{color:#d2cec4}
+dialog.docs-search-dialog{background:var(--canvas)}.docs-search-trigger kbd{border-color:var(--hairline)}.docs-search-dialog input{background:transparent;color:var(--text)}
+.create-room-dialog::backdrop{background:#000a}.docs-search-dialog::backdrop{background:#000a}
+@media(max-width:760px){.landing-atmosphere{height:1100px}.landing-atmosphere:after{background:linear-gradient(0deg,var(--canvas),transparent 75%),linear-gradient(90deg,#0b101644,transparent)}}
+
+.turn-block,.turn-block.against,.judge-panel{background:var(--surface)}.judge-panel,.verdict-scores>div,.judge-table th,.judge-table td,.judge-assessment{border-color:var(--hairline)}.judge-error{border-color:var(--accent);background:#e1a47710}

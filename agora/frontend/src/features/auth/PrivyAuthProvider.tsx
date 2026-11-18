@@ -53,5 +53,5 @@ function Bridge({children}:PropsWithChildren) {
   return <AuthContext.Provider value={{configured:true,ready,authenticated,syncing,error,login:()=>login({loginMethods:['email']}),logout,sync}}>{children}</AuthContext.Provider>;
 }
 export default function PrivyAuthProvider({children}:PropsWithChildren) {
-  return <PrivyProvider appId={appId} config={{loginMethods:['email'],appearance:{theme:'light',accentColor:'#a84d30'},embeddedWallets:{ethereum:{createOnLogin:'off'},solana:{createOnLogin:'off'}}}}><Bridge>{children}</Bridge></PrivyProvider>;
+  return <PrivyProvider appId={appId} config={{loginMethods:['email'],appearance:{theme:'dark',accentColor:'#e1a477'},embeddedWallets:{ethereum:{createOnLogin:'off'},solana:{createOnLogin:'off'}}}}><Bridge>{children}</Bridge></PrivyProvider>;
 }

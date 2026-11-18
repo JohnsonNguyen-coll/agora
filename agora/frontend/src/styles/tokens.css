@@ -1,8 +1,8 @@
 :root {
-  color-scheme: light;
-  --canvas: #f4f2e9; --surface: #e9ecdf; --hairline: #d5d7ca;
-  --text: #292e27; --muted: #64685e; --accent: #a84d30;
-  --for: #476873; --against: #a84d30;
+  color-scheme: dark;
+  --canvas: #0b1016; --surface: #141d25; --hairline: #2a3641;
+  --text: #eeeae2; --muted: #a6b3bd; --accent: #e1a477;
+  --for: #7ecabb; --against: #f0a27b;
   --serif: 'Instrument Serif', Georgia, serif; --sans: 'Inter', sans-serif;
   --mono: 'JetBrains Mono', monospace; --radius: 3px;
 }
