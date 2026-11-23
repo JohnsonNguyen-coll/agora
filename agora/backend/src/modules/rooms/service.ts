@@ -1,3 +1,4 @@
+import { enqueueJudge } from '../judging/service.js';
 import { control, turnDeadline } from '../tournaments/deadlines.js';
 import { tallyVotes } from '../votes/tally.js';
 import { finalVerdict } from '../../../../shared/src/judging.js';
@@ -44,7 +45,7 @@ export async function detail(id: string, session: string): Promise<Room> {
   const judgement = await getJudgement(id);
   const tallies = await tallyVotes(id);
   const votingRule = (await query(sql`SELECT version FROM room_vote_rules WHERE room_id=${id}`)).length ? 'verified-account-v1' : 'legacy-session';
-  return { tournamentControl, votingRule, tournament, judgement, verdict: row.status === 'closed' ? finalVerdict(tallies, judgement) : null, ...summary(row, agents, transcript.length), nextTurnIndex: transcript.length, nextSide: row.mode === 'external' && row.status === 'live' ? (transcript.length % 2 === 0 ? 'FOR' : 'AGAINST') : null, mySide: agents.find(a => a.session_id === session)?.side ?? null,
+  return { tournamentControl, votingRule, tournament, judgement, verdict: row.status === 'closed' ? finalVerdict(tallies, judgement) : null, ...summary(row, agents, transcript.length), nextTurnIndex: transcript.length, nextSide: row.status === 'live' ? (transcript.find(t => t.status === 'streaming')?.side ?? (transcript.length % 2 === 0 ? 'FOR' : 'AGAINST')) : null, mySide: agents.find(a => a.session_id === session)?.side ?? null,
     myVote: mine?.side ?? null, votingEndsAt: row.voting_ends_at, endReason: row.end_reason,
     votes: tallies,
     transcript: transcript.map(t => ({ id: t.id, roomId: t.room_id, side: t.side, turnIndex: t.turn_index,
@@ -82,12 +83,22 @@ export async function join(id: string, session: string, input: ParticipantInput)
 }
 export async function ready(id: string, session: string) {
   await transaction(async execute => {
+    await execute(sql`UPDATE rooms SET status=status WHERE id=${id}`);
     const room = await findRoom(id, execute);
+    if (room.mode !== 'latch') throw new AppError(409, 'wrong_mode', 'Use external readiness for this room.');
     if (room.status !== 'waiting') throw new AppError(409, 'room_locked', 'The match has already started.');
     const agent = (await roomAgents(id, execute)).find(a => a.session_id === session);
     if (!agent) throw new AppError(403, 'spectator', 'Only a participant can ready up.');
     if (agent.ready) return;
     await execute(sql`UPDATE agents SET ready=1 WHERE id=${agent.id}`);
     await append(execute, id, 'agent.ready', { side: agent.side });
+    const agents = await roomAgents(id, execute);
+    if (agents.length === 2 && agents.every(a => a.ready)) {
+      const startsAt = new Date().toISOString();
+      const endsAt = new Date(Date.now() + room.duration_minutes * 60000).toISOString();
+      await execute(sql`UPDATE rooms SET status='live',starts_at=${startsAt},ends_at=${endsAt} WHERE id=${id}`);
+      await enqueueJudge(id, execute);
+      await append(execute, id, 'match.started', { mode: 'latch', startsAt, endsAt, firstSide: 'FOR' });
+    }
   });
 }

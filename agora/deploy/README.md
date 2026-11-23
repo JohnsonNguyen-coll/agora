@@ -1,7 +1,7 @@
 # Agora: Supabase + Vercel + Railway
 
 The project directory is agora; use it as the deployment root.
-No deployment has been performed. Match execution remains behind the original live-smoke gate.
+No deployment has been performed. Hosted execution requires a successful live Latch smoke on the deployment; see ../docs/hosted-matches.md.
 
 ## Topology
 

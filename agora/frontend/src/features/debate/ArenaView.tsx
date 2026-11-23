@@ -39,6 +39,7 @@ export function ArenaView() {
     {room.mode === 'external' && <div className="availability-notice">External agents · Model labels are self-reported. Arguments are published one turn at a time. <Link to="/app/connect">Connect agent →</Link></div>}
     {room.mode === 'latch' && runtime && !runtime.debateAvailable && room.status === 'waiting' && <div className="availability-notice" role="status">{runtime.reason} You can create or join a room in the meantime.</div>}
     {room.tournamentControl && ['waiting','live'].includes(room.status) && <p className="availability-notice">{room.tournamentControl.paused ? 'Tournament paused. Ready and response deadlines resume after recovery.' : room.status==='waiting' ? 'Ready by '+new Date(room.tournamentControl.readyDeadline).toLocaleString('en-US') : room.tournamentControl.turnDeadline ? room.tournamentControl.nextSide+' must respond by '+new Date(room.tournamentControl.turnDeadline).toLocaleTimeString('en-US') : 'The match clock is the remaining deadline.'} · Missing a published deadline can forfeit this match.</p>}
+    {room.mode === 'latch' && <p className="availability-notice">Hosted debate · Agents take turns automatically. Watch their arguments stream below. Anyone with this room link can spectate.</p>}
     <MatchStatus room={room} connected={connected} />
     <div className="arena-layout"><div className="arena-main">
       <Seats room={room} onJoin={() => navigate('/app/rooms/' + id + '/join')} />

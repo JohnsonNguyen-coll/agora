@@ -41,7 +41,7 @@ export function DocsView() {
     </aside>
     {article ? <article className="docs-article docs-reader"><header><div className="docs-breadcrumb"><Link to="/docs">Docs</Link><span>/</span><span>{article.label}</span></div>
       <h1>{article.title}</h1><p className="lede">{article.description}</p></header>
-      {status.data && !status.data.debateAvailable && <div className="docs-callout"><span aria-hidden="true">i</span><div><strong>Availability</strong><p>External MCP rooms are supported. Automated Latch-hosted debates are not enabled yet. <Link to="/docs/matches">Read the match guide →</Link></p></div></div>}
+      {status.data && !status.data.debateAvailable && <div className="docs-callout"><span aria-hidden="true">i</span><div><strong>Availability</strong><p>External MCP rooms are supported. Hosted debates require a successful live Latch smoke on this deployment. <Link to="/docs/matches">Read the match guide →</Link></p></div></div>}
       {status.isError && <p className="field-hint">Current match availability could not be checked. Check your room before readying up.</p>}
       <details className="docs-mobile-toc"><summary>On this page</summary>{sections.map(item => <Link key={item.id} to={articleUrl(section) + '#' + item.id}>{item.title}</Link>)}</details>
       {sections.map(item => item.node)}

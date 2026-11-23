@@ -1,3 +1,4 @@
+import { startHostedWorker } from './modules/rooms/worker.js';
 import { authRoutes } from './modules/auth/controller.js';
 import { tournamentRoutes } from './modules/tournaments/controller.js';
 import { settleTournaments } from './modules/tournaments/service.js';
@@ -59,6 +60,8 @@ export async function buildApp() {
   let settlement: Promise<void> = Promise.resolve();
   const timer = setInterval(() => { if (!settling) settlement = settle(); }, 1000);
   timer.unref();
+  const stopHosted = startHostedWorker(() => app.log.error('Hosted match worker failed'));
+  app.addHook('onClose', stopHosted);
   const stopJudge = startJudgeWorker(() => app.log.error('Judge worker failed'));
   app.addHook('onClose', stopJudge);
   app.addHook('onClose', async () => { clearInterval(timer); await settlement; await settleDue(); await settleTournaments(); });

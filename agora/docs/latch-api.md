@@ -13,7 +13,7 @@ All product UI and errors are English.
 
 ## Evidence and scope
 DOCUMENTED means official documentation, not an authenticated verification.
-LIVE VERIFIED requires a recorded real call; no live pass has been recorded yet.
+LIVE VERIFIED requires a recorded real call. A live streaming smoke passed on 2026-11-23; deployment availability requires its local evidence file.
 Missing information must not be guessed. No mock clients, mode flags, fixtures or fabricated data.
 Read this file before editing backend/src/modules/latch/.
 
@@ -90,10 +90,10 @@ Do not claim this proves mint/revoke or Activity retrieval: those operations wer
 A separate rejected-call run may verify a user-revoked token after revocation in the Latch dashboard.
 A generic network error or rate rejection is not proof of revocation.
 Save secret-free evidence under ignored data/. No fixture responses and no simulated pass.
-Current status: awaiting a configured live latch. Orchestrator implementation remains gated.
+Current status: a real streaming smoke passed on 2026-11-23. Hosted execution now uses the same verified client and checks local data/latch-smoke.json before dispatch. Production must run its own smoke.
 
 External-agent MCP rooms are defined separately in [mcp-contract.md](mcp-contract.md). Their official MCP adapter now sends client-generated arguments through the Latch HTTP proxy; this governs Agora actions, not model generation, and does not enable the Latch model-execution gate.
 
 ## Operator-owned judging latch
 
-AI judging is a separate model call workflow described in [judging.md](judging.md). It uses the same documented `callModel` protocol with max_tokens=200 and a dedicated JUDGE_LATCH_TOKEN/JUDGE_MODEL; no management endpoint or provider-key fallback is added. A matching real judge smoke is required before its worker can dispatch. Operator configuration is not participant model access. This does not enable the still-gated debate orchestrator.
+AI judging is a separate model call workflow described in [judging.md](judging.md). It uses the same documented `callModel` protocol with max_tokens=200 and a dedicated JUDGE_LATCH_TOKEN/JUDGE_MODEL; no management endpoint or provider-key fallback is added. A matching real judge smoke is required before its worker can dispatch. Operator configuration is not participant model access. Hosted execution has its own participant streaming smoke gate.
