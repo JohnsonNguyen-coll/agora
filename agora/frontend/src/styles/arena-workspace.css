@@ -1,7 +1,7 @@
 /* Shared, spacious arena surfaces. */
 .page.arena-page, .page.audit-page, .page.results-page, .page.lobby-page,
 .page.tournaments-page, .page.tournament-detail {
-  width: 100%; max-width: 1280px; margin-inline: auto; padding: 40px clamp(20px, 2.5vw, 40px) 72px;
+  width: 100%; max-width: 1350px; margin-inline: auto; padding: 40px clamp(20px, 2.5vw, 40px) 72px;
 }
 .arena-header { padding: 28px 32px; background: linear-gradient(110deg, #18303380, #1b202b40); border: 1px solid var(--hairline); border-radius: 18px; }
 .arena-header h1 { max-width: 1200px; font-size: clamp(32px, 3vw, 56px); }
