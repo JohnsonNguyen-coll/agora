@@ -1,0 +1,69 @@
+/* Shared, spacious arena surfaces. */
+.page.arena-page, .page.audit-page, .page.results-page, .page.lobby-page,
+.page.tournaments-page, .page.tournament-detail {
+  width: 100%; max-width: 1920px; padding: 40px clamp(20px, 3vw, 64px) 72px;
+}
+.arena-header { padding: 28px 32px; background: linear-gradient(110deg, #18303380, #1b202b40); border: 1px solid var(--hairline); border-radius: 18px; }
+.arena-header h1 { max-width: 1200px; font-size: clamp(32px, 3vw, 56px); }
+.arena-layout { grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); gap: 28px; align-items: start; }
+.arena-page .seats { position: relative; gap: 40px; padding: 0; border: 0; margin-bottom: 24px; }
+.seats::after { content: 'VS'; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--hairline); background: var(--canvas); font: 12px var(--mono); color: var(--muted); z-index: 1; }
+.arena-page .seat { padding: 28px; min-height: 240px; border-radius: 16px; background: radial-gradient(ellipse at 0 0, #7ecabb14, transparent 75%), var(--surface); border: 1px solid var(--hairline); border-top: 3px solid var(--for); }
+.arena-page .seat.against { background: radial-gradient(ellipse at 100% 0, #f0a27b16, transparent 75%), var(--surface); border-top-color: var(--against); }
+.seat-identity { display: flex; align-items: center; gap: 16px; margin: 20px 0 16px; }
+.seat-identity h2 { margin: 0; font-size: clamp(23px, 2.1vw, 36px); }
+.agent-avatar { display: grid; place-items: center; flex-shrink: 0; width: 54px; height: 54px; border: 1px solid #7ecabb50; border-radius: 16px; color: var(--for); background: #7ecabb12; font: 16px var(--mono); }
+.against .agent-avatar { color: var(--against); border-color: #f0a27b50; background: #f0a27b12; }
+.arena-page .seat-active { box-shadow: 0 0 0 1px var(--for), 0 12px 44px #7ecabb0e; }
+.arena-page .seat-active.against { box-shadow: 0 0 0 1px var(--against), 0 12px 44px #f0a27b0e; }
+.ready-strip { border: 1px solid var(--hairline); border-radius: 12px; padding: 22px 24px; background: #14251f55; margin-bottom: 24px; }
+.ready-strip h3 { margin-bottom: 6px; }
+.ready-strip p { max-width: 780px; }
+.ready-strip .button { flex-shrink: 0; min-width: 132px; }
+.arena-main .transcript { max-width: none; width: 100%; }
+.arena-main .transcript-empty { min-height: 240px; }
+.arena-page .audit-rail { border-radius: 16px; }
+.audit-page .audit-intro { display: grid; gap: 16px; margin-block: 28px; padding: 28px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px; }
+.audit-page .full-audit { padding: 28px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px; }
+.audit-event-title { display: flex; align-items: center; gap: 18px; margin-bottom: 8px; flex-wrap: wrap; }
+.audit-event-title > span { font-size: 11px; color: var(--muted); }
+.full-audit dl { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 10px 20px; margin-block: 24px; }
+.full-audit dt { margin: 0; }
+.full-audit pre { padding: 20px; background: var(--canvas); border-radius: 8px; overflow: auto; }
+.results-page .judge-panel { border-radius: 16px; }
+.lobby-page .room-row { padding: 26px; margin-top: 18px; border: 1px solid var(--hairline); border-radius: 16px; background: linear-gradient(110deg, #18303366, #141d25); transition: border-color .2s, transform .2s; }
+.lobby-page .room-row:hover { border-color: #71868c; transform: translateY(-2px); }
+.lobby-page .room-row h2 { font-size: clamp(25px, 2.2vw, 34px); margin-block: 20px; max-width: none; }
+.lobby-page .room-row-bottom { align-items: center; }
+.lobby-page .room-row-bottom .text-link { padding: 9px 16px; border: 1px solid var(--hairline); border-radius: 8px; text-decoration: none; white-space: nowrap; }
+.tournament-card { border-radius: 16px; background: linear-gradient(135deg, #1b302d66, var(--surface)); }
+.tournament-form .field-hint { margin-bottom: 20px; }
+dialog.account-dialog { max-width: 600px; padding: 28px; border-radius: 20px; background: #121b24; box-shadow: 0 32px 100px #0008; }
+.account-dialog .dialog-heading { margin-bottom: 28px; }
+.account-profile { display: flex; gap: 18px; align-items: center; padding-bottom: 24px; }
+.account-avatar { display: grid; place-items: center; width: 62px; height: 62px; border-radius: 18px; background: #7ecabb18; border: 1px solid #7ecabb55; color: var(--for); flex-shrink: 0; font: 18px var(--mono); }
+.account-profile .eyebrow { font-size: 10px; margin-bottom: 8px; }
+.account-identity { overflow-wrap: anywhere; line-height: 1.6; font-size: 15px; }
+.account-facts { margin: 0; border-top: 1px solid var(--hairline); }
+.account-facts > div { display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--hairline); }
+.account-facts dt { color: var(--muted); font-size: 12px; }
+.account-facts dd { margin: 0; font-size: 12px; overflow-wrap: anywhere; }
+.account-manage { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
+@media(max-width:1100px) {
+  .arena-layout { grid-template-columns: 1fr; }
+  .arena-page .audit-rail { display: block; }
+}
+@media(max-width:760px) {
+  .arena-header { padding: 22px; }
+  .arena-page .seats { gap: 18px; }
+  .arena-page .seat { padding: 18px; min-height: 220px; }
+  .seat-identity { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .seats::after { width: 32px; height: 32px; font-size: 10px; }
+  .agent-avatar { width: 42px; height: 42px; border-radius: 12px; }
+  .agent-model { font-size: 10px; }
+  .ready-strip { padding: 20px; }
+  .ready-strip .button { width: 100%; }
+  .full-audit dl { grid-template-columns: 1fr; gap: 6px; }
+  .full-audit dd { margin-bottom: 10px; }
+  .account-facts > div { grid-template-columns: 1fr; gap: 8px; }
+}

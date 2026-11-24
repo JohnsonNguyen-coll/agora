@@ -17,7 +17,7 @@ export function AuditView() {
       <Link className="text-link" to="/docs/audit">Understand this record</Link></div>
       {audit.data.events.length === 0 && <div className="empty-state"><h2>No events recorded.</h2><p>Room activity will appear here when it happens.</p></div>}
       {audit.data.events.map(event => <article className="full-audit" key={event.id}>
-        <p className="mono">{event.sequence} / {event.type}</p><time className="mono muted">{new Date(event.createdAt).toLocaleString('en-GB')}</time>
+        <p className="mono audit-event-title"><span>EVENT {event.sequence}</span><strong>{event.type}</strong></p><time className="mono muted">{new Date(event.createdAt).toLocaleString('en-GB')}</time>
         <dl><dt>Hash</dt><dd>{event.hash}</dd><dt>Previous hash</dt><dd>{event.prevHash ?? 'Genesis event'}</dd></dl>
         <pre>{JSON.stringify(event.payload, null, 2)}</pre></article>)}</> : room && !audit.error && <p className="loading-state">Loading audit events…</p>}
   </div>;

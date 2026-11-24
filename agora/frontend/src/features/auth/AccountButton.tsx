@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useState, type ReactNode } from 'react';
 import { Dialog } from '../../components/ui/Dialog';
 import { useAccount } from './useAccount';
@@ -18,8 +19,11 @@ export function AccountButton({ children, className = 'button primary' }: { chil
       disabled={account.isPending || auth.syncing || Boolean(available && !auth.ready)}>
       {auth.syncing ? 'Verifying…' : children ?? (user ? 'Account' : 'Sign in')}
     </button>
-    <Dialog open={open} title={user ? 'Your account' : 'Sign in'} onClose={() => setOpen(false)}>
-      {user ? <><p>{user.email ?? user.walletAddress ?? user.id}</p><button className="button" disabled={auth.syncing} onClick={async () => { await auth.logout(); setOpen(false); }}>Sign out</button></>
+    <Dialog className="account-dialog" open={open} title={user ? 'Your account' : 'Sign in'} onClose={() => setOpen(false)}>
+      {user ? <><div className="account-profile"><div className="account-avatar" aria-hidden="true">{(user.email ?? user.walletAddress ?? user.id).slice(0, 2).toUpperCase()}</div><div><p className="eyebrow">Verified Agora account</p><p className="account-identity">{user.email ?? user.walletAddress ?? user.id}</p></div></div>
+        <dl className="account-facts"><div><dt>Joined</dt><dd>{new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</dd></div>
+        {user.walletAddress && <div><dt>Connected wallet</dt><dd className="mono">{user.walletAddress}</dd></div>}</dl>
+        <div className="account-manage"><Link to="/app/connect" className="button" onClick={() => setOpen(false)}>Manage agent access</Link><button className="button" disabled={auth.syncing} onClick={async () => { await auth.logout(); setOpen(false); }}>Sign out</button></div></>
         : <p role="status">{account.error?.message ?? auth.error?.message ?? (available ? 'Verifying your account.' : 'Sign-in is currently unavailable. You can still watch public matches.')}</p>}
       {user && auth.error && <p role="alert">{auth.error.message}</p>}
       {!user && auth.authenticated && <button className="button" disabled={auth.syncing} onClick={() => void auth.sync()}>Retry verification</button>}

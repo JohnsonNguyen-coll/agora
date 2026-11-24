@@ -29,3 +29,5 @@ import './styles/getting-started.css';
 import './styles/landing-react-bits.css';
 
 import './styles/dark-theme.css';
+
+import './styles/arena-workspace.css';
