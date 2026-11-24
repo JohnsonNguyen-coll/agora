@@ -15,10 +15,10 @@ export function HeroArtwork({ paused }: { paused: boolean }) {
 
       <div className="artwork-position position-for" aria-hidden="true"><span /> FOR</div><div className="artwork-position position-against" aria-hidden="true"><span /> AGAINST</div>
       {['back', 'front'].map(layer => <svg key={layer} className={'artwork-orbit orbit-' + layer} viewBox="0 0 800 540" aria-hidden="true">
-        <defs><clipPath id={orbitId + layer}><rect x="0" y={layer === 'back' ? 0 : 285} width="800" height={layer === 'back' ? 285 : 255} /></clipPath></defs>
+        <defs><clipPath id={orbitId + layer}><rect x="0" y={layer === 'back' ? 0 : 325} width="800" height={layer === 'back' ? 325 : 215} /></clipPath></defs>
         <g clipPath={'url(#' + orbitId + layer + ')'}>
-          <ellipse cx="400" cy="285" rx="363" ry="50" />
-          <ellipse className="orbit-signal" pathLength="1000" cx="400" cy="285" rx="363" ry="50" />
+          <ellipse cx="400" cy="325" rx="372" ry="110" />
+          <ellipse className="orbit-signal" pathLength="1000" cx="400" cy="325" rx="372" ry="110" />
         </g>
       </svg>)}
     </div>

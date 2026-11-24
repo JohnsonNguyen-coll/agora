@@ -8,7 +8,7 @@
 .landing-refined .launch-button:after{content:'';position:absolute;inset:-70% -35%;background:linear-gradient(110deg,transparent 35%,#f6e8bd28 50%,transparent 65%);transform:translateX(-85%);transition:transform .65s ease;pointer-events:none;z-index:-1}
 .landing-refined .launch-button:hover:after,.landing-refined .launch-button:focus-visible:after{transform:translateX(85%)}
 .landing-refined .launch-button:hover{box-shadow:0 5px 18px #292e2717;transform:translateY(-2px)}
-.landing-refined .artwork-frame{isolation:isolate;overflow:visible;transform-style:preserve-3d}
+.landing-refined .artwork-frame{isolation:isolate;overflow:visible;transform-style:flat}
 .artwork-frame img{position:relative;z-index:1;pointer-events:none}
 .artwork-position{position:absolute;z-index:2;display:flex;align-items:center;gap:8px;font:9px var(--mono);letter-spacing:.1em;color:var(--muted);padding:9px 12px;border:1px solid var(--hairline);border-radius:20px;background:#f4f2e9e8;animation:arena-label-float 6s ease-in-out infinite}
 .artwork-position span{width:5px;height:5px;border-radius:50%;background:var(--for)}.position-for{top:24%;left:7%}.position-against{bottom:22%;right:3%;animation-delay:-3s}.position-against span{background:var(--against)}

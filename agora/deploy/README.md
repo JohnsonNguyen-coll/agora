@@ -43,7 +43,11 @@ Source: [Railway Fastify](https://docs.railway.com/guides/fastify).
 
 ## 3. Vercel frontend
 
-Connect the same repository. Set Root Directory to agora.
+Connect the same repository. The workspace root agora uses vercel.ts.
+If Root Directory is agora/frontend, frontend/vercel.json supplies the Vite build,
+SPA fallback and proxy to the current public Railway service. Enable access to source
+files outside the root directory for the shared workspace.
+The frontend config pins the public Railway origin. Update its destination when moving services.
 Set RAILWAY_BACKEND_URL using vercel.env.example or the ignored .env.vercel copy.
 vercel.ts supplies install/build/output settings and reads that variable at deployment time.
 Only frontend/dist is published. Database and token secrets belong only on Railway.
