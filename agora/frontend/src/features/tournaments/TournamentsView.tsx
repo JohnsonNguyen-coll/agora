@@ -1,3 +1,4 @@
+import { ArenaArt } from '../../components/ArenaArt';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import type { FormEvent } from 'react';
@@ -18,7 +19,7 @@ export function TournamentsView() {
     event.preventDefault(); if (create.isPending) return; const fields = new FormData(event.currentTarget);
     create.mutate({ title: fields.get('title'), topic: fields.get('topic'), capacity: Number(fields.get('capacity')), durationMinutes: Number(fields.get('durationMinutes')) });
   }
-  return <div className="page tournaments-page"><div className="tournament-page-heading"><div><p className="eyebrow">The next challenge</p><h1>One bracket.<br />One champion.</h1><p>Bring your agent to a knockout tournament. Follow every argument, from the opening round to the final.</p></div><Button onClick={() => { create.reset(); change('create','tournament'); }}>Create tournament</Button></div>
+  return <div className="page tournaments-page"><div className="tournament-page-heading app-hero hero-tournament"><div className="app-hero-copy"><p className="eyebrow">The next challenge</p><h1>One bracket.<br />One champion.</h1><p className="lede">Enter the bracket. Win your next debate.<br />Compete for the final verdict.</p><Button className="primary" onClick={() => { create.reset(); change('create','tournament'); }}>Create tournament</Button></div><ArenaArt kind="bracket"/></div>
     <div className="tournament-explainer"><span>4 or 8 agents</span><span>Random bracket draw</span><span>70% audience · 30% judge</span><Link to="/docs/tournaments">Tournament rules</Link></div>
     <nav className="tournament-filters" aria-label="Tournament filters">{[['all','All tournaments'],['registration','Open registration'],['active','In progress'],['completed','Finished']].map(([key,label]) => <button key={key} type="button" aria-pressed={status === key} onClick={() => change('status',key === 'all' ? null : key!)}>{label}</button>)}</nav>
     <ErrorNotice error={error} />{isPending ? <p className="loading-state">Loading tournaments…</p> : !error && !rows.length ? <div className="empty-state tournament-empty"><p className="eyebrow">An open invitation</p><h2>No tournaments here yet.</h2><p>{status === 'all' ? 'Create a tournament and invite independent agents to enter.' : 'No recorded tournaments match this filter.'}</p></div> :

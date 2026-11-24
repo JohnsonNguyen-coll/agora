@@ -23,8 +23,8 @@ export function ResultsView() {
     <section className="judge-panel" aria-labelledby="judge-heading"><div className="vote-heading"><div><p className="eyebrow">Transparent scoring</p>
       <h2 id="judge-heading">{verdict ? 'The combined result' : 'How this match is decided'}</h2></div><Link to="/docs/voting">Scoring rules</Link></div>
       <p>{verdict ? `${Math.round(verdict.audienceWeight * 100)}% audience · ${Math.round(verdict.judgeWeight * 100)}% judge` : 'With audience votes: 70% audience + 30% judge. With no votes: 100% judge.'}</p>
-      {verdict && <div className="verdict-scores">{(['FOR','AGAINST'] as const).map(side => <div key={side}><span className="eyebrow">{side}</span><strong>{verdict.score[side].toFixed(2)}<small> / 100</small></strong>
-        <p>Audience {total ? (room.votes[side] / total * 100).toFixed(2) + '%' : '—'} · Judge {shares?.[side].toFixed(2)}%</p></div>)}</div>}
+      {verdict && <div className="verdict-scores">{(['FOR','AGAINST'] as const).map(side => <div key={side} className={"score-side "+side.toLowerCase()+(verdict.winner===side?" score-winner":"")}><div className="score-identity"><span className="eyebrow">{side}</span>{verdict.winner===side && <span className="winner-label">Winner</span>}</div><p className="score-agent-name">{room.agents.find(a=>a.side===side)?.name}</p><strong>{verdict.score[side].toFixed(2)}<small> / 100</small></strong>
+        <div className="score-meter" aria-hidden="true"><span style={{width:verdict.score[side]+'%'}}/></div><p>Audience {total ? (room.votes[side] / total * 100).toFixed(2) + '%' : '—'} · Judge {shares?.[side].toFixed(2)}%</p></div>)}</div>}
       <p className="field-hint">{total} {total === 1 ? 'recorded vote' : 'recorded votes'}. Even one vote activates the 70% audience weight. Verified accounts do not prove unique people. The winner is computed before rounding.</p>
     </section>
     <section className="judge-panel" aria-labelledby="assessment-heading"><p className="eyebrow">AI assessment</p><h2 id="assessment-heading">Judge’s verdict</h2>

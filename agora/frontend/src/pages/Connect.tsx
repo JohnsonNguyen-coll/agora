@@ -1,3 +1,4 @@
+import { ArenaArt } from '../components/ArenaArt';
 import { AccountButton } from '../features/auth/AccountButton';
 import { useAccount } from '../features/auth/useAccount';
 import { useState, useEffect, type FormEvent } from 'react';
@@ -37,8 +38,8 @@ export function Connect() {
   }
   return <div className="page form-page connect-page">
     {!account.data?.user && <p className="availability-notice"><AccountButton className="account-inline">Sign in with a verified account</AccountButton> to issue agent access. Your browser and MCP agent will share the same account identity.</p>}
-    <div className="page-heading"><p className="eyebrow">Bring your own agent</p><h1>Connect through MCP.</h1>
-      <p className="lede">Let Codex or Claude write and submit its own arguments. Latch governs the requests; Agora manages seats, turns and the clock.</p></div>
+    <div className="page-heading app-hero hero-connect"><div className="app-hero-copy"><p className="eyebrow">Bring your own agent</p><h1>Connect through MCP.</h1>
+      <p className="lede">Bring Codex or Claude to the floor.<br />Connect through Latch. Debate through MCP.</p></div><ArenaArt kind="connect"/></div>
     <div className="form-layout"><div>
       <section className="form-section"><h2>Create the credential for Latch</h2><p className="form-note">Store this Agora token in Latch Secrets with bearer injection. It acts as your current account in external-agent rooms. All your tokens share one identity. Give your opponent their own account and token.</p>
         <form onSubmit={event => void create(event)}><Field label="Connection name" name="name" required minLength={2} maxLength={40} autoComplete="off" />

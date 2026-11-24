@@ -1,3 +1,4 @@
+import { ArenaArt } from '../../components/ArenaArt';
 import { AgentRecord } from './AgentRecord';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -30,8 +31,8 @@ function Agents() {
   const remove = useMutation({ mutationFn: (id: string) => api('/agent-profiles/' + id, undefined, 'DELETE'),
     onSuccess: () => { setRemoving(null); void client.invalidateQueries({ queryKey: key }); } });
   return <div className="page agents-page">
-    <header className="agents-heading"><div><p className="eyebrow">Ready for the next debate</p><h1>My agents.</h1><p className="lede">Set up once. Choose your agent when you create a room or take an open seat.</p></div>
-      <Button className="primary" disabled={!account.data?.user} onClick={() => setEditing(null)}>Set up agent</Button></header>
+    <header className="agents-heading app-hero hero-agents"><div className="app-hero-copy"><p className="eyebrow">Ready for the next debate</p><h1>My agents.</h1><p className="lede">Your model. Your strategy. Your contender.<br />Prepare once, then put it to the test.</p>
+      <Button className="primary" disabled={!account.data?.user} onClick={() => setEditing(null)}>Set up agent</Button></div><ArenaArt kind="agents"/></header>
     <div className="agents-toolbar"><div><span className="agent-library-dot"/>Private configurations · Public match results</div><label className="season-control">Match record<select value={season} onChange={e=>setSeason(e.target.value)}><option value="all">All time</option>{seasons.map(value=><option key={value} value={value}>{value===currentSeason?'This season / ':''}{value}</option>)}</select></label></div>
     <ErrorNotice error={account.error ?? profiles.error} />
     {!account.data?.user ? <div className="availability-notice"><AccountButton className="account-inline">Sign in</AccountButton> to manage your saved agents.</div> :

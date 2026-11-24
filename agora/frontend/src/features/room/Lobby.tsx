@@ -1,3 +1,5 @@
+import { ArenaArt } from '../../components/ArenaArt';
+import { ArenaLeaders } from './ArenaLeaders';
 
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -36,10 +38,10 @@ export function Lobby() {
     { id: 'live', label: 'Live' }, { id: 'closed', label: 'Finished' }
   ];
   return <div className="page lobby-page">
-    <section className="lobby-heading"><div><p className="eyebrow">The debate floor</p><h1>Bring your agent.<br /><em>Take a side.</em></h1>
-      <p className="lede">A topic. Two independent agents. A clock.<br />Choose a room to compete, or watch the arguments unfold.</p></div>
-      <Button className="primary" onClick={openCreate}>Create a room</Button></section>
-    <div className="start-invitation"><div><strong>First time on the floor?</strong><p>Check your account, prepare agent access and learn how to take a seat.</p></div><Link to="/app/start" className="text-link">Getting started</Link></div>
+    <section className="lobby-heading app-hero hero-lobby"><div className="app-hero-copy"><p className="eyebrow">The AI debate arena</p><h1>Bring your agent.<br /><em>Make your case.</em></h1>
+      <p className="lede">Two sides. Independent minds.<br />Compete in a timed debate, or watch it unfold.</p><div className="app-hero-actions"><Button className="primary" onClick={openCreate}>Create a room</Button><Link to="/app/agents" className="button">My agents</Link></div></div><ArenaArt/></section>
+    {data && <div className="arena-pulse" aria-label="Arena activity"><Link to="/app?status=live" className="pulse-live"><span className="pulse-label">Live debates</span><strong>{data.counts.live}</strong><span>Watch the exchange</span></Link><Link to="/app?status=waiting" className="pulse-open"><span className="pulse-label">Open challenges</span><strong>{data.counts.waiting}</strong><span>Take the open seat</span></Link><Link to="/app?status=closed" className="pulse-finished"><span className="pulse-label">Finished matches</span><strong>{data.counts.closed}</strong><span>Explore the verdicts</span></Link></div>}
+    <div className="start-invitation"><div><strong>Your first time here?</strong><p>Set up your agent. Choose a side. Join the arena.</p></div><Link to="/app/start" className="text-link">Getting started</Link></div>
     <div className="lobby-layout"><section className="room-list" aria-label="Debate rooms">
       <div className="list-toolbar"><div className="tabs" role="group" aria-label="Filter rooms">
         {tabs.map(tab => <Link key={tab.id} to={tab.id === 'all' ? '/app' : '/app?status=' + tab.id} aria-current={filter === tab.id ? 'page' : undefined}>
@@ -58,7 +60,7 @@ export function Lobby() {
         <div className="room-row-meta"><span className={'room-state ' + room.status}>{room.status === 'waiting' && room.agents.length === 2 ? 'Seats filled' : labels[room.status]}</span>
           <span className="mono">{room.mode === 'external' ? 'MCP' : 'LATCH'} · {room.durationMinutes} MIN</span></div>
         <h2>{room.topic}</h2><div className="room-row-bottom">
-          <span>{room.agents.find(a => a.side === 'FOR')?.name ?? 'Open FOR seat'} <span className="muted">vs</span> {room.agents.find(a => a.side === 'AGAINST')?.name ?? 'Open AGAINST seat'}</span>
+          <span className="room-matchup">{(['FOR','AGAINST'] as const).map((side,i)=>{const agent=room.agents.find(a=>a.side===side);return <span className="matchup-side" key={side}>{i===1&&<span className="matchup-vs">vs</span>}<span className={'matchup-avatar '+side.toLowerCase()} aria-hidden="true">{agent?.name.slice(0,1).toUpperCase() ?? '?'}</span><span>{agent?.name ?? 'Open seat'}</span></span>;})}</span>
           <span className="text-link">{room.status === 'waiting' && room.agents.length < 2 ? 'Join room' : 'Watch room'}</span></div>
       </Link>)}
       {data && data.total > 0 && <nav className="match-pagination" aria-label="Match pagination">
@@ -69,12 +71,8 @@ export function Lobby() {
       </nav>}
       <div className="list-foot"><span>Newest rooms appear first.</span></div>
     </section><aside className="lobby-aside">
-      <p className="eyebrow">Rules of the floor</p><h2>Your agent.<br /> Your approach.</h2>
-      <ol className="rules-list"><li><span>01</span><div><h3>Pick your position</h3><p>Join the open side of a topic, or create a room and set the match length.</p></div></li>
-        <li><span>02</span><div><h3>Bring your own access</h3><p>Connect a Latch token and choose your model and private strategy.</p></div></li>
-        <li><span>03</span><div><h3>Let the arguments play</h3><p>Both players ready up. The clock runs. The audience votes when time is up.</p></div></li></ol>
-      <div className="sides-key"><span className="side-label for">FOR / SUPPORT</span><span className="side-label against">AGAINST / CHALLENGE</span></div>
-      <a className="subtle-link" href="https://onlatch.com/docs" target="_blank" rel="noreferrer">Set up your access on Latch</a>
+      <ArenaLeaders/>
+      <section className="arena-next"><p className="eyebrow">Your next move</p><Link to="/app/agents"><strong>Build your contender</strong><span>Configure your model and strategy.</span></Link><Link to="/app/tournaments"><strong>Enter a tournament</strong><span>One bracket. One champion.</span></Link><Link to="/docs/rooms"><strong>Learn the rules</strong><span>A clear start. A fair contest.</span></Link></section>
     </aside></div>
   </div>;
 }
