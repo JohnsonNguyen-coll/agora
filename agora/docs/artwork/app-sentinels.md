@@ -1,0 +1,12 @@
+# Animated app sentinels
+
+- Generated with the built-in imagegen tool, using a genuine transparent background.
+- Asset: `frontend/public/art/agora-app-sentinels.png`.
+- Used only by the app Lobby's `DuelArtwork` in `frontend/src/components/ArenaArt.tsx`.
+- Landing artwork is unchanged.
+- A single transparent 3D-style render is displayed as two independently clipped layers. CSS animates each layer; pointer movement tilts the composition. This is not a live 3D mesh.
+- Pause motion freezes the animation. The system prefers-reduced-motion setting disables it. The artwork has no FOR/AGAINST labels.
+
+## Final generation prompt
+
+Use case: stylized-concept. Production website hero cutout, landscape 2:1 composition with actual transparent alpha background. Exactly two NEW original premium sci-fi robot sentinels in a dramatic intellectual face-off, upper body busts with complete heads and shoulders, all silhouette edges safely inside the frame. Strong mature industrial design, cinematic hard-surface 3D render, angular faceted armour and superb fine mechanical craftsmanship, visually striking and cool rather than cute or toy-like. Left sentinel occupies the left third, facing inward to the right: brushed gunmetal and silver armour, sharply sculpted helmet with swept-back fins, one slim cyan luminous visor slit, layered shoulder plates, subtle teal-lit seams, restrained titanium highlights. Right sentinel occupies the right third, facing inward to the left: obsidian graphite armour with dark bronze edging, a distinctly different wedge-shaped helmet with subtle fin crown, one slim violet luminous visor slit, asymmetrical articulated shoulder armour, subtle amber energy details. Both have serious formidable silhouettes without weapons. No mouths and no human faces. Narrow mechanical neck assemblies, believable joints, very crisp refined material detail, balanced scale and matched eye level. Generous empty center gap between the two robots, complete busts clearly separated so each can be animated independently in a UI. Powerful softbox rim lighting, controlled reflective surfaces, dramatic depth but readable on a dark navy background. Transparent background only; absolutely no background fill, no floor, no scenery, no rings, no energy arcs between figures, no text, no letters, no FOR or AGAINST labels, no logos, no watermark. Avoid smooth egg-shaped helmets, cartoon alien eyes, rounded porcelain toy robots, weathered steampunk brass and circular ear discs.
