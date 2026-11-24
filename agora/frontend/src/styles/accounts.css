@@ -6,3 +6,12 @@
 .account-links { display:flex; gap:18px; flex-wrap:wrap; }
 .account-links button { padding:0; background:none; border:0; text-decoration:underline; cursor:pointer; color:inherit; }
 @media(max-width:600px) { .account-card { padding:20px; } .site-header nav { flex-wrap:wrap; } }
+.create-steps button { padding: 8px 2px; border: 0; background: transparent; color: inherit; }
+.create-steps li { padding-bottom: 0; }
+.custom-select { position: relative; min-width: 0; }
+.select-trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid var(--hairline); border-radius: 8px; background: var(--surface); color: var(--text); text-align: left; gap: 16px; }
+.select-chevron { width: 7px; height: 7px; border-bottom: 1px solid currentColor; border-right: 1px solid currentColor; transform: rotate(45deg); margin: 0 4px 4px; flex-shrink: 0; }
+.select-options { position: absolute; inset: calc(100% + 6px) 0 auto; z-index: 12; padding: 6px; border: 1px solid var(--hairline); border-radius: 10px; background: #1a2631; box-shadow: 0 12px 32px #0006; }
+.select-options button { width: 100%; text-align: left; padding: 11px 12px; border: 0; border-radius: 6px; background: transparent; color: var(--text); }
+.select-options button:hover, .select-options button:focus-visible { background: #ffffff12; outline-offset: -2px; }
+.select-options button[aria-selected="true"] { background: #e1a4771a; color: var(--accent); }
