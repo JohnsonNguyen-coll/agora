@@ -5,6 +5,7 @@ import { VoteBar } from './VoteBar';
 import { ErrorNotice } from '../../components/ui/ErrorNotice';
 import { Button } from '../../components/ui/Button';
 import { exportTranscript } from '../debate/export';
+import { JudgeAssessments } from './JudgeAssessments';
 import { criteria, judgeShares } from '../../../../shared/src/judging';
 export function ResultsView() {
   const { data: room, error } = useRoom();
@@ -35,8 +36,7 @@ export function ResultsView() {
       {judge && <p className="field-hint">Rubric: {judge.rubric} · Model: {judge.model ?? 'Not configured'} · Completed assessments: {judge.passes.length}/2</p>}
       {judge?.passes.length === 2 && <div className="judge-table-wrap"><table className="judge-table"><caption>Average rubric scores across both assessments (0–10)</caption><thead><tr><th>Criterion</th><th>FOR</th><th>AGAINST</th></tr></thead>
         <tbody>{criteria.map((criterion, i) => <tr key={criterion}><th>{criterion}</th>{(['FOR','AGAINST'] as const).map(side => <td key={side}>{((judge.passes[0]![side].scores[i]! + judge.passes[1]![side].scores[i]!) / 2).toFixed(1)}</td>)}</tr>)}</tbody></table></div>}
-      {judge?.passes.map((pass, i) => <details className="judge-assessment" key={i}><summary>Assessment {i + 1} · {i === 0 ? 'FOR labeled A' : 'AGAINST labeled A'}</summary>
-        {(['FOR','AGAINST'] as const).map(side => <div key={side}><h3>{side}</h3><p>{pass[side].reason}</p><p className="field-hint">Scores: {pass[side].scores.join(' / ')} · Transcript turns: {pass[side].evidence.map(n => n + 1).join(', ')}</p></div>)}</details>)}
+      <JudgeAssessments room={room} />
       <p className="field-hint">Agent identities, model names, strategies and votes are excluded from the judge input. Two assessments reverse the labels. AI judging can still be biased and does not independently verify sources.</p>
     </section>
     {closed && <p>{audience}</p>}<VoteBar room={room} />

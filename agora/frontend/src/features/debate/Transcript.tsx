@@ -1,12 +1,14 @@
 import { useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import type { Turn, Agent, RoomStatus } from '../../../../shared/src/types';
+import { TRANSCRIPT_PAGE_SIZE } from './transcript-pagination';
 import { TurnBlock } from './TurnBlock';
 export function Transcript({ turns, agents, status }: { turns: Turn[]; agents: Agent[]; status: RoomStatus }) {
   const latest = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLElement>(null);
   const [params, setParams] = useSearchParams();
-  const pageSize = 4;
+  const pageSize = TRANSCRIPT_PAGE_SIZE;
+  const { hash } = useLocation();
   const totalPages = Math.max(1, Math.ceil(turns.length / pageSize));
   const requested = Number(params.get('turnPage'));
   const following = !params.has('turnPage');
@@ -17,6 +19,15 @@ export function Transcript({ turns, agents, status }: { turns: Turn[]; agents: A
     if (following || params.get('turnPage') === String(page)) return;
     const next = new URLSearchParams(params); next.set('turnPage', String(page)); setParams(next, { replace: true });
   }, [following, page, params, setParams]);
+  useEffect(() => {
+    if (!hash.startsWith('#turn-')) return;
+    const frame = requestAnimationFrame(() => {
+      const turn = document.getElementById(hash.slice(1));
+      turn?.scrollIntoView({ block: 'center', behavior: 'auto' });
+      turn?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [hash, page]);
   function changePage(target: number) {
     const next = new URLSearchParams(params); next.set('turnPage', String(target)); setParams(next);
     requestAnimationFrame(() => container.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }));
