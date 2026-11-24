@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 import assert from 'node:assert/strict';
 config({path:'.env'});
 const base=process.env.AUTH_SMOKE_BASE || 'http://localhost:3001', origin=process.env.APP_ORIGIN || 'http://localhost:5173';
-if(!process.env.PRIVY_SMOKE_ACCESS_TOKEN) throw new Error('Configure PRIVY_SMOKE_ACCESS_TOKEN from a real email OTP login. No JWT or account is simulated.');
+if(!process.env.PRIVY_SMOKE_ACCESS_TOKEN) throw new Error('Configure PRIVY_SMOKE_ACCESS_TOKEN from a real email, Google or wallet login. No JWT or account is simulated.');
 const sessions=[];
 async function request(path,cookie,body) {
   const r=await fetch(base+'/api/auth/'+path,{method:body===undefined?'GET':'POST',headers:{Origin:origin,...(cookie?{Cookie:cookie}:{}),...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)}),signal:AbortSignal.timeout(20000)});

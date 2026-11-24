@@ -13,9 +13,22 @@ export function provider() {
   return client ??= new PrivyClient({ appId: env.PRIVY_APP_ID!, appSecret: env.PRIVY_APP_SECRET!, timeout: 10000, maxRetries: 0 });
 }
 export function publicUser(user: User) {
-  const email=user.linked_accounts.find(a=>a.type==='email' && Number.isFinite(a.verified_at) && a.verified_at>0);
-  if(user.is_guest || !email || email.type!=='email') throw new AppError(403,'email_unverified','Sign in using a verified email OTP account.');
-  return { id:user.id,email:email.address,createdAt:new Date(user.created_at*1000).toISOString(),confirmedAt:new Date(email.verified_at*1000).toISOString() };
+  const verified = user.linked_accounts.filter(account =>
+    Number.isFinite(account.verified_at) && account.verified_at > 0);
+  const email = verified.find(account => account.type === 'email');
+  const google = verified.find(account => account.type === 'google_oauth');
+  const wallet = verified.find(account => account.type === 'wallet' &&
+    account.connector_type !== 'embedded' && account.wallet_client_type !== 'privy');
+  const identity = email ?? google ?? wallet;
+  if (user.is_guest || !identity)
+    throw new AppError(403, 'identity_unverified', 'Sign in with email, Google or a verified external wallet.');
+  return {
+    id: user.id,
+    email: email?.type === 'email' ? email.address : google?.type === 'google_oauth' ? google.email : null,
+    walletAddress: wallet?.type === 'wallet' ? wallet.address : null,
+    createdAt: new Date(user.created_at * 1000).toISOString(),
+    confirmedAt: new Date(identity.verified_at * 1000).toISOString()
+  };
 }
 async function verify(accessToken: string) {
   try {
@@ -23,7 +36,9 @@ async function verify(accessToken: string) {
     const user=await api.users()._get(claims.user_id);
     if(user.id!==claims.user_id) throw new AppError(401,'invalid_auth_session','Sign in again.');
     const account=publicUser(user);
-    await query(sql`INSERT INTO accounts (id,email,created_at,confirmed_at) VALUES (${account.id},${account.email},${account.createdAt},${account.confirmedAt})
+    // The legacy non-null email column stays empty for wallet-only accounts.
+    // Public identity is read from verified Privy accounts on every session check.
+    await query(sql`INSERT INTO accounts (id,email,created_at,confirmed_at) VALUES (${account.id},${account.email ?? ''},${account.createdAt},${account.confirmedAt})
       ON CONFLICT(id) DO UPDATE SET email=excluded.email,confirmed_at=excluded.confirmed_at`);
     return {user,expiresAt:new Date(claims.expiration*1000).toISOString()};
   } catch(error) {

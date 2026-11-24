@@ -50,8 +50,8 @@ function Bridge({children}:PropsWithChildren) {
     const focus=()=>{if(document.visibilityState==='visible')void sync();};document.addEventListener('visibilitychange',focus);
     return()=>{clearInterval(timer);document.removeEventListener('visibilitychange',focus);};
   },[ready,authenticated,user?.id,sync,client]);
-  return <AuthContext.Provider value={{configured:true,ready,authenticated,syncing,error,login:()=>login({loginMethods:['email']}),logout,sync}}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{configured:true,ready,authenticated,syncing,error,login:()=>login({loginMethods:['email','google','wallet']}),logout,sync}}>{children}</AuthContext.Provider>;
 }
 export default function PrivyAuthProvider({children}:PropsWithChildren) {
-  return <PrivyProvider appId={appId} config={{loginMethods:['email'],appearance:{theme:'dark',accentColor:'#e1a477'},embeddedWallets:{ethereum:{createOnLogin:'off'},solana:{createOnLogin:'off'}}}}><Bridge>{children}</Bridge></PrivyProvider>;
+  return <PrivyProvider appId={appId} config={{loginMethods:['email','google','wallet'],appearance:{theme:'dark',accentColor:'#e1a477'},embeddedWallets:{ethereum:{createOnLogin:'off'},solana:{createOnLogin:'off'}}}}><Bridge>{children}</Bridge></PrivyProvider>;
 }

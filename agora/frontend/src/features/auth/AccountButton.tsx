@@ -19,12 +19,12 @@ export function AccountButton({ children, className = 'button primary' }: { chil
       {auth.syncing ? 'Verifying…' : children ?? (user ? 'Account' : 'Sign in')}
     </button>
     <Dialog open={open} title={user ? 'Your account' : 'Sign in'} onClose={() => setOpen(false)}>
-      {user ? <><p>{user.email}</p><button className="button" disabled={auth.syncing} onClick={async () => { await auth.logout(); setOpen(false); }}>Sign out</button></>
-        : <p role="status">{account.error?.message ?? auth.error?.message ?? (available ? 'Verifying your account.' : 'Email sign-in is currently unavailable. You can still watch public matches.')}</p>}
+      {user ? <><p>{user.email ?? user.walletAddress ?? user.id}</p><button className="button" disabled={auth.syncing} onClick={async () => { await auth.logout(); setOpen(false); }}>Sign out</button></>
+        : <p role="status">{account.error?.message ?? auth.error?.message ?? (available ? 'Verifying your account.' : 'Sign-in is currently unavailable. You can still watch public matches.')}</p>}
       {user && auth.error && <p role="alert">{auth.error.message}</p>}
       {!user && auth.authenticated && <button className="button" disabled={auth.syncing} onClick={() => void auth.sync()}>Retry verification</button>}
       {account.isError && <button className="button" onClick={() => void account.refetch()}>Try again</button>}
-      {!user && available && !auth.authenticated && <button className="button" onClick={() => { setOpen(false); auth.login(); }}>Continue with email</button>}
+      {!user && available && !auth.authenticated && <button className="button" onClick={() => { setOpen(false); auth.login(); }}>Continue to sign in</button>}
     </Dialog>
   </>;
 }
