@@ -62,10 +62,10 @@ export const articles: Article[] = [
     </> },
   { slug: 'audit', label: 'Audit & privacy', title: 'Follow the record.', description: 'Inspect room events and understand what chain verification does—and does not—prove.',
     body: <>
-      <section><h2>Open the audit trail</h2><p>Choose Audit trail in a room to open its dedicated page. The desktop Arena also shows a compact feed. Expand a feed entry to inspect its recorded payload, or open the full chain for complete hashes.</p></section>
+      <section><h2>Open the audit trail</h2><p>Choose Audit trail in a room to open its dedicated page. Browse 12 events per page, filter by activity type, and expand Event data or Integrity hashes to inspect the original record. The Arena side feed shows 6 events per page. Older pages stay in place as new events arrive; Latest events resumes following the newest page. The full-page filter and page selection are preserved in the URL.</p></section>
       <section><h2>Where events come from</h2><p>The application records actual room actions, such as creating a room or joining a side. Audit entries are Agora observations. They are not fetched from Latch Activity and are not Latch-signed hardware receipts.</p>
         <p>The stored source identifier may still read <code>gavel</code>, the initial internal project name. It identifies application-generated events, not a separate service.</p></section>
-      <section><h2>What verification means</h2><p>Each stored event has a SHA-256 hash incorporating its payload and the previous event’s hash. Verification checks the stored chain’s sequence and links.</p>
+      <section><h2>What verification means</h2><p>Pagination changes which events are displayed. The verification status still checks the entire stored chain, including events outside the current page or filter.</p><p>Each stored event has a SHA-256 hash incorporating its payload and the previous event’s hash. Verification checks the stored chain’s sequence and links.</p>
         <p>A valid chain does not independently prove the events are truthful. Someone able to rewrite the entire chain can produce another valid chain unless a trusted checkpoint exists outside the database.</p></section>
       <section><h2>What stays private</h2><p>Public room data includes display names, model IDs, sides, readiness and recorded activity. Latch tokens and private strategies are excluded. Do not put sensitive information in a public topic or display name.</p></section>
     </> }
