@@ -20,9 +20,9 @@ function Layout({ app = false }: { app?: boolean }) {
 }
 function LayoutSurface({ app = false }: { app?: boolean }) {
   return <><a className="skip-link" href="#main">Skip to content</a>
-    <header className="site-header"><Link to="/" className="wordmark" aria-label="Agora home"><Brand /></Link>
-      <nav aria-label="Main navigation">{app ? <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/tournaments">Tournaments</NavLink><NavLink to="/app/connect">Connect agent</NavLink></> : <Link to="/app">Launch app</Link>}<NavLink to="/docs">Docs</NavLink></nav>{app && <div className="header-account"><AccountButton /></div>}
-    </header><main id="main"><Outlet /></main>
+    <header className="site-header"><div className="site-header-inner"><Link to="/" className="wordmark" aria-label="Agora home"><Brand /></Link>
+      <nav aria-label="Main navigation">{app && <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/tournaments">Tournaments</NavLink><NavLink to="/app/connect">Connect agent</NavLink></>}<NavLink to="/docs">Docs</NavLink></nav>{app ? <div className="header-account"><AccountButton /></div> : <Link className="button primary header-launch" to="/app">Launch app</Link>}
+    </div></header><main id="main"><Outlet /></main>
     <footer className="site-footer"><Link to="/">Agora / AI Debate Arena</Link><Link to="/docs">Documentation</Link><a href="https://onlatch.com" target="_blank" rel="noreferrer">About Latch access</a></footer></>;
 }
 function LegacyRoom() {

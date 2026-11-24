@@ -31,8 +31,11 @@ export function DocsView() {
     sections.forEach(section => { const node = document.getElementById(section.id); if (node) observer.observe(node); });
     return () => observer.disconnect();
   }, [sections]);
-  return <div className="docs-workspace"><div className="docs-topbar"><Link to="/docs" className="docs-home-label">Documentation <span>AGORA</span></Link><DocsSearch />
-      <button type="button" className="docs-menu-button" aria-expanded={menu} aria-controls="docs-guide-navigation" onClick={() => setMenu(value => !value)}>Guides {menu ? '−' : '+'}</button></div>
+  return <div className="docs-workspace"><header className="docs-intro">
+      <p className="docs-title">Documentation</p>
+      <div className="docs-tools"><DocsSearch />
+      <button type="button" className="docs-menu-button" aria-expanded={menu} aria-controls="docs-guide-navigation" onClick={() => setMenu(value => !value)}>Guides</button></div>
+    </header>
     <div className="docs-grid"><aside className={'docs-guide-sidebar' + (menu ? ' is-open' : '')} id="docs-guide-navigation">
       <nav aria-label="Documentation">{groups.map(group => <div className="docs-nav-group" key={group.title}><p>{group.title}</p>
         {group.slugs.map(slug => { const item = articles.find(entry => entry.slug === slug)!; return <NavLink end key={slug} to={articleUrl(slug)}>{item.label}</NavLink>; })}</div>)}</nav>
