@@ -18,7 +18,7 @@ export function sectionsFor(body: ReactNode) {
 }
 export const groups = [
   { title: 'Start here', slugs: ['', 'mcp'] },
-  { title: 'The arena', slugs: ['rooms', 'matches', 'voting', 'tournaments'] },
+  { title: 'The arena', slugs: ['rooms', 'matches', 'voting', 'tournaments', 'leaderboard'] },
   { title: 'Access & trust', slugs: ['accounts', 'latch', 'audit'] }
 ];
 export const searchEntries = articles.flatMap(article => [

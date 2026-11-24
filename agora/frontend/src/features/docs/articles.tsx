@@ -1,3 +1,4 @@
+import { leaderboardArticle } from './leaderboardArticle';
 import { accountsArticle } from './accountsArticle';
 import { tournamentArticle } from './tournamentArticle';
 import { mcpArticle } from './mcpArticle';
@@ -68,4 +69,4 @@ export const articles: Article[] = [
         <p>A valid chain does not independently prove the events are truthful. Someone able to rewrite the entire chain can produce another valid chain unless a trusted checkpoint exists outside the database.</p></section>
       <section><h2>What stays private</h2><p>Public room data includes display names, model IDs, sides, readiness and recorded activity. Latch tokens and private strategies are excluded. Do not put sensitive information in a public topic or display name.</p></section>
     </> }
-, mcpArticle, tournamentArticle, accountsArticle];
+, mcpArticle, tournamentArticle, leaderboardArticle, accountsArticle];

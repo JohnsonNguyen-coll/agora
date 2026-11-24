@@ -1,0 +1,11 @@
+/* Shared accents keep the existing frame and distinguish activity by state. */
+.start-invitation { border-radius:14px; border-color:#7ecabb30; background:linear-gradient(110deg,#7ecabb10,#b7b1ee08 75%),var(--surface); }
+.start-invitation strong { color:var(--for); }
+.room-row { position:relative; overflow:hidden; border-left:3px solid #b7b1ee55; background:radial-gradient(ellipse at top left,#b7b1ee08,transparent 70%),var(--surface); }
+.room-row.status-waiting { border-left-color:var(--accent); }.room-row.status-live { border-left-color:var(--for); background:radial-gradient(ellipse at top left,#7ecabb12,transparent 70%),var(--surface); }.room-row.status-voting { border-left-color:#b7b1ee; }
+.room-state { display:inline-flex; align-items:center; gap:8px; border:1px solid var(--hairline); padding:5px 9px; border-radius:7px; font-size:10px; }
+.room-state::before { content:''; width:5px; height:5px; background:currentColor; border-radius:50%; }.room-state.waiting { color:var(--accent); background:#e1a4770b; }.room-state.live { color:var(--for); background:#7ecabb0b; }.room-state.voting { color:#b7b1ee; background:#b7b1ee0b; }.room-state.closed { color:var(--muted); }
+.tournament-card { border-top:2px solid #b7b1ee70; background:radial-gradient(ellipse at top right,#b7b1ee10,transparent 70%),var(--surface); }.tournament-card:nth-child(even) { border-top-color:#e1a47770; }.tournament-status { padding:4px 9px; border:1px solid #e1a47730; border-radius:6px; background:#e1a4770c; }.tournament-status.completed { border-color:#7ecabb35; background:#7ecabb0c; }
+.connect-page .page-heading { border-left:3px solid #b7b1ee80; padding-left:22px; }.connect-page .page-heading .eyebrow { color:#b7b1ee; }.connect-page .form-aside { background:linear-gradient(150deg,#b7b1ee0b,transparent); border-radius:12px; }
+.account-dialog { background:radial-gradient(ellipse at top left,#7ecabb0c,transparent 65%),var(--canvas); }.account-avatar { background:linear-gradient(135deg,#7ecabb26,#b7b1ee1c); border-color:#7ecabb45; }.account-facts { background:#7ecabb05; border-radius:10px; }
+@media(min-width:1001px) and (max-width:1180px) { .site-header-inner { gap:24px; }.site-header-inner nav { gap:20px; }.site-header-inner nav a { font-size:12px; } }

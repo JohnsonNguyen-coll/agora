@@ -9,7 +9,9 @@ export function seasonLabel(value: string) {
 }
 export function Leaderboard() {
  const [params,setParams] = useSearchParams();
- const season=params.get('season') ?? new Date().toISOString().slice(0,7), page=Number(params.get('page') ?? 1);
+ const requestedSeason=params.get('season') ?? '', requestedPage=Number(params.get('page') ?? 1);
+ const season=/^(all|\d{4}-(0[1-9]|1[0-2]))$/.test(requestedSeason)?requestedSeason:new Date().toISOString().slice(0,7);
+ const page=Number.isSafeInteger(requestedPage) && requestedPage>0 && requestedPage<=1000000?requestedPage:1;
  const query=useQuery({queryKey:['leaderboard',season,page],queryFn:()=>api<LeaderboardPage>(`/leaderboard?season=${encodeURIComponent(season)}&page=${page}`)});
  const data=query.data, current=new Date().toISOString().slice(0,7);
  const seasons=[...new Set([current,...data?.seasons ?? [],season])].filter(s=>s!=='all').sort().reverse();

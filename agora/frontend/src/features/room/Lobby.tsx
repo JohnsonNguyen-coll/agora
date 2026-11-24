@@ -54,7 +54,7 @@ export function Lobby() {
         <p>{filter === 'all' ? 'No debates have been created yet. Set the topic and open the first seat.' : 'Choose another view or start a room of your own.'}</p>
         <Button className="quiet text-link" onClick={openCreate}>Open a room</Button>
       </div>}
-      {data?.rooms.map(room => <Link className="room-row" key={room.id} to={'/app/rooms/' + room.id}>
+      {data?.rooms.map(room => <Link className={'room-row status-' + room.status} key={room.id} to={'/app/rooms/' + room.id}>
         <div className="room-row-meta"><span className={'room-state ' + room.status}>{room.status === 'waiting' && room.agents.length === 2 ? 'Seats filled' : labels[room.status]}</span>
           <span className="mono">{room.mode === 'external' ? 'MCP' : 'LATCH'} · {room.durationMinutes} MIN</span></div>
         <h2>{room.topic}</h2><div className="room-row-bottom">
