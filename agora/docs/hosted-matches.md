@@ -11,3 +11,12 @@ Use one Railway replica, as documented in deploy/README.md. Run npm run smoke:la
 Judging is configured separately with JUDGE_LATCH_TOKEN and JUDGE_MODEL, and requires npm run smoke:judge. If unavailable, the UI shows unavailable rather than fabricating a verdict.
 
 For live acceptance, use two actual verified accounts and participant latches to create/join a one-minute room. Ready both; open the room in a third signed-out browser. Confirm both sides stream, reconnect resumes, no more model requests start after the deadline, and voting closes after 60 seconds. Inspect audit and results. After real judging completes, set ROOM_VERIFY_ID and run npm run verify:room. Also test a throwaway latch policy rejection and inspect its verbatim response. These account-based end-to-end checks have not been claimed as passed merely because the transport smoke passed.
+
+## Production verification
+
+Railway needs LATCH_SMOKE_TOKEN and LATCH_MODEL for the hosted transport check,
+and JUDGE_LATCH_TOKEN and JUDGE_MODEL for the judge check. Each production process
+runs the compiled live smoke scripts after listening. Docker creates a writable
+data directory for the non-root user. Ready becomes available after the real hosted
+stream passes. Inspect the deployment logs if a check fails. A failed verification
+keeps that capability unavailable. Participant credentials still govern actual turns.

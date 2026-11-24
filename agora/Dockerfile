@@ -22,5 +22,6 @@ COPY --from=build /app/mcp/package.json mcp/package.json
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build /app/backend/dist backend/dist
 COPY --from=build /app/backend/src/db/migrations backend/src/db/migrations
+RUN mkdir -p /app/data && chown node:node /app/data
 USER node
 CMD ["npm", "run", "start", "-w", "backend"]
