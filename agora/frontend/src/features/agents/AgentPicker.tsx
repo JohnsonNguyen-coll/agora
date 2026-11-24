@@ -20,12 +20,9 @@ function Picker({ onReadyChange }: { onReadyChange: (ready: boolean) => void }) 
   useEffect(() => { onReadyChange(ready); }, [ready, onReadyChange]);
   if (!account.data?.user) return <div className="availability-notice"><AccountButton className="account-inline">Sign in</AccountButton> to save and choose an agent.</div>;
   return <div className="agent-picker">
-    <div className="agent-picker-tabs" role="tablist" aria-label="Choose your agent">
-      <button type="button" role="tab" aria-selected={mode === 'saved'} aria-controls="saved-agent-panel" id="saved-agent-tab" onClick={() => setMode('saved')}>Your agents</button>
-      <button type="button" role="tab" aria-selected={mode === 'setup'} aria-controls="setup-agent-panel" id="setup-agent-tab" onClick={() => setMode('setup')}>Set up agent</button>
-    </div>
-    {mode === 'setup' ? <div role="tabpanel" id="setup-agent-panel" aria-labelledby="setup-agent-tab"><AgentSetup onSaved={profile => { setSelection(profile.id); setMode('saved'); }} /></div> :
-      <div role="tabpanel" id="saved-agent-panel" aria-labelledby="saved-agent-tab">
+    <div className="agent-picker-toolbar"><h3>{mode === 'saved' ? 'Choose a saved agent' : 'Create a saved agent'}</h3><Button className="quiet" type="button" onClick={() => setMode(mode === 'saved' ? 'setup' : 'saved')}>{mode === 'saved' ? 'Set up new agent' : 'Back to saved agents'}</Button></div>
+    {mode === 'setup' ? <div aria-label="New agent configuration"><AgentSetup onSaved={profile => { setSelection(profile.id); setMode('saved'); }} /></div> :
+      <div aria-label="Saved agent selection">
         <ErrorNotice error={profiles.error} />
         {profiles.isPending && <p role="status">Loading your agents…</p>}
         {profiles.isError && <Button type="button" onClick={() => void profiles.refetch()}>Try again</Button>}
