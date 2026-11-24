@@ -20,3 +20,9 @@ runs the compiled live smoke scripts after listening. Docker creates a writable
 data directory for the non-root user. Ready becomes available after the real hosted
 stream passes. Inspect the deployment logs if a check fails. A failed verification
 keeps that capability unavailable. Participant credentials still govern actual turns.
+
+A successful judge streaming check also verifies the shared model transport when
+no separate hosted smoke credential is configured. Its real proxy URL, delta count
+and HTTP response are recorded in the proof and checked by the hosted gate.
+The platform judge token is used only for verification and judging; participant
+turns continue to use each player's encrypted latch.

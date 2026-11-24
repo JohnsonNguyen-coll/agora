@@ -13,7 +13,7 @@ if (!env.JUDGE_LATCH_TOKEN || !env.JUDGE_MODEL) {
     const result = await callModel(env.JUDGE_LATCH_TOKEN, { model: env.JUDGE_MODEL, stream: true, max_tokens: 40,
       messages: [{ role: 'user', content: 'State one short principle for impartial debate judging.' }] }, () => { deltas++; });
     if (!deltas || !result.text.trim()) throw new Error('No real streaming text received.');
-    const proof = { passed: true, checkedAt: new Date().toISOString(), fingerprint: judgeFingerprint(),
+    const proof = { passed: true, checkedAt: new Date().toISOString(), fingerprint: judgeFingerprint(), proxy: env.LATCH_PROXY_BASE, deltas,
       model: result.model, inputTokens: result.inputTokens, outputTokens: result.outputTokens, observation: result.observation };
     await mkdir(resolve(projectRoot, 'data'), { recursive: true });
     await writeFile(resolve(projectRoot, 'data/judge-smoke.json'), JSON.stringify(proof, null, 2));
