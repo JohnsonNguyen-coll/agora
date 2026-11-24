@@ -14,7 +14,15 @@ export function roomRoutes(app: FastifyInstance) {
     const judgeReason = judgeAvailability();
     return { ...runtime, judgeAvailable: judgeReason === null, judgeReason };
   });
-  app.get('/api/rooms', async () => ({ rooms: await rooms.listRooms() }));
+  app.get('/api/rooms', async req => {
+    const input = z.object({
+      page: z.coerce.number().int().min(1).max(1000000).optional(),
+      pageSize: z.coerce.number().int().min(1).max(50).default(6),
+      status: z.enum(['all', 'waiting', 'live', 'closed']).default('all')
+    }).parse(req.query);
+    if (input.page === undefined) return { rooms: await rooms.listRooms() };
+    return rooms.listRoomPage({ ...input, page: input.page });
+  });
   app.post('/api/rooms', { config: { rateLimit: { max: 10, timeWindow: '1 minute' } } }, async (req, reply) => {
     const id = await rooms.create(createRoom.parse(req.body), req.sessionId);
     return reply.code(201).send(await rooms.detail(id, req.sessionId));

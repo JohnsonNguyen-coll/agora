@@ -10,7 +10,7 @@ import type { AgentRecord, RoomRecord, TurnRecord } from '../../db/records.js';
 import { seal } from '../../lib/crypto.js';
 import { AppError } from '../../lib/errors.js';
 import { append } from '../audit/service.js';
-import type { Agent, CreateRoomInput, ParticipantInput, Room, RoomSummary, Side } from '../../../../shared/src/types.js';
+import type { Agent, CreateRoomInput, ParticipantInput, Room, RoomSummary, RoomPage, RoomFilter, Side } from '../../../../shared/src/types.js';
 const safeAgent = (a: AgentRecord): Agent => ({ id: a.id, name: a.name, model: a.model, side: a.side,
   ready: Boolean(a.ready), status: a.status, latchId: a.latch_id });
 export async function findRoom(id: string, execute: Query = query) {
@@ -31,6 +31,31 @@ export async function listRooms() {
     const count = (await query<{ count: number | string }>(sql`SELECT COUNT(*) AS count FROM turns WHERE room_id=${row.id}`))[0];
     return summary(row, await roomAgents(row.id), Number(count?.count ?? 0));
   }));
+}
+export async function listRoomPage(input: { page: number; pageSize: number; status: RoomFilter }): Promise<RoomPage> {
+  return transaction(async execute => {
+    const seats = sql`((SELECT COUNT(*) FROM agents a WHERE a.room_id=r.id) +
+      (SELECT COUNT(*) FROM external_agents a WHERE a.room_id=r.id))`;
+    const counts = (await execute<{ all_count: number | string; waiting: number | string; live: number | string; closed: number | string }>(sql`
+      SELECT COUNT(*) AS all_count,
+        COUNT(CASE WHEN r.status='waiting' AND ${seats}<2 THEN 1 END) AS waiting,
+        COUNT(CASE WHEN r.status='live' THEN 1 END) AS live,
+        COUNT(CASE WHEN r.status='closed' THEN 1 END) AS closed FROM rooms r`))[0]!;
+    const totals = { all: Number(counts.all_count), waiting: Number(counts.waiting), live: Number(counts.live), closed: Number(counts.closed) };
+    const total = totals[input.status];
+    const totalPages = Math.max(1, Math.ceil(total / input.pageSize));
+    const page = Math.min(input.page, totalPages);
+    const filter = input.status === 'all' ? sql`1=1` : input.status === 'waiting'
+      ? sql`r.status='waiting' AND ${seats}<2` : sql`r.status=${input.status}`;
+    const rows = await execute<RoomRecord>(sql`SELECT r.*, CASE WHEN e.room_id IS NULL THEN 'latch' ELSE 'external' END AS mode
+      FROM rooms r LEFT JOIN external_rooms e ON e.room_id=r.id WHERE ${filter}
+      ORDER BY r.created_at DESC,r.id DESC LIMIT ${input.pageSize} OFFSET ${(page - 1) * input.pageSize}`);
+    const rooms = await Promise.all(rows.map(async row => {
+      const count = (await execute<{ count: number | string }>(sql`SELECT COUNT(*) AS count FROM turns WHERE room_id=${row.id}`))[0];
+      return summary(row, await roomAgents(row.id, execute), Number(count?.count ?? 0));
+    }));
+    return { rooms, page, pageSize: input.pageSize, total, totalPages, counts: totals };
+  });
 }
 export async function detail(id: string, session: string): Promise<Room> {
   const row = await findRoom(id), agents = await roomAgents(id);

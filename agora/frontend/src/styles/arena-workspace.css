@@ -1,7 +1,7 @@
 /* Shared, spacious arena surfaces. */
 .page.arena-page, .page.audit-page, .page.results-page, .page.lobby-page,
 .page.tournaments-page, .page.tournament-detail {
-  width: 100%; max-width: 1480px; margin-inline: auto; padding: 40px clamp(20px, 2.5vw, 40px) 72px;
+  width: 100%; max-width: 1280px; margin-inline: auto; padding: 40px clamp(20px, 2.5vw, 40px) 72px;
 }
 .arena-header { padding: 28px 32px; background: linear-gradient(110deg, #18303380, #1b202b40); border: 1px solid var(--hairline); border-radius: 18px; }
 .arena-header h1 { max-width: 1200px; font-size: clamp(32px, 3vw, 56px); }
@@ -66,4 +66,14 @@ dialog.account-dialog { max-width: 600px; padding: 28px; border-radius: 20px; ba
   .full-audit dl { grid-template-columns: 1fr; gap: 6px; }
   .full-audit dd { margin-bottom: 10px; }
   .account-facts > div { grid-template-columns: 1fr; gap: 8px; }
+}
+
+.match-pagination { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 24px; }
+.match-pagination p, .pagination-current { font-size: 12px; color: var(--muted); }
+.match-pagination > div { display: flex; align-items: center; gap: 14px; }
+.match-pagination .button { padding: 8px 12px; font-size: 12px; }
+.pagination-current { white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media(max-width:760px) {
+  .match-pagination { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .match-pagination > div { width: 100%; justify-content: space-between; gap: 8px; }
 }

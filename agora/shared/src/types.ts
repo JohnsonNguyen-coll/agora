@@ -10,6 +10,12 @@ export interface RoomSummary {
   createdAt: string; startsAt: string | null; endsAt: string | null;
   agents: Agent[]; turns: number;
 }
+export type RoomFilter = 'all' | 'waiting' | 'live' | 'closed';
+export interface RoomPage {
+  rooms: RoomSummary[];
+  page: number; pageSize: number; total: number; totalPages: number;
+  counts: Record<RoomFilter, number>;
+}
 export interface Turn {
   id: string; roomId: string; side: Side; turnIndex: number; content: string;
   tokensUsed: number | null; startedAt: string; completedAt: string | null;
