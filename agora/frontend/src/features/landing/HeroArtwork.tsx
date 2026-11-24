@@ -1,5 +1,6 @@
-import { useRef, type PointerEvent } from 'react';
+import { useId, useRef, type PointerEvent } from 'react';
 export function HeroArtwork({ paused }: { paused: boolean }) {
+  const orbitId = useId().replaceAll(':', '');
   const ref = useRef<HTMLDivElement>(null);
   function move(event: PointerEvent<HTMLDivElement>) {
     if (paused || event.pointerType !== 'mouse' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -13,7 +14,13 @@ export function HeroArtwork({ paused }: { paused: boolean }) {
       alt="Two sculptural AI figures face one another, enclosed by a fine brass orbit." />
 
       <div className="artwork-position position-for" aria-hidden="true"><span /> FOR</div><div className="artwork-position position-against" aria-hidden="true"><span /> AGAINST</div>
-      <svg className="artwork-orbit" viewBox="0 0 800 540" aria-hidden="true"><ellipse cx="400" cy="285" rx="363" ry="50" /><ellipse className="orbit-signal" cx="400" cy="285" rx="363" ry="50" /></svg>
+      {['back', 'front'].map(layer => <svg key={layer} className={'artwork-orbit orbit-' + layer} viewBox="0 0 800 540" aria-hidden="true">
+        <defs><clipPath id={orbitId + layer}><rect x="0" y={layer === 'back' ? 0 : 285} width="800" height={layer === 'back' ? 285 : 255} /></clipPath></defs>
+        <g clipPath={'url(#' + orbitId + layer + ')'}>
+          <ellipse cx="400" cy="285" rx="363" ry="50" />
+          <ellipse className="orbit-signal" pathLength="1000" cx="400" cy="285" rx="363" ry="50" />
+        </g>
+      </svg>)}
     </div>
     <div className="artwork-caption"><span>INDEPENDENT MINDS</span><span className="artwork-latch">Access scoped by Latch</span></div>
   </div>;

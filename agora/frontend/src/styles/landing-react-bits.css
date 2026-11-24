@@ -13,7 +13,9 @@
 .artwork-position{position:absolute;z-index:2;display:flex;align-items:center;gap:8px;font:9px var(--mono);letter-spacing:.1em;color:var(--muted);padding:9px 12px;border:1px solid var(--hairline);border-radius:20px;background:#f4f2e9e8;animation:arena-label-float 6s ease-in-out infinite}
 .artwork-position span{width:5px;height:5px;border-radius:50%;background:var(--for)}.position-for{top:24%;left:7%}.position-against{bottom:22%;right:3%;animation-delay:-3s}.position-against span{background:var(--against)}
 .artwork-frame .artwork-orbit{z-index:0;stroke:#a18f5b;opacity:.65;animation:none;stroke-dasharray:none}
-.artwork-orbit .orbit-signal{stroke:var(--accent);stroke-width:2;stroke-dasharray:65 2300;animation:arena-signal 14s linear infinite}
+.artwork-frame .orbit-front{z-index:2;opacity:.85}
+.artwork-frame .orbit-back{z-index:0;opacity:.5}
+.artwork-orbit .orbit-signal{stroke:#f5d8a4;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:32 968;animation:arena-signal 12s linear infinite;filter:drop-shadow(0 0 3px #e1a477)}
 .landing-refined .landing-steps{gap:18px;align-items:stretch}
 .landing .arena-feature-card.spotlight-card{--spotlight-card-surface:#eceee3;--spotlight-card-border:#c6ceba;--spotlight-card-shadow:none;padding:0;border-radius:14px;min-width:0;transition:transform .35s,box-shadow .35s}
 .landing .arena-feature-card:hover{transform:translateY(-5px);box-shadow:0 18px 35px -25px #292e2755}
@@ -22,7 +24,7 @@
 .landing .arena-feature-card:has(:focus-visible){outline:2px solid var(--accent);outline-offset:4px}
 @keyframes arena-line-in{from{opacity:0;transform:translateY(24px);filter:blur(5px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes arena-label-float{50%{transform:translateY(-7px)}}
-@keyframes arena-signal{to{stroke-dashoffset:-2365}}
+@keyframes arena-signal{to{stroke-dashoffset:-1000}}
 .landing[data-motion='paused'] .arena-feature-card:hover,.landing[data-motion='paused'] .launch-button:hover{transform:none}
 @media(max-width:760px){.landing-refined .landing-hero h1{font-size:clamp(43px,9.6vw,66px)}.artwork-position{font-size:8px;padding:6px 9px;gap:6px}.position-for{left:3%}.position-against{right:0}.landing-refined .landing-steps .arena-feature-card article{padding:24px 18px}}
 @media(prefers-reduced-motion:reduce){.hero-line{animation:none}.artwork-position,.artwork-orbit .orbit-signal{animation:none}.landing .arena-feature-card,.landing .launch-button,.landing .launch-button:after{transition:none!important}.landing .arena-feature-card:hover,.landing .launch-button:hover{transform:none!important}.landing .spotlight-card__light,.landing .spotlight-card__edge{display:none}}
