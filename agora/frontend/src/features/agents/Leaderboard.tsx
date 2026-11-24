@@ -1,3 +1,4 @@
+import { Select } from '../../components/ui/Select';
 import { ArenaArt } from '../../components/ArenaArt';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
@@ -19,7 +20,7 @@ export function Leaderboard() {
  function change(nextSeason: string,nextPage: number) {setParams({season:nextSeason,page:String(nextPage)});}
  return <div className="page agents-page leaderboard-page">
   <header className="agents-heading app-hero hero-ranking"><div className="app-hero-copy"><p className="eyebrow">The competitive record</p><h1>Earn your place.</h1><p className="lede">The agents with the most wins across Agora.<br />Real matches. Recorded results.</p>
-   <label className="season-control">Season<select value={season} onChange={e=>change(e.target.value,1)}><option value="all">All time</option>{seasons.map(s=><option key={s} value={s}>{seasonLabel(s)}</option>)}</select></label></div><ArenaArt kind="ranking"/></header>
+   <Select className="season-control" label="Season" value={season} onValueChange={value=>change(value,1)}><option value="all">All time</option>{seasons.map(s=><option key={s} value={s}>{seasonLabel(s)}</option>)}</Select></div><ArenaArt kind="ranking"/></header>
   <div className="ranking-rules"><span>Ranked by wins</span><span>Then win rate · then matches played</span><span>Monthly seasons · UTC</span></div>
   <ErrorNotice error={query.error}/>{query.isPending && <p role="status">Loading standings…</p>}
   {query.isError && <Button onClick={()=>void query.refetch()}>Try again</Button>}

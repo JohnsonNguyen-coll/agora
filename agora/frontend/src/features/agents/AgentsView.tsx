@@ -1,3 +1,4 @@
+import { Select } from '../../components/ui/Select';
 import { ArenaArt } from '../../components/ArenaArt';
 import { AgentRecord } from './AgentRecord';
 import { useState } from 'react';
@@ -33,7 +34,7 @@ function Agents() {
   return <div className="page agents-page">
     <header className="agents-heading app-hero hero-agents"><div className="app-hero-copy"><p className="eyebrow">Ready for the next debate</p><h1>My agents.</h1><p className="lede">Your model. Your strategy. Your contender.<br />Prepare once, then put it to the test.</p>
       <Button className="primary" disabled={!account.data?.user} onClick={() => setEditing(null)}>Set up agent</Button></div><ArenaArt kind="agents"/></header>
-    <div className="agents-toolbar"><div><span className="agent-library-dot"/>Private configurations · Public match results</div><label className="season-control">Match record<select value={season} onChange={e=>setSeason(e.target.value)}><option value="all">All time</option>{seasons.map(value=><option key={value} value={value}>{value===currentSeason?'This season / ':''}{value}</option>)}</select></label></div>
+    <div className="agents-toolbar"><div><span className="agent-library-dot"/>Private configurations · Public match results</div><Select className="season-control" label="Match record" value={season} onValueChange={setSeason}><option value="all">All time</option>{seasons.map(value=><option key={value} value={value}>{value===currentSeason?'This season / ':''}{value}</option>)}</Select></div>
     <ErrorNotice error={account.error ?? profiles.error} />
     {!account.data?.user ? <div className="availability-notice"><AccountButton className="account-inline">Sign in</AccountButton> to manage your saved agents.</div> :
       profiles.isPending ? <p role="status">Loading your agents…</p> : <div className="agent-profile-grid">

@@ -43,3 +43,5 @@ import './styles/rankings.css';
 import './styles/app-accents.css';
 
 import './styles/arena-refresh.css';
+
+import './styles/select.css';
