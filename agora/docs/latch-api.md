@@ -26,7 +26,7 @@ Gavel's audit is its own observations, not a copy of Latch Activity.
 ## callModel
 The client exposes callModel(latchToken, body, onDelta, options?).
 The optional options object carries AbortSignal and observed-response callbacks.
-The caller receives real completion, model, token usage and Latch correlation metadata.
+The caller receives real completion, model, token usage, stopReason (null when absent) and Latch correlation metadata.
 Never fabricate missing usage or IDs. Validate data with Zod; no any types.
 LATCH_PROXY_BASE defaults to https://onlatch.com/proxy and is deployment-controlled, never user-supplied.
 POST to ${LATCH_PROXY_BASE}/v1/messages.

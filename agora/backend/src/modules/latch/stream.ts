@@ -10,13 +10,17 @@ const delta = z.object({ delta: z.discriminatedUnion('type', [
   z.object({ type: z.literal('thinking_delta'), thinking: z.string() }),
   z.object({ type: z.literal('signature_delta'), signature: z.string() })
 ]) });
-const usage = z.object({ usage: z.object({ output_tokens: z.number().int().nonnegative() }) });
+const usage = z.object({
+  usage: z.object({ output_tokens: z.number().int().nonnegative() }),
+  delta: z.object({ stop_reason: z.string().nullable().optional() }).optional()
+});
 export async function consumeStream(body: ReadableStream<Uint8Array>, onDelta: (text: string) => void | Promise<void>, signal?: AbortSignal) {
   const reader = body.getReader();
   const decoder = new TextDecoder();
   let buffer = '', text = '', model: string | null = null;
   let inputTokens: number | null = null, outputTokens: number | null = null;
   let complete = false, started = false;
+  let stopReason: string | null = null;
   async function frame(value: string) {
     signal?.throwIfAborted();
     const lines = value.split(/\r?\n/).filter(line => line.startsWith('data:'));
@@ -41,7 +45,9 @@ export async function consumeStream(body: ReadableStream<Uint8Array>, onDelta: (
         await onDelta(result.data.delta.text);
       }
     } else if (event.type === 'message_delta') {
-      outputTokens = usage.parse(event).usage.output_tokens;
+      const item = usage.parse(event);
+      outputTokens = item.usage.output_tokens;
+      stopReason = item.delta?.stop_reason ?? stopReason;
     } else if (event.type === 'message_stop') {
       if (!started) throw new LatchError('protocol_error', 'Completion arrived before message_start.');
       complete = true;
@@ -64,7 +70,7 @@ export async function consumeStream(body: ReadableStream<Uint8Array>, onDelta: (
       if (chunk.done) break;
     }
     if (!complete) throw new LatchError('incomplete_stream', 'The model stream ended before message_stop.');
-    return { text, model, inputTokens, outputTokens };
+    return { text, model, inputTokens, outputTokens, stopReason };
   } finally {
     await reader.cancel().catch(() => undefined);
     reader.releaseLock();

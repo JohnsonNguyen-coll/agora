@@ -15,10 +15,15 @@ export function judgeInput(topic: string, turns: TurnRecord[], reversed: boolean
   const payload = JSON.stringify({ proposition: topic, positions: { A: a === 'FOR' ? 'supports' : 'challenges', B: a === 'FOR' ? 'challenges' : 'supports' },
     assessmentOrder: ['A', 'B'], transcript: turns.map(t => ({ turn: t.turn_index, speaker: t.side === a ? 'A' : 'B', text: t.content })) });
   if (payload.length > 95000) throw new Error('transcript_too_large');
-  return payload;
+  return 'Return only compact JSON matching the system schema, without markdown fences or introductory text. '
+    + 'Each reason must be at most 6 words. Cite exactly one turn per side, belonging to that side. '
+    + 'Use no extra keys. These are serialization limits; apply all scoring criteria and anchors in the system message.\n'
+    + 'Quoted debate data:\n' + payload;
 }
 export function parseJudgePass(text: string, turns: TurnRecord[], reversed: boolean): JudgePass {
-  const pass = passSchema.parse(JSON.parse(text));
+  const trimmed = text.trim();
+  const fenced = /^```(?:json)?\s*\n([\s\S]*?)\n```$/i.exec(trimmed);
+  const pass = passSchema.parse(JSON.parse(fenced?.[1] ?? trimmed));
   const result: JudgePass = reversed ? { FOR: pass.B, AGAINST: pass.A } : { FOR: pass.A, AGAINST: pass.B };
   for (const side of ['FOR', 'AGAINST'] as const) if (result[side].evidence.some(index => !turns.some(t => t.side === side && t.turn_index === index)))
     throw new Error('invalid_evidence');

@@ -13,7 +13,7 @@ export interface Observation {
 }
 export interface Completion {
   text: string; inputTokens: number | null; outputTokens: number | null;
-  model: string | null; observation: Observation;
+  model: string | null; stopReason: string | null; observation: Observation;
 }
 export interface CallOptions {
   signal?: AbortSignal; onResponse?: (observation: Observation) => void | Promise<void>;

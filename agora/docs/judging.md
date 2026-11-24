@@ -51,3 +51,22 @@ Votes use verified Privy account identities, one per room. Accounts must exist b
 ## Verification commands
 
 `npm run typecheck` and `npm run build` validate code. `npx tsx --test scripts/check-judging-math.test.ts` checks the pure weighting arithmetic; it contains no fixture model responses. `npm run smoke:judge` needs the real dedicated latch. Existing `npm test` still requires the separate live test latch.
+## Compact output and failure recovery
+
+The scoring system prompt and its frozen rubric hash stay the same. The request
+enforces compact JSON, one citation per side and at most six words per rationale
+so both assessments fit the existing 200-token output policy. Complete Markdown
+JSON fences are accepted as formatting. Incomplete JSON is rejected.
+
+The stream records the actual stop_reason. Output stopped by max_tokens produces
+judge_output_truncated. Invalid JSON, schema violations and wrong-side citations
+have separate error codes with the real proxy observation retained.
+
+For an operator-requested serialization repair, run from backend:
+node --import tsx scripts/repair-judge.ts ROOM_ID
+The production build contains dist/backend/scripts/repair-judge.js for node.
+The tool requires a closed non-tournament room, a failed serialization response,
+zero accepted assessments, and the original model, rubric hash and transcript hash.
+It uses the shared judge assessment and verdict persistence functions, records the
+repair in the audit chain, and respects the database dispatch interval. Existing
+accepted or disputed results cannot be rerolled with this tool.
