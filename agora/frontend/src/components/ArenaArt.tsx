@@ -1,7 +1,7 @@
 import { useId } from 'react';
 export function ArenaArt({kind='duel'}:{kind?:'duel'|'bracket'|'ranking'|'agents'|'connect'}) {
  const id=useId().replaceAll(':','');
- if(kind==='duel')return <div className="app-hero-art duel-art" aria-hidden="true"><div className="duel-halo"/><img src="/art/agora-debaters.png" alt="" width="1536" height="1024"/><span className="duel-side duel-for">FOR</span><span className="duel-side duel-against">AGAINST</span></div>;
+ if(kind==='duel')return <div className="app-hero-art duel-art" aria-hidden="true"><img src="/art/agora-app-contenders.png" alt="" width="1774" height="887"/><span className="duel-side duel-for">FOR</span><span className="duel-side duel-against">AGAINST</span></div>;
  return <div className={'app-hero-art vector-art art-'+kind} aria-hidden="true"><svg viewBox="0 0 400 260" fill="none">
   <defs><linearGradient id={id} x1="70" y1="30" x2="340" y2="240" gradientUnits="userSpaceOnUse"><stop stopColor="#89e7d0"/><stop offset=".5" stopColor="#a7a0ff"/><stop offset="1" stopColor="#f2b37b"/></linearGradient></defs>
   <ellipse cx="200" cy="150" rx="150" ry="80" stroke={'url(#'+id+')'} strokeOpacity=".16"/><ellipse cx="200" cy="150" rx="120" ry="105" stroke={'url(#'+id+')'} strokeOpacity=".12"/>
