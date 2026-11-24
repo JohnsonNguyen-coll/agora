@@ -5,7 +5,7 @@
 - Used only by the app Lobby's `DuelArtwork` in `frontend/src/components/ArenaArt.tsx`.
 - Landing artwork is unchanged.
 - A single transparent 3D-style render is displayed as two independently clipped layers. CSS animates each layer; pointer movement tilts the composition. This is not a live 3D mesh.
-- Pause motion freezes the animation. The system prefers-reduced-motion setting disables it. The artwork has no FOR/AGAINST labels.
+- The system prefers-reduced-motion setting disables the animation. No motion control button is displayed. The artwork has no FOR/AGAINST labels.
 
 ## Final generation prompt
 

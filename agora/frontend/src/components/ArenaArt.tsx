@@ -1,4 +1,4 @@
-import { useId, useRef, useState, type PointerEvent } from 'react';
+import { useId, useRef, type PointerEvent } from 'react';
 export function ArenaArt({kind='duel'}:{kind?:'duel'|'bracket'|'ranking'|'agents'|'connect'}) {
  const id=useId().replaceAll(':','');
  if(kind==='duel')return <DuelArtwork/>;
@@ -13,17 +13,15 @@ export function ArenaArt({kind='duel'}:{kind?:'duel'|'bracket'|'ranking'|'agents
 }
 
 function DuelArtwork() {
- const [paused,setPaused]=useState(false);
  const scene=useRef<HTMLDivElement>(null);
  function reset(){scene.current?.style.setProperty('--look-x','0deg');scene.current?.style.setProperty('--look-y','0deg');}
  function move(event:PointerEvent<HTMLDivElement>) {
-  if(paused || event.pointerType!=='mouse' || matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(event.pointerType!=='mouse' || matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   const bounds=event.currentTarget.getBoundingClientRect();
   scene.current?.style.setProperty('--look-x',((event.clientX-bounds.left)/bounds.width-.5)*5+'deg');
   scene.current?.style.setProperty('--look-y',-((event.clientY-bounds.top)/bounds.height-.5)*4+'deg');
  }
- return <div className="app-hero-art duel-art sentinel-art" data-paused={paused} onPointerMove={move} onPointerLeave={reset} role="group" aria-label="Robot contenders artwork">
+ return <div className="app-hero-art duel-art sentinel-art" onPointerMove={move} onPointerLeave={reset} role="group" aria-label="Robot contenders artwork">
   <div ref={scene} className="sentinel-scene" aria-hidden="true">{['cyan','violet'].map(side=><div key={side} className={'sentinel sentinel-'+side}><img src="/art/agora-app-sentinels.png" alt="" width="1774" height="887"/></div>)}</div>
-  <button type="button" className="sentinel-motion" aria-pressed={paused} onClick={()=>{setPaused(!paused);reset();}}>{paused?'Resume motion':'Pause motion'}</button>
  </div>;
 }

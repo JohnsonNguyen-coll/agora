@@ -60,12 +60,10 @@
 .sentinel-scene::before,.sentinel-scene::after { content:''; position:absolute; width:48%; height:85%; top:5%; border-radius:50%; background:radial-gradient(ellipse,#53cfcd19,transparent 70%); pointer-events:none; }.sentinel-scene::after { right:0; background:radial-gradient(ellipse,#9f79ef1d,transparent 70%); }
 .sentinel { position:absolute; inset:0; will-change:transform; }.sentinel-cyan { clip-path:inset(0 50% 0 0); transform-origin:25% 50%; animation:sentinel-cyan-drift 6.5s ease-in-out infinite; }.sentinel-violet { clip-path:inset(0 0 0 50%); transform-origin:75% 50%; animation:sentinel-violet-drift 7.5s ease-in-out infinite; }
 .sentinel-cyan img { filter:drop-shadow(0 10px 24px #39c6c018); }.sentinel-violet img { filter:drop-shadow(0 10px 24px #a47aef22); }
-.sentinel-art[data-paused="true"] .sentinel { animation-play-state:paused; }.sentinel-art[data-paused="true"] .sentinel-scene { transform:none; }
-.sentinel-motion { position:absolute; right:0; bottom:-2px; border:0; border-bottom:1px solid #a6b3bd30; padding:5px 0; color:var(--muted); background:none; font:9px var(--mono); cursor:pointer; }.sentinel-motion:hover { color:var(--text); }
 @keyframes sentinel-cyan-drift { 0%,100% { transform:translate3d(0,3px,0) rotate(-.4deg); } 50% { transform:translate3d(2px,-5px,0) rotate(.6deg); } }
 @keyframes sentinel-violet-drift { 0%,100% { transform:translate3d(0,-4px,0) rotate(.5deg); } 50% { transform:translate3d(-2px,4px,0) rotate(-.5deg); } }
 @media(max-width:600px) {.sentinel-art { height:190px; }.sentinel-art .sentinel img { width:100%; left:0; }}
-@media(prefers-reduced-motion:reduce) {.sentinel { animation:none; will-change:auto; }.sentinel-scene { transition:none; transform:none; }.sentinel-motion { display:none; }}
+@media(prefers-reduced-motion:reduce) {.sentinel { animation:none; will-change:auto; }.sentinel-scene { transition:none; transform:none; }}
 
 .sentinel-scene { mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent); }
 .sentinel-art .sentinel img { mask-image:linear-gradient(0deg,transparent,#000 17%,#000); }
