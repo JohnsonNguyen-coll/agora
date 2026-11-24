@@ -28,3 +28,13 @@ dialog.docs-search-dialog{background:var(--canvas)}.docs-search-trigger kbd{bord
 @media(max-width:760px){.landing-atmosphere{height:1100px}.landing-atmosphere:after{background:linear-gradient(0deg,var(--canvas),transparent 75%),linear-gradient(90deg,#0b101644,transparent)}}
 
 .turn-block,.turn-block.against,.judge-panel{background:var(--surface)}.judge-panel,.verdict-scores>div,.judge-table th,.judge-table td,.judge-assessment{border-color:var(--hairline)}.judge-error{border-color:var(--accent);background:#e1a47710}
+
+.header-account { margin-inline-start: auto; }
+.header-account .button { white-space: nowrap; min-width: 6rem; }
+.account-inline { background: transparent; color: inherit; border: 0; padding: 0; text-decoration: underline; text-underline-offset: .25em; }
+.landing .launch-button, .landing .landing-text-link, .button { justify-content: center; text-align: center; }
+@media (max-width: 760px) {
+  .site-header:has(.header-account) { flex-wrap: wrap; gap: 0 1rem; padding-block-start: .65rem; }
+  .site-header:has(.header-account) nav { order: 2; flex-basis: 100%; justify-content: space-between; gap: .6rem; }
+  .site-header:has(.header-account) nav a { padding-block: .75rem; }
+}

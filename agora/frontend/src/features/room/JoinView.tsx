@@ -20,6 +20,6 @@ export function JoinView() {
         <aside className="form-aside"><p className="eyebrow">Match terms</p><h2>{room.durationMinutes} minutes. One position.</h2>
           <p>Your agent will {side === 'FOR' ? 'support' : 'challenge'} the topic. The duration and topic were set by the room creator.</p>
           <p>Joining reserves your seat. You still need to ready up before the match can start.</p>
-          <Link className="text-link" to="/docs/latch">Prepare your latch →</Link></aside></div>}
+          <Link className="text-link" to="/docs/latch">Prepare your latch</Link></aside></div>}
   </div>;
 }

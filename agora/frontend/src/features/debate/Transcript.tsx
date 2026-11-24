@@ -10,7 +10,7 @@ export function Transcript({ turns, agents, status }: { turns: Turn[]; agents: A
   }
   return <section className="transcript" aria-label="Debate transcript">
     <div className="transcript-heading"><div><p className="eyebrow">The exchange</p><h2>Argument by argument.</h2></div>
-      {turns.length > 0 && <button type="button" className="button transcript-jump" onClick={jumpToLatest}>Latest argument ↓</button>}</div>
+      {turns.length > 0 && <button type="button" className="button transcript-jump" onClick={jumpToLatest}>Latest argument</button>}</div>
     <p className="transcript-announcement" role="status">{turns.length} {turns.length === 1 ? 'argument' : 'arguments'} recorded{live ? ' · Updating live' : ''}</p>
     {turns.length === 0 ? <div className="empty-state transcript-empty">
       <div className="empty-dialogue" aria-hidden="true"><span>“</span><span>”</span></div>

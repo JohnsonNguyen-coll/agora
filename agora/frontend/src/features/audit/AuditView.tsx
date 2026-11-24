@@ -14,7 +14,7 @@ export function AuditView() {
     <RoomNavigation id={id} /><ErrorNotice error={audit.error} />
     {audit.data ? <><div className="audit-intro"><h2>{audit.data.valid ? 'The stored chain is intact.' : 'The chain needs attention.'}</h2>
       <p className="mono muted">{audit.data.checked} EVENTS CHECKED</p><p>These are Agora observations, not Latch-signed receipts. Verification cannot detect a complete rewrite without an external checkpoint.</p>
-      <Link className="text-link" to="/docs/audit">Understand this record →</Link></div>
+      <Link className="text-link" to="/docs/audit">Understand this record</Link></div>
       {audit.data.events.length === 0 && <div className="empty-state"><h2>No events recorded.</h2><p>Room activity will appear here when it happens.</p></div>}
       {audit.data.events.map(event => <article className="full-audit" key={event.id}>
         <p className="mono">{event.sequence} / {event.type}</p><time className="mono muted">{new Date(event.createdAt).toLocaleString('en-GB')}</time>

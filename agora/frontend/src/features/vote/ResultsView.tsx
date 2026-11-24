@@ -17,10 +17,10 @@ export function ResultsView() {
   const audience = !total ? 'No audience votes were cast.' : room.votes.FOR === room.votes.AGAINST ? 'The audience vote is tied.' : `Audience choice: ${room.votes.FOR > room.votes.AGAINST ? 'FOR' : 'AGAINST'}.`;
   return <div className="page results-page"><Link to={'/app/rooms/' + room.id} className="back-link">← Arena</Link>
     <p className="eyebrow">{verdict ? 'Final verdict' : room.status === 'voting' ? 'Voting is open' : 'Match results'}</p>
-    <h1>{title}</h1><p className="result-topic">{room.topic}</p>{room.tournament && <Link to={'/app/tournaments/' + room.tournament.id}>Back to tournament ↗</Link>}<RoomNavigation id={room.id} />
+    <h1>{title}</h1><p className="result-topic">{room.topic}</p>{room.tournament && <Link to={'/app/tournaments/' + room.tournament.id}>Back to tournament</Link>}<RoomNavigation id={room.id} />
     {room.endReason && <p className="availability-notice">{room.endReason}</p>}
     <section className="judge-panel" aria-labelledby="judge-heading"><div className="vote-heading"><div><p className="eyebrow">Transparent scoring</p>
-      <h2 id="judge-heading">{verdict ? 'The combined result' : 'How this match is decided'}</h2></div><Link to="/docs/voting">Scoring rules ↗</Link></div>
+      <h2 id="judge-heading">{verdict ? 'The combined result' : 'How this match is decided'}</h2></div><Link to="/docs/voting">Scoring rules</Link></div>
       <p>{verdict ? `${Math.round(verdict.audienceWeight * 100)}% audience · ${Math.round(verdict.judgeWeight * 100)}% judge` : 'With audience votes: 70% audience + 30% judge. With no votes: 100% judge.'}</p>
       {verdict && <div className="verdict-scores">{(['FOR','AGAINST'] as const).map(side => <div key={side}><span className="eyebrow">{side}</span><strong>{verdict.score[side].toFixed(2)}<small> / 100</small></strong>
         <p>Audience {total ? (room.votes[side] / total * 100).toFixed(2) + '%' : '—'} · Judge {shares?.[side].toFixed(2)}%</p></div>)}</div>}

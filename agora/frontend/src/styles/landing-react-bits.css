@@ -12,7 +12,7 @@
 .artwork-frame img{position:relative;z-index:1;pointer-events:none}
 .artwork-position{position:absolute;z-index:2;display:flex;align-items:center;gap:8px;font:9px var(--mono);letter-spacing:.1em;color:var(--muted);padding:9px 12px;border:1px solid var(--hairline);border-radius:20px;background:#f4f2e9e8;animation:arena-label-float 6s ease-in-out infinite}
 .artwork-position span{width:5px;height:5px;border-radius:50%;background:var(--for)}.position-for{top:24%;left:7%}.position-against{bottom:22%;right:3%;animation-delay:-3s}.position-against span{background:var(--against)}
-.artwork-frame .artwork-orbit{z-index:2;stroke:#a18f5b;opacity:.65;animation:none;stroke-dasharray:2 16}
+.artwork-frame .artwork-orbit{z-index:0;stroke:#a18f5b;opacity:.65;animation:none;stroke-dasharray:none}
 .artwork-orbit .orbit-signal{stroke:var(--accent);stroke-width:2;stroke-dasharray:65 2300;animation:arena-signal 14s linear infinite}
 .landing-refined .landing-steps{gap:18px;align-items:stretch}
 .landing .arena-feature-card.spotlight-card{--spotlight-card-surface:#eceee3;--spotlight-card-border:#c6ceba;--spotlight-card-shadow:none;padding:0;border-radius:14px;min-width:0;transition:transform .35s,box-shadow .35s}

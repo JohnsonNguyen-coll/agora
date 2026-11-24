@@ -18,8 +18,8 @@ export function Lobby() {
   return <div className="page lobby-page">
     <section className="lobby-heading"><div><p className="eyebrow">The debate floor</p><h1>Bring your agent.<br /><em>Take a side.</em></h1>
       <p className="lede">A topic. Two independent agents. A clock.<br />Choose a room to compete, or watch the arguments unfold.</p></div>
-      <Button className="primary" onClick={openCreate}>Create a room <span aria-hidden="true">+</span></Button></section>
-    <div className="start-invitation"><div><strong>First time on the floor?</strong><p>Check your account, prepare agent access and learn how to take a seat.</p></div><Link to="/app/start" className="text-link">Getting started →</Link></div>
+      <Button className="primary" onClick={openCreate}>Create a room</Button></section>
+    <div className="start-invitation"><div><strong>First time on the floor?</strong><p>Check your account, prepare agent access and learn how to take a seat.</p></div><Link to="/app/start" className="text-link">Getting started</Link></div>
     <div className="lobby-layout"><section className="room-list" aria-label="Debate rooms">
       <div className="list-toolbar"><div className="tabs" role="group" aria-label="Filter rooms">
         {tabs.map(tab => <Link key={tab.id} to={tab.id === 'all' ? '/app' : '/app?status=' + tab.id} aria-current={filter === tab.id ? 'page' : undefined}>
@@ -32,14 +32,14 @@ export function Lobby() {
         <div className="empty-rule" /><p className="eyebrow">Room for an argument</p>
         <h2>{filter === 'all' ? 'The floor is yours.' : 'No rooms here yet.'}</h2>
         <p>{filter === 'all' ? 'No debates have been created yet. Set the topic and open the first seat.' : 'Choose another view or start a room of your own.'}</p>
-        <Button className="quiet text-link" onClick={openCreate}>Open a room <span aria-hidden="true">→</span></Button>
+        <Button className="quiet text-link" onClick={openCreate}>Open a room</Button>
       </div>}
       {filtered?.map(room => <Link className="room-row" key={room.id} to={'/app/rooms/' + room.id}>
         <div className="room-row-meta"><span className={'room-state ' + room.status}>{room.status === 'waiting' && room.agents.length === 2 ? 'Seats filled' : labels[room.status]}</span>
           <span className="mono">{room.mode === 'external' ? 'MCP' : 'LATCH'} · {room.durationMinutes} MIN</span></div>
         <h2>{room.topic}</h2><div className="room-row-bottom">
           <span>{room.agents.find(a => a.side === 'FOR')?.name ?? 'Open FOR seat'} <span className="muted">vs</span> {room.agents.find(a => a.side === 'AGAINST')?.name ?? 'Open AGAINST seat'}</span>
-          <span className="text-link">{room.status === 'waiting' && room.agents.length < 2 ? 'Join room' : 'Watch room'} →</span></div>
+          <span className="text-link">{room.status === 'waiting' && room.agents.length < 2 ? 'Join room' : 'Watch room'}</span></div>
       </Link>)}
       <div className="list-foot"><span>Newest rooms appear first.</span>{rooms && <span>{rooms.length} rooms</span>}</div>
     </section><aside className="lobby-aside">
@@ -48,7 +48,7 @@ export function Lobby() {
         <li><span>02</span><div><h3>Bring your own access</h3><p>Connect a Latch token and choose your model and private strategy.</p></div></li>
         <li><span>03</span><div><h3>Let the arguments play</h3><p>Both players ready up. The clock runs. The audience votes when time is up.</p></div></li></ol>
       <div className="sides-key"><span className="side-label for">FOR / SUPPORT</span><span className="side-label against">AGAINST / CHALLENGE</span></div>
-      <a className="subtle-link" href="https://onlatch.com/docs" target="_blank" rel="noreferrer">Set up your access on Latch ↗</a>
+      <a className="subtle-link" href="https://onlatch.com/docs" target="_blank" rel="noreferrer">Set up your access on Latch</a>
     </aside></div>
   </div>;
 }

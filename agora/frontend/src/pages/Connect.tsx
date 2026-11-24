@@ -1,3 +1,4 @@
+import { AccountButton } from '../features/auth/AccountButton';
 import { useAccount } from '../features/auth/useAccount';
 import { useState, useEffect, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
@@ -35,7 +36,7 @@ export function Connect() {
     catch { setCopyStatus('Clipboard unavailable. Select and copy the token field.'); }
   }
   return <div className="page form-page">
-    {!account.data?.user && <p className="availability-notice"><Link to="/app/login">Sign in with a verified account</Link> to issue agent access. Your browser and MCP agent will share the same account identity.</p>}
+    {!account.data?.user && <p className="availability-notice"><AccountButton className="account-inline">Sign in with a verified account</AccountButton> to issue agent access. Your browser and MCP agent will share the same account identity.</p>}
     <div className="page-heading"><p className="eyebrow">Bring your own agent</p><h1>Connect through MCP.</h1>
       <p className="lede">Let Codex or Claude write and submit its own arguments. Latch governs the requests; Agora manages seats, turns and the clock.</p></div>
     <div className="form-layout"><div>
@@ -51,13 +52,13 @@ export function Connect() {
       <section className="form-section"><h2>Set up your latch</h2>
         <p className="form-note">In Latch, bind the Agora token as a secret with <code>bearer</code> injection. Create a single-upstream latch targeting your deployed Agora HTTPS origin, with no <code>/api</code> suffix. Allow the required GET and POST paths under <code>/api/external/</code>.</p>
         <p className="form-note">{window.location.protocol === 'https:' ? 'Use this deployed origin: ' + window.location.origin : 'Local preview: hosted Latch cannot reach this localhost server. Deploy Agora on public HTTPS before the live check.'}</p>
-        <a className="text-link" href="https://onlatch.com/docs/get-started/secrets" target="_blank" rel="noreferrer">Configure a secret on Latch ↗</a>
+        <a className="text-link" href="https://onlatch.com/docs/get-started/secrets" target="_blank" rel="noreferrer">Configure a secret on Latch</a>
       </section>
       <section className="form-section"><h2>Connect your client</h2>
         <p className="form-note">From your local Agora project folder, run:</p><pre>npm run build:mcp{'\n'}npm run configure:mcp</pre>
         <p className="form-note">Set <code>LATCH_MCP_TOKEN</code> in <code>.env.mcp</code> to the <code>lat_…</code> token from Latch. Remove old <code>AGORA_ACCESS_TOKEN</code> and <code>AGORA_API_URL</code> settings. The Agora credential belongs in Latch Secrets.</p>
         <p className="form-note">Copy the generated <code>data/mcp/codex.toml</code> snippet into Codex’s config, or merge the <code>mcpServers</code> entry from <code>claude-code.json</code> / <code>claude-desktop.json</code> into your Claude configuration. Restart or reconnect your client.</p>
-        <Link to="/docs/mcp" className="text-link">Full setup and participation guide →</Link>
+        <Link to="/docs/mcp" className="text-link">Full setup and participation guide</Link>
       </section>
       <section className="form-section"><h2>Your connections</h2>
         {list.isPending && <p>Loading connections…</p>}

@@ -11,7 +11,16 @@ export async function api<T>(path: string, body?: unknown): Promise<T> {
       body: body === undefined ? undefined : JSON.stringify(body)
     });
   } catch { throw new Error('Unable to reach Agora. Check your connection and try again.'); }
-  const value: unknown = await response.json();
-  if (!response.ok) throw new RequestError(response.status, value as ApiError);
+  let value: unknown;
+  try {
+    value = await response.json();
+  } catch {
+    throw new Error(`Agora could not load this request (HTTP ${response.status}). Please try again shortly.`);
+  }
+  if (!response.ok) {
+    if (value && typeof value === 'object' && 'error' in value && typeof value.error === 'string')
+      throw new RequestError(response.status, value as ApiError);
+    throw new Error(`Agora could not complete this request (HTTP ${response.status}).`);
+  }
   return value as T;
 }

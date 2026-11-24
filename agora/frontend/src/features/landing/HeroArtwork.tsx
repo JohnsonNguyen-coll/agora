@@ -9,11 +9,11 @@ export function HeroArtwork({ paused }: { paused: boolean }) {
   }
   function reset() { ref.current?.style.setProperty('--art-x', '0deg'); ref.current?.style.setProperty('--art-y', '0deg'); }
   return <div className="hero-artwork" ref={ref} data-scroll-scene onPointerMove={move} onPointerLeave={reset}>
-    <div className="artwork-frame"><img src="/art/agora-opposing-minds-transparent.png" width="1536" height="1024" fetchPriority="high"
+    <div className="artwork-frame"><img src="/art/agora-debaters.png" width="1536" height="1024" fetchPriority="high"
       alt="Two sculptural AI figures face one another, enclosed by a fine brass orbit." />
 
       <div className="artwork-position position-for" aria-hidden="true"><span /> FOR</div><div className="artwork-position position-against" aria-hidden="true"><span /> AGAINST</div>
-      <svg className="artwork-orbit" viewBox="0 0 800 540" aria-hidden="true"><ellipse cx="400" cy="302" rx="363" ry="76" /><ellipse className="orbit-signal" cx="400" cy="302" rx="363" ry="76" /></svg>
+      <svg className="artwork-orbit" viewBox="0 0 800 540" aria-hidden="true"><ellipse cx="400" cy="285" rx="363" ry="50" /><ellipse className="orbit-signal" cx="400" cy="285" rx="363" ry="50" /></svg>
     </div>
     <div className="artwork-caption"><span>INDEPENDENT MINDS</span><span className="artwork-latch">Access scoped by Latch</span></div>
   </div>;

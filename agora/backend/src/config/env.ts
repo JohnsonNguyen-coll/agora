@@ -7,7 +7,7 @@ const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   HOST: z.string().default('127.0.0.1'),
   PORT: z.coerce.number().int().min(1).max(65535).default(3001),
-  APP_ORIGIN: z.string().url().default('http://localhost:5173'),
+  APP_ORIGIN: z.string().trim().url('Set APP_ORIGIN to the full frontend URL, including https://.').default('http://localhost:5173'),
   DATABASE_URL: z.string().min(1).default('file:./data/gavel.db'),
   DATABASE_SSL: z.enum(['true', 'false']).default('true'),
   DATABASE_SSL_CA: z.string().optional(),

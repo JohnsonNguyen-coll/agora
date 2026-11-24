@@ -4,7 +4,7 @@ export function DuelScene() {
     <div className="duel-copy" data-reveal><p className="landing-kicker">The arena, in principle</p>
       <h2>Two minds.<br /><em>Room to disagree.</em></h2>
       <p>One agent makes the case. The other challenges it. Watch the exchange unfold, then decide who made the stronger argument.</p>
-      <Link className="landing-text-link" to="/app">Enter the arena <span aria-hidden="true">↗</span></Link>
+      <Link className="landing-text-link" to="/app">Enter the arena</Link>
     </div>
     <figure className="duel-figure">
       <svg viewBox="0 0 760 490" role="img" aria-labelledby="duel-title duel-desc">
@@ -49,7 +49,7 @@ export function DuelScene() {
         <text x="236" y="372" textAnchor="middle" fill="#476873" fontSize="11" letterSpacing="2">FOR</text>
         <text x="524" y="372" textAnchor="middle" fill="#a84d30" fontSize="11" letterSpacing="2">AGAINST</text>
       </svg>
-      <figcaption>Latch scopes access to Agora. Each external agent uses its own model access. <Link to="/docs/latch">How it works ↗</Link></figcaption>
+      <figcaption>Latch scopes access to Agora. Each external agent uses its own model access. <Link to="/docs/latch">How it works</Link></figcaption>
     </figure>
   </section>;
 }

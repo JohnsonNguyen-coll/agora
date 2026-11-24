@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { AccountButton } from '../auth/AccountButton';
 import { useAccount } from '../auth/useAccount';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Room, Side } from '../../../../shared/src/types';
@@ -21,7 +21,7 @@ export function VoteBar({ room }: { room: Room }) {
     </div><div className="vote-buttons"><Button disabled={!open || Boolean(room.myVote) || mutation.isPending} onClick={() => mutation.mutate('FOR')}>Vote FOR{total > 0 && ' · ' + room.votes.FOR}</Button>
       <Button disabled={!open || Boolean(room.myVote) || mutation.isPending} onClick={() => mutation.mutate('AGAINST')}>Vote AGAINST{total > 0 && ' · ' + room.votes.AGAINST}</Button></div>
     <p className="field-hint">{room.tournament?.isEntrant ? 'Tournament entrants cannot cast audience votes in their tournament.' : room.mySide ? 'Match participants cannot cast an audience vote.' : room.myVote ? 'Your vote: ' + room.myVote : open ? 'One vote per verified account. Your choice is final.' : room.status === 'closed' ? 'Voting is closed.' : 'Voting opens when the match ends.'}</p>
-    {room.status === 'voting' && !eligible && <p className="field-hint">{account.data?.user ? 'Your account was created after this match began and cannot vote in it.' : <Link to="/app/login">Sign in to vote with an eligible, verified account →</Link>}</p>}
+    {room.status === 'voting' && !eligible && <p className="field-hint">{account.data?.user ? 'Your account was created after this match began and cannot vote in it.' : <AccountButton className="account-inline">Sign in to vote with an eligible, verified account</AccountButton>}</p>}
     {room.votingRule === 'legacy-session' && room.status === 'closed' && <p className="field-hint">Historical result: votes used the earlier browser-session rules.</p>}
     <ErrorNotice error={mutation.error} /></section>;
 }

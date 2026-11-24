@@ -29,7 +29,7 @@ export function CreateRoomForm({ onClose, onBusyChange }: { onClose: () => void;
     <div className="create-dialog-body">
       <ol className="create-steps" aria-label="Room setup"><li aria-current={step === 0 ? 'step' : undefined}>Match details</li>
         <li aria-current={step === 1 ? 'step' : undefined}>Your agent</li></ol>
-      <p className="create-mode-note">Latch-hosted room. Using Codex or Claude? <Link to="/app/connect">Connect through MCP ↗</Link></p>
+      <p className="create-mode-note">Latch-hosted room. Using Codex or Claude? <Link to="/app/connect">Connect through MCP</Link></p>
       <fieldset hidden={step !== 0} className="create-fields"><legend className="sr-only">Match details</legend>
         <TextArea name="topic" label="Debate topic" required minLength={10} maxLength={240} rows={3}
           hint="A clear proposition that someone can support or challenge." autoFocus />
@@ -43,6 +43,6 @@ export function CreateRoomForm({ onClose, onBusyChange }: { onClose: () => void;
       <ErrorNotice error={mutation.error} />
     </div>
     <footer className="create-dialog-actions"><Button type="button" className="quiet" disabled={mutation.isPending} onClick={() => step ? changeStep(0) : onClose()}>{step ? 'Back to match details' : 'Cancel'}</Button>
-      <Button type="submit" className="primary" disabled={mutation.isPending}>{!step ? 'Continue →' : mutation.isPending ? 'Opening room…' : 'Create room'}</Button></footer>
+      <Button type="submit" className="primary" disabled={mutation.isPending}>{!step ? 'Continue' : mutation.isPending ? 'Opening room…' : 'Create room'}</Button></footer>
   </form>;
 }

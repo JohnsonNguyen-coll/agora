@@ -41,7 +41,7 @@ function Bridge({children}:PropsWithChildren) {
     if(!ready)return;
     if(!authenticated){
       const current=++generation.current;
-      const task=(async()=>{await pending.current;await api('/auth/sign-out',{});if(current!==generation.current)return;setSyncing(false);setError(null);client.setQueryData(['account'],{configured:true,provider:'privy',appId,user:null});await client.resetQueries({predicate:q=>q.queryKey[0]!=='account'});})().catch(cause=>setError(cause instanceof Error?cause:new Error('Unable to clear the previous session.')));
+      const task=(async()=>{await pending.current;await api('/auth/sign-out',{});if(current!==generation.current)return;setSyncing(false);setError(null);await client.invalidateQueries({queryKey:['account']});await client.resetQueries({predicate:q=>q.queryKey[0]!=='account'});})().catch(cause=>setError(cause instanceof Error?cause:new Error('Unable to clear the previous session.')));
       clearing.current=task;void task.finally(()=>{if(clearing.current===task)clearing.current=null;});
       return;
     }
