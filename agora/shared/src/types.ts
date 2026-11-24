@@ -36,3 +36,8 @@ export interface ParticipantInput { name: string; model: string; strategy: strin
 export interface CreateRoomInput extends ParticipantInput { topic: string; durationMinutes: number; side: Side; }
 export interface ApiError { error: string; code: string; details?: unknown; }
 export interface RuntimeStatus { debateAvailable: boolean; reason: string | null; }
+
+export interface AgentProfile {
+  id: string; name: string; model: string; strategy: string;
+  createdAt: string; updatedAt: string;
+}

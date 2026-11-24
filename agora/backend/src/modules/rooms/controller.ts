@@ -1,7 +1,8 @@
+import { participantFromProfile } from '../agent-profiles/service.js';
 import type { FastifyInstance } from 'fastify';
 import { ready as readyExternal } from '../external/service.js';
 import { z } from 'zod';
-import { createRoom, participant, roomParams } from './schema.js';
+import { roomCreation, roomParticipant, roomParams } from './schema.js';
 import * as rooms from './service.js';
 import { audit } from '../audit/service.js';
 import { vote } from '../votes/service.js';
@@ -24,13 +25,17 @@ export function roomRoutes(app: FastifyInstance) {
     return rooms.listRoomPage({ ...input, page: input.page });
   });
   app.post('/api/rooms', { config: { rateLimit: { max: 10, timeWindow: '1 minute' } } }, async (req, reply) => {
-    const id = await rooms.create(createRoom.parse(req.body), req.sessionId);
+    const input = roomCreation.parse(req.body);
+    const agent = 'agentProfileId' in input ? await participantFromProfile(input.agentProfileId, req.sessionId) : input;
+    const id = await rooms.create({ ...input, ...agent }, req.sessionId);
     return reply.code(201).send(await rooms.detail(id, req.sessionId));
   });
   app.get('/api/rooms/:id', async req => rooms.detail(roomParams.parse(req.params).id, req.sessionId));
   app.post('/api/rooms/:id/join', async req => {
     const { id } = roomParams.parse(req.params);
-    await rooms.join(id, req.sessionId, participant.parse(req.body));
+    const input = roomParticipant.parse(req.body);
+    const agent = 'agentProfileId' in input ? await participantFromProfile(input.agentProfileId, req.sessionId) : input;
+    await rooms.join(id, req.sessionId, agent);
     return rooms.detail(id, req.sessionId);
   });
   app.post('/api/rooms/:id/ready', async req => {

@@ -33,3 +33,5 @@ import './styles/dark-theme.css';
 import './styles/arena-workspace.css';
 
 import './styles/site-layout.css';
+
+import './styles/agents.css';

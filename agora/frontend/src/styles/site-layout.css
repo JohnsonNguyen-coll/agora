@@ -8,14 +8,14 @@
   padding-inline: var(--site-gutter); min-height: 96px;
   display: flex; align-items: center; gap: 32px;
 }
-.site-header-inner nav { margin-left: auto; align-self: auto; align-items: center; gap: 8px; flex-wrap: nowrap; }
+.site-header-inner nav { margin-left: 0; align-self: stretch; align-items: stretch; gap: 32px; flex-wrap: nowrap; }
 .site-header-inner nav a, .landing-header nav a {
   padding: 9px 13px; border: 0; border-radius: 7px; font-size: 13px;
   color: var(--muted); transition: color .2s, background .2s;
 }
 .site-header-inner nav a:hover, .landing-header nav a:hover { color: var(--text); background: #ffffff08; }
 .site-header-inner nav a.active { color: var(--text); background: #ffffff0b; border: 0; }
-.site-header-inner .header-account { margin-left: 0; }
+.site-header-inner .header-account, .site-header-inner .header-launch { margin-left: auto; }
 .site-header-inner .button { min-width: 104px; border-radius: 8px; }
 .landing .landing-header { height: 96px; }
 .landing-header nav { gap: 8px; }
@@ -78,4 +78,35 @@
 .docs-reader .docs-pagination > a { border-color: var(--hairline); background: var(--surface); }
 @media(max-width:760px) {
   .site-header:has(.header-account) { padding: 0; }
+}
+
+/* Restore the app's original left-aligned navigation and spaced text links. */
+.site-header-inner { gap: 48px; }
+.site-header-inner nav a { padding: 0; display: flex; align-items: center; border-radius: 0; border-bottom: 1px solid transparent; background: none; letter-spacing: .01em; }
+.site-header-inner nav a:hover { background: none; }
+.site-header-inner nav a.active { background: none; border-bottom: 1px solid var(--text); }
+.landing-header nav { gap: 32px; }
+.landing-header nav a { padding: 8px 0; background: none; }
+.landing-header nav a:hover { background: none; }
+.landing-header nav a::after { display: block; }
+.landing-header .agora-name { font-size: 52px; letter-spacing: -3px; }
+.landing-header .agora-mark { width: 48px; height: 48px; }
+.lobby-heading h1 { letter-spacing: .005em; line-height: 1.2; }
+.connect-page .page-heading { margin-bottom: 40px; }
+.connect-page h1, .connect-page h2 { letter-spacing: .005em; line-height: 1.25; }
+.connect-page .form-section h2 { margin-bottom: 16px; }
+.connect-page .form-section > p, .connect-page .form-aside p { max-width: 74ch; line-height: 1.85; }
+.connect-page .form-aside h2 { line-height: 1.35; }
+.connect-page .form-section .form-note { margin-bottom: 26px; }
+@media(max-width:1000px) {
+  .site-header-inner { min-height: 0; padding-block: 14px 0; gap: 12px 24px; flex-wrap: wrap; }
+  .site-header-inner nav { order: 3; flex-basis: 100%; min-width: 0; overflow-x: auto; gap: 28px; margin: 0; }
+  .site-header-inner nav a { flex-shrink: 0; padding-block: 14px; }
+}
+@media(max-width:760px) {
+  .site-header-inner nav { justify-content: flex-start; gap: 24px; }
+  .site-header-inner nav a { padding-inline: 0; }
+  .landing-header nav { gap: 18px; }
+  .landing-header .agora-name { font-size: 42px; letter-spacing: -2px; }
+  .landing-header .agora-mark { width: 36px; height: 36px; }
 }

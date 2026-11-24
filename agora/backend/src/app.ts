@@ -1,3 +1,4 @@
+import { agentProfileRoutes } from './modules/agent-profiles/controller.js';
 import { startHostedWorker } from './modules/rooms/worker.js';
 import { authRoutes } from './modules/auth/controller.js';
 import { tournamentRoutes } from './modules/tournaments/controller.js';
@@ -46,6 +47,7 @@ export async function buildApp() {
   });
   app.addHook('preHandler', async req => { if (req.url.startsWith('/api/')) await settleDue(); });
   authRoutes(app);
+  agentProfileRoutes(app);
   roomRoutes(app);
   externalRoutes(app);
   tournamentRoutes(app);

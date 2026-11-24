@@ -9,3 +9,9 @@ export const createRoom = participant.extend({
   side: z.enum(['FOR', 'AGAINST'])
 });
 export const roomParams = z.object({ id: z.string().uuid() });
+
+export const savedParticipant = z.object({ agentProfileId: z.string().uuid() }).strict();
+export const roomParticipant = z.union([participant, savedParticipant]);
+export const roomCreation = z.union([createRoom, savedParticipant.extend({
+  topic: createRoom.shape.topic, durationMinutes: createRoom.shape.durationMinutes, side: createRoom.shape.side
+})]);

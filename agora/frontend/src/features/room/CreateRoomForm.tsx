@@ -9,14 +9,15 @@ import { Button } from '../../components/ui/Button';
 import { Field, TextArea } from '../../components/ui/Field';
 import { Select } from '../../components/ui/Select';
 import { ErrorNotice } from '../../components/ui/ErrorNotice';
-import { ParticipantFields, participantValues } from './ParticipantFields';
+import { AgentPicker } from '../agents/AgentPicker';
 export function CreateRoomForm({ onClose, onBusyChange }: { onClose: () => void; onBusyChange: (busy: boolean) => void }) {
   const navigate = useNavigate();
   const runtime = useQuery({ queryKey: ['runtime'], queryFn: () => api<RuntimeStatus>('/runtime'), refetchInterval: 5000 });
   const [step, setStep] = useState(0);
+  const [agentReady, setAgentReady] = useState(false);
   const form = useRef<HTMLFormElement>(null);
   const mutation = useMutation({ mutationFn: (data: FormData) => api<Room>('/rooms', {
-    ...participantValues(data), topic: String(data.get('topic')), durationMinutes: Number(data.get('durationMinutes')),
+    agentProfileId: String(data.get('agentProfileId')), topic: String(data.get('topic')), durationMinutes: Number(data.get('durationMinutes')),
     side: data.get('side') as Side
   }), onSuccess: room => navigate('/app/rooms/' + room.id), onSettled: () => onBusyChange(false) });
   function changeStep(next: number) {
@@ -25,11 +26,12 @@ export function CreateRoomForm({ onClose, onBusyChange }: { onClose: () => void;
       for (const field of fields ?? []) if (!field.reportValidity()) return;
     }
     setStep(next);
-    requestAnimationFrame(() => form.current?.querySelector<HTMLElement>(next ? '[name="name"]' : '[name="topic"]')?.focus());
+    requestAnimationFrame(() => form.current?.querySelector<HTMLElement>(next ? '[role="tab"]' : '[name="topic"]')?.focus());
   }
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!step) { changeStep(1); return; }
+    if (!agentReady) return;
     onBusyChange(true); mutation.mutate(new FormData(event.currentTarget));
   }
   return <form ref={form} onSubmit={submit} onKeyDown={event => {
@@ -49,11 +51,11 @@ export function CreateRoomForm({ onClose, onBusyChange }: { onClose: () => void;
         <p className="create-context">The clock starts when both players are ready. Your topic and duration are fixed once the room opens.</p>
       </fieldset>
       <fieldset hidden={step !== 1} disabled={step !== 1 || mutation.isPending} className="create-fields"><legend className="sr-only">Your agent</legend>
-        <ParticipantFields /><p className="create-context">{runtime.data?.debateAvailable ? 'Once both players are ready, your agents exchange arguments automatically until the clock runs out.' : runtime.isPending ? 'Checking automated match availability…' : runtime.data?.reason ?? 'Match availability could not be checked. Try again before readying up.'}</p>
+        <AgentPicker onReadyChange={setAgentReady} /><p className="create-context">{runtime.data?.debateAvailable ? 'Once both players are ready, your agents exchange arguments automatically until the clock runs out.' : runtime.isPending ? 'Checking automated match availability…' : runtime.data?.reason ?? 'Match availability could not be checked. Try again before readying up.'}</p>
       </fieldset>
       <ErrorNotice error={mutation.error} />
     </div>
     <footer className="create-dialog-actions"><Button type="button" className="quiet" disabled={mutation.isPending} onClick={() => step ? changeStep(0) : onClose()}>{step ? 'Back to match details' : 'Cancel'}</Button>
-      <Button type={step ? "submit" : "button"} onClick={step ? undefined : () => changeStep(1)} className="primary" disabled={mutation.isPending}>{!step ? 'Continue' : mutation.isPending ? 'Opening room…' : 'Create room'}</Button></footer>
+      <Button type={step ? "submit" : "button"} onClick={step ? undefined : () => changeStep(1)} className="primary" disabled={mutation.isPending || (step === 1 && !agentReady)}>{!step ? 'Continue' : mutation.isPending ? 'Opening room…' : 'Create room'}</Button></footer>
   </form>;
 }
