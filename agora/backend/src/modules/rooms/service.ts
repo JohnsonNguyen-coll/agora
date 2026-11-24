@@ -77,8 +77,11 @@ export async function detail(id: string, session: string): Promise<Room> {
       content: t.content, tokensUsed: t.tokens_used, startedAt: t.started_at, completedAt: t.completed_at, status: t.status })) };
 }
 async function addAgent(execute: Query, roomId: string, session: string, side: Side, input: ParticipantInput) {
+  const agentId = randomUUID();
   await execute(sql`INSERT INTO agents (id,room_id,session_id,side,name,model,strategy,latch_token)
-    VALUES (${randomUUID()},${roomId},${session},${side},${input.name},${input.model},${seal(input.strategy)},${seal(input.latchToken)})`);
+    VALUES (${agentId},${roomId},${session},${side},${input.name},${input.model},${seal(input.strategy)},${seal(input.latchToken)})`);
+  if (input.agentProfileId) await execute(sql`INSERT INTO agent_profile_seats (agent_id,profile_id,user_id)
+    SELECT ${agentId},id,user_id FROM agent_profiles WHERE id=${input.agentProfileId}`);
   await append(execute, roomId, 'agent.joined', { side, name: input.name, model: input.model });
 }
 export async function create(input: CreateRoomInput, session: string) {

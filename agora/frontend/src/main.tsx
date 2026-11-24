@@ -37,3 +37,5 @@ import './styles/site-layout.css';
 import './styles/agents.css';
 
 import './styles/dialogue.css';
+
+import './styles/rankings.css';

@@ -32,7 +32,7 @@ export interface AuditEvent {
   prevHash: string | null; hash: string; createdAt: string; source: 'gavel';
 }
 export interface AuditResult { events: AuditEvent[]; valid: boolean; checked: number; }
-export interface ParticipantInput { name: string; model: string; strategy: string; latchToken: string; }
+export interface ParticipantInput { agentProfileId?: string; name: string; model: string; strategy: string; latchToken: string; }
 export interface CreateRoomInput extends ParticipantInput { topic: string; durationMinutes: number; side: Side; }
 export interface ApiError { error: string; code: string; details?: unknown; }
 export interface RuntimeStatus { debateAvailable: boolean; reason: string | null; }

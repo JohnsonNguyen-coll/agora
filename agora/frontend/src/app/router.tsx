@@ -1,3 +1,4 @@
+import { Leaderboard } from '../features/agents/Leaderboard';
 import { AgentsView } from '../features/agents/AgentsView';
 import { GettingStarted } from '../pages/GettingStarted';
 import { AuthBoundary } from '../features/auth/AuthBoundary';
@@ -22,7 +23,7 @@ function Layout({ app = false }: { app?: boolean }) {
 function LayoutSurface({ app = false }: { app?: boolean }) {
   return <><a className="skip-link" href="#main">Skip to content</a>
     <header className="site-header"><div className="site-header-inner"><Link to="/" className="wordmark" aria-label="Agora home"><Brand /></Link>
-      <nav aria-label="Main navigation">{app && <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/tournaments">Tournaments</NavLink><NavLink to="/app/agents">My agents</NavLink><NavLink to="/app/connect">Connect agent</NavLink></>}<NavLink to="/docs">Docs</NavLink></nav>{app ? <div className="header-account"><AccountButton /></div> : <Link className="button primary header-launch" to="/app">Launch app</Link>}
+      <nav aria-label="Main navigation">{app && <><NavLink to="/app" end>Lobby</NavLink><NavLink to="/app/tournaments">Tournaments</NavLink><NavLink to="/app/leaderboard">Leaderboard</NavLink><NavLink to="/app/agents">My agents</NavLink><NavLink to="/app/connect">Connect agent</NavLink></>}<NavLink to="/docs">Docs</NavLink></nav>{app ? <div className="header-account"><AccountButton /></div> : <Link className="button primary header-launch" to="/app">Launch app</Link>}
     </div></header><main id="main"><Outlet /></main>
     <footer className="site-footer"><Link to="/">Agora / AI Debate Arena</Link><Link to="/docs">Documentation</Link><a href="https://onlatch.com" target="_blank" rel="noreferrer">About Latch access</a></footer></>;
 }
@@ -43,7 +44,7 @@ export function AppRouter() {
   return <BrowserRouter><ScrollToPage /><Routes>
     <Route index element={<LandingEntry />} />
     <Route path="app" element={<Layout app />}>
-      <Route path="agents" element={<AgentsView />} /><Route path="start" element={<GettingStarted />} /><Route path="login" element={<Navigate replace to="/app" />} /><Route path="auth/confirm" element={<Navigate replace to="/app" />} /><Route index element={<Home />} /><Route path="connect" element={<Connect />} /><Route path="create" element={<CreateRoom />} />
+      <Route path="leaderboard" element={<Leaderboard />} /><Route path="agents" element={<AgentsView />} /><Route path="start" element={<GettingStarted />} /><Route path="login" element={<Navigate replace to="/app" />} /><Route path="auth/confirm" element={<Navigate replace to="/app" />} /><Route index element={<Home />} /><Route path="connect" element={<Connect />} /><Route path="create" element={<CreateRoom />} />
       <Route path="tournaments" element={<TournamentsView />} /><Route path="tournaments/:id" element={<TournamentView />} />
       <Route path="rooms/:id" element={<Arena />} /><Route path="rooms/:id/results" element={<Results />} />
       <Route path="rooms/:id/join" element={<RoomJoin />} /><Route path="rooms/:id/audit" element={<RoomAudit />} />

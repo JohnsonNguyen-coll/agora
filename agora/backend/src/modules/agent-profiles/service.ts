@@ -52,5 +52,5 @@ export async function remove(session: string, id: string) {
 export async function participantFromProfile(id: string, session: string): Promise<ParticipantInput> {
   const account = await requireAccount(session);
   const row = await owned(id, account.id);
-  return { name: row.name, model: row.model, strategy: unseal(row.strategy), latchToken: unseal(row.latch_token) };
+  return { agentProfileId: row.id, name: row.name, model: row.model, strategy: unseal(row.strategy), latchToken: unseal(row.latch_token) };
 }
