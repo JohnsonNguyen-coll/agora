@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
+import Markdown, { type Components } from 'react-markdown';
+const heading: Components['h1'] = ({ children }) => <h4>{children}</h4>;
+const components: Components = {
+  h1: heading, h2: heading, h3: heading, h4: heading, h5: heading, h6: heading,
+  a: ({ href, children }) => <a href={href} target="_blank" rel="noreferrer">{children}</a>,
+  img: ({ alt }) => <span>{alt}</span>
+};
 export function StreamingText({ text, active }: { text: string; active: boolean }) {
-  const [length, setLength] = useState(active ? 0 : text.length);
-  useEffect(() => {
-    if (!active) { setLength(text.length); return; }
-    if (length >= text.length) return;
-    const timer = setTimeout(() => setLength(value => Math.min(value + 1, text.length)), 8);
-    return () => clearTimeout(timer);
-  }, [text, active, length]);
-  return <p className="turn-body">{active ? text.slice(0, length) : text}{active && <span className="block-cursor" aria-label="Generating" />}</p>;
+  return <div className="turn-body">
+    <Markdown components={components}>{text}</Markdown>
+    {active && (text ? <span className="block-cursor" aria-label="Generating" /> :
+      <p className="turn-waiting" role="status">Waiting for the opening words…</p>)}
+  </div>;
 }

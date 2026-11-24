@@ -38,7 +38,7 @@ export async function callModel(token: string, input: ModelBody, onDelta: (text:
     await options.onResponse?.(observation);
     if (!response.body || !observation.contentType?.includes('text/event-stream'))
       throw new LatchError('protocol_error', 'Expected a model event stream.', observation);
-    const completion = await consumeStream(response.body, onDelta);
+    const completion = await consumeStream(response.body, onDelta, signal);
     return { ...completion, observation };
   } catch (error) {
     if (error instanceof LatchError) throw error;

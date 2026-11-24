@@ -12,8 +12,8 @@ export function useEventStream(id: string) {
     stream.addEventListener('room.update', () => {
       if (refresh) return;
       refresh = setTimeout(() => {
-        void client.invalidateQueries({ queryKey: ['room', id] });
-        void client.invalidateQueries({ queryKey: ['audit', id] });
+        void client.invalidateQueries({ queryKey: ['room', id] }, { cancelRefetch: false });
+        void client.invalidateQueries({ queryKey: ['audit', id] }, { cancelRefetch: false });
         refresh = undefined;
       }, 100);
     });

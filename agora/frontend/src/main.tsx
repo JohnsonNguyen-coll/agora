@@ -35,3 +35,5 @@ import './styles/arena-workspace.css';
 import './styles/site-layout.css';
 
 import './styles/agents.css';
+
+import './styles/dialogue.css';
